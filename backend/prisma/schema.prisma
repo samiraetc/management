@@ -1,0 +1,71 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id         String            @id @default(uuid()) @unique
+  first_name String
+  last_name  String
+  full_name  String
+  email      String            @unique
+  password   String
+  created_at DateTime          @default(now())
+  username   String            @unique
+  position   String?
+  language   String?
+  workspaces Workspace[]       @relation("WorkspaceCreator")
+  member_of   WorkspaceMembers[]
+}
+
+model Label {
+  id            String             @id @default(uuid())
+  name          String             @unique
+  color         String
+  workspaces    WorkspaceLabels[]  @relation("LabelWorkspaces") // Relação inversa adicionada
+}
+
+model Workspace {
+  id         String            @id @default(uuid()) @unique
+  name       String
+  created_at  DateTime          @default(now())
+  updated_at  DateTime          @updatedAt()
+  creator_id  String
+  creator    User              @relation("WorkspaceCreator", fields: [creator_id], references: [id])
+  url_key    String            @unique
+  members    WorkspaceMembers[]
+  labels     WorkspaceLabels[]
+  custom_labels WorkspaceCustomLabels[]
+}
+
+model WorkspaceMembers {
+  user_id      String
+  workspace_id String
+  user        User              @relation(fields: [user_id], references: [id])
+  workspace   Workspace         @relation(fields: [workspace_id], references: [id])
+
+  @@id([user_id, workspace_id])
+}
+
+model WorkspaceLabels {
+  label_id     String
+  workspace_id String
+  label       Label             @relation("LabelWorkspaces", fields: [label_id], references: [id])
+  workspace   Workspace         @relation(fields: [workspace_id], references: [id])
+
+  @@id([label_id, workspace_id])
+}
+
+model WorkspaceCustomLabels {
+  id            String  @id @default(uuid()) @unique
+  workspace_id  String
+  name          String
+  color         String
+  workspace    Workspace   @relation(fields: [workspace_id], references: [id])
+}
+
+
