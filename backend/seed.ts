@@ -20,6 +20,21 @@ async function main() {
     });
   }
 
+  // Seed data for labels
+  const priorities = [
+    { name: "no_priority", value: 0 },
+    { name: "urgent", value: 1 },
+    { name: "high", value: 2 },
+    { name: "medium", value: 3 },
+    { name: "low", value: 4 },
+  ];
+
+  for (const priority of priorities) {
+    await prisma.priority.create({
+      data: {...priority}
+    });
+  }
+
   // Seed data for users
   const users = [
     {
@@ -45,7 +60,7 @@ async function main() {
 
   // Pegue todas as labels existentes
   const existingLabels = await prisma.label.findMany();
-  
+
   // Pegar o admin
   const adminUser = await prisma.user.findUnique({
     where: {
@@ -60,7 +75,7 @@ async function main() {
       username: true,
       position: true,
       language: true,
-    }
+    },
   });
 
   // Verifica se o adminUser foi encontrado

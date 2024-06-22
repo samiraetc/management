@@ -1,10 +1,17 @@
 import { FastifyInstance } from "fastify";
 import {
   createWorkspaceController,
-  createWorkspaceCustomLabel,
   getAllWorkspaces,
-  addWorkspaceMember,
+  getWorkspace,
 } from "@/controllers/workspace/workspaceController";
+import {
+  createWorkspaceCustomLabel,
+  patchWorkspaceCustomLabel,
+} from "@/controllers/customLabels/customLabelController";
+import {
+  addWorkspaceMember,
+  removeWorkspaceMember,
+} from "@/controllers/members/membersController";
 
 const workspaceRouters = async (server: FastifyInstance) => {
   server.post(
@@ -17,15 +24,30 @@ const workspaceRouters = async (server: FastifyInstance) => {
     { preValidation: [server.authenticate] },
     getAllWorkspaces
   );
+  server.get(
+    "/workspaces/:id",
+    { preValidation: [server.authenticate] },
+    getWorkspace
+  );
   server.post(
-    "/workspace/:id/label",
+    "/workspaces/:id/labels",
     { preValidation: [server.authenticate] },
     createWorkspaceCustomLabel
   );
+  server.patch(
+    "/workspaces/:id/labels",
+    { preValidation: [server.authenticate] },
+    patchWorkspaceCustomLabel
+  );
   server.post(
-    "/workspace/:id/members",
+    "/workspaces/:id/members",
     { preValidation: [server.authenticate] },
     addWorkspaceMember
+  );
+  server.delete(
+    "/workspaces/:id/members",
+    { preValidation: [server.authenticate] },
+    removeWorkspaceMember
   );
 };
 

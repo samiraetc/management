@@ -1,17 +1,13 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { findUserByToken } from "@/middleware/auth";
+import { workspaceSchema } from "@/schemas/workspace/workspaceSchema/workspaceSchema";
 import {
-  workspaceCustomLabelSchema,
-  workspaceMembersSchema,
-  workspaceSchema,
-} from "@/schemas/workspace/workspaceSchema";
-import {
-  addWorkspaceMembers,
+  createWorkspace,
   selectAllCustomLabel,
   selectAllWorkspaces,
-  workspaceCustomLabel,
+  selectWorkspaces,
 } from "@/models/workspace/workspace";
-import { selectLabel } from "@/models/labels/labels";
+import { Label, selectAllLabels, selectLabel } from "@/models/labels/labels";
 import { selectUser } from "@/models/user/user";
 
 const createWorkspaceController = async (
@@ -19,70 +15,42 @@ const createWorkspaceController = async (
   reply: FastifyReply
 ) => {
   try {
-    const userId = findUserByToken(request, reply);
+    const user = await findUserByToken(request, reply);
     const parsedBody = workspaceSchema.parse(request.body);
 
-    /* const body = {
-      first_name: parsedBody.first_name,
-      last_name: parsedBody.last_name,
-      email: parsedBody.email,
-      password: parsedBody.password,
-      created_at: new Date(),
-      username: parsedBody.username,
-      position: parsedBody.position,
-      language: parsedBody.language,
+    const body = {
+      name: parsedBody.name,
+      url_key: parsedBody.url_key,
+      creator: user?.id,
+      labels: await selectAllLabels(),
     };
 
-    const user = await createUser(body);
+    const workspace = await createWorkspace(body);
+    const creator = await selectUser(workspace.creator_id);
+    const customLabels = await selectAllCustomLabel(workspace.id);
 
-    const { password, ...userWithoutPassword } = user; */
-    reply.code(201).send({ data: "" });
+    const labels = await Promise.all(
+      workspace.labels.map(async (label: { label_id: string }) => {
+        return await selectLabel(label.label_id);
+      })
+    );
+
+    const members = await Promise.all(
+      workspace.members.map(async (member: { user_id: string }) => {
+        return await selectUser(member.user_id);
+      })
+    );
+
+    reply.code(201).send({
+      data: {
+        ...workspace,
+        labels: [...labels, ...customLabels],
+        creator,
+        members,
+      },
+    });
   } catch (error) {
     reply.code(400).send(error);
-  }
-};
-
-const createWorkspaceCustomLabel = async (
-  request: FastifyRequest,
-  reply: FastifyReply
-) => {
-  try {
-    const { id } = request.params as { id: string };
-    const parsedBody = workspaceCustomLabelSchema.parse(request.body);
-
-    const body = {
-      workspace_id: id,
-      name: parsedBody.name,
-      color: parsedBody.color,
-    };
-
-    const customLabel = await workspaceCustomLabel(body);
-    reply.code(201).send({ data: customLabel });
-  } catch (error) {
-    reply.code(400).send({ error: "Failed to create label", details: error });
-  }
-};
-
-const addWorkspaceMember = async (
-  request: FastifyRequest,
-  reply: FastifyReply
-) => {
-  try {
-    const { id } = request.params as { id: string };
-
-    const parsedBody = workspaceMembersSchema.parse(request.body);
-    
-    const body = parsedBody.user_id.map((member: string) => ({
-      workspace_id: id,
-      user_id: member,
-    }));
-
-    console.log(body)
-
-    const customLabel = await addWorkspaceMembers(body);
-    reply.code(201).send({ data: customLabel });
-  } catch (error) {
-    reply.code(400).send({ error: "Failed to create label", details: error });
   }
 };
 
@@ -125,9 +93,47 @@ const getAllWorkspaces = async (_: FastifyRequest, reply: FastifyReply) => {
   }
 };
 
-export {
-  createWorkspaceController,
-  getAllWorkspaces,
-  createWorkspaceCustomLabel,
-  addWorkspaceMember,
+const getWorkspace = async (request: FastifyRequest, reply: FastifyReply) => {
+  try {
+
+
+    const { id } = request.params as { id: string };
+
+    const workspace = await selectWorkspaces(id);
+
+    if(!workspace) {
+      reply.code(404).send({ message: "Workspace not found" });
+      return 
+    }
+
+        const creator = await selectUser(workspace.creator_id);
+
+        const customLabels = await selectAllCustomLabel(workspace.id);
+
+        const labels = await Promise.all(
+          workspace.labels.map(async (label) => {
+            return await selectLabel(label.label_id);
+          })
+        );
+
+        const members = await Promise.all(
+          workspace.members.map(async (member) => {
+            return await selectUser(member.user_id);
+          })
+        );
+
+      
+    reply.code(200).send({
+      data: {
+        ...workspace,
+        labels: [...labels, ...customLabels],
+        creator,
+        members
+      }
+    });
+  } catch (error) {
+    reply.code(400).send({ error });
+  }
 };
+
+export { createWorkspaceController, getAllWorkspaces, getWorkspace };

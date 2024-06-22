@@ -68,4 +68,8 @@ model WorkspaceCustomLabels {
   workspace    Workspace   @relation(fields: [workspace_id], references: [id])
 }
 
-
+model Priority {
+  id    String  @id @default(uuid()) @unique
+  name  String
+  value Int @unique
+}

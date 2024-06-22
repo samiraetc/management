@@ -1,17 +1,18 @@
 import {
-  createLabel,
-  selectAllLabels,
-  selectLabel,
-} from "@/models/labels/labels";
-import { labelSchema } from "@/schemas/labels/labelsSchema";
+  createPriority,
+  selectAllPriorities,
+  selectPriority,
+} from "@/models/priority/priorityModel";
+
+import { prioritySchema } from "@/schemas/priority/prioritySchema";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 const AllLabelController = async (_: FastifyRequest, reply: FastifyReply) => {
   try {
-    const labels = await selectAllLabels();
+    const labels = await selectAllPriorities();
     reply.code(200).send({ data: labels });
   } catch (error) {
-    reply.code(400).send({ error: "Failed to fetch labels" });
+    reply.code(400).send({ error: "Failed to fetch priorities" });
   }
 };
 
@@ -22,10 +23,10 @@ const getLabelController = async (
   const { id } = request.params as { id: string };
 
   try {
-    const label = await selectLabel(id);
+    const label = await selectPriority(id);
     reply.code(200).send({ data: label });
   } catch (error) {
-    reply.code(400).send({ error: "Failed to fetch labels" });
+    reply.code(400).send({ error: "Failed to fetch priority" });
   }
 };
 
@@ -34,17 +35,19 @@ const createLabelController = async (
   reply: FastifyReply
 ) => {
   try {
-    const parsedBody = labelSchema.parse(request.body);
+    const parsedBody = prioritySchema.parse(request.body);
 
     const body = {
       name: parsedBody.name,
-      color: parsedBody.color,
+      value: parsedBody.value,
     };
 
-    const label = await createLabel(body);
+    const label = await createPriority(body);
     reply.code(201).send({ data: label });
   } catch (error) {
-    reply.code(400).send({ error: "Failed to create label", details: error });
+    reply
+      .code(400)
+      .send({ error: "Failed to create priority", details: error });
   }
 };
 

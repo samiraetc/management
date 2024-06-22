@@ -1,5 +1,10 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { createUser, selectAllUsers, selectUser, UserWithoutPassword } from "@/models/user/user";
+import {
+  createUser,
+  selectAllUsers,
+  selectUser,
+  UserWithoutPassword,
+} from "@/models/user/user";
 import { userSchema } from "@/schemas/user/userSchema";
 import bcrypt from "bcrypt";
 

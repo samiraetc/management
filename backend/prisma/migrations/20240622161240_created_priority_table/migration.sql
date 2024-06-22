@@ -61,6 +61,15 @@ CREATE TABLE "WorkspaceCustomLabels" (
     CONSTRAINT "WorkspaceCustomLabels_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Priority" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "value" INTEGER NOT NULL,
+
+    CONSTRAINT "Priority_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_id_key" ON "User"("id");
 
@@ -81,6 +90,12 @@ CREATE UNIQUE INDEX "Workspace_url_key_key" ON "Workspace"("url_key");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "WorkspaceCustomLabels_id_key" ON "WorkspaceCustomLabels"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Priority_id_key" ON "Priority"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Priority_value_key" ON "Priority"("value");
 
 -- AddForeignKey
 ALTER TABLE "Workspace" ADD CONSTRAINT "Workspace_creator_id_fkey" FOREIGN KEY ("creator_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
