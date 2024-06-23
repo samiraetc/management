@@ -38,6 +38,24 @@ async function main() {
     });
   }
 
+   // Seed data for estimatives
+   const estimatives = [
+    { name: "exponential", points: ['1', '2', '4', '8', '16'] },
+    { name: "fibonacci", points: ['1','2','3','5','8'] },
+    { name: "linear", points: ['1','2','3','4','5'] },
+    { name: "t-shirt", points: ['XS', 'S', 'M', 'L', 'XL'] },
+  ];
+
+  for (const estimative of estimatives) {
+    await prisma.estimatives.upsert({
+      where: { name: estimative.name },
+      update: {},
+      create: estimative,
+    });
+  }
+
+  console.log(estimatives)
+
   // Seed data for users
   const users = [
     {
