@@ -1,16 +1,15 @@
-import { FastifyRequest, FastifyReply } from "fastify";
 import {
   createUser,
   selectAllUsers,
   selectUser,
-  UserWithoutPassword,
-} from "@/models/user/user";
-import { userSchema } from "@/schemas/user/userSchema";
-import bcrypt from "bcrypt";
+} from '@/models/user/userModel';
+import { userSchema } from '@/schemas/user/userSchema';
+import bcrypt from 'bcrypt';
+import { FastifyRequest, FastifyReply } from 'fastify';
 
 const createUserController = async (
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) => {
   try {
     const parsedBody = userSchema.parse(request.body);
@@ -29,9 +28,7 @@ const createUserController = async (
 
     const user = await createUser(body);
 
-    const { password, ...userWithoutPassword } = user;
-
-    reply.code(201).send({ data: userWithoutPassword });
+    reply.code(201).send({ data: user });
   } catch (error) {
     reply.code(400).send(error);
   }
@@ -39,7 +36,7 @@ const createUserController = async (
 
 const selectUserController = async (
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) => {
   try {
     const { userId } = request.params as { userId: string };
@@ -47,12 +44,11 @@ const selectUserController = async (
     const user = await selectUser(userId);
 
     if (!user) {
-      reply.code(404).send({ message: "User not found" });
+      reply.code(404).send({ message: 'User not found' });
       return;
     }
 
     reply.code(200).send({ data: user });
-    
   } catch (error) {
     reply.code(400).send({ error });
   }

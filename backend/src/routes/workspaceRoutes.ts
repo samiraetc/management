@@ -1,85 +1,85 @@
-import { FastifyInstance } from "fastify";
 import {
   createWorkspaceController,
   getAllWorkspaces,
   getWorkspace,
-} from "@/controllers/workspace/workspaceController";
+} from '@/controllers/workspace/workspaceController';
+import { FastifyInstance } from 'fastify';
 
 const workspaceRouters = async (server: FastifyInstance) => {
   server.post(
-    "/workspaces",
+    '/workspaces',
     {
       preValidation: [server.authenticate],
       schema: {
-        tags: ["Workspace"],
+        tags: ['Workspace'],
         security: [{ bearerAuth: [] }],
         body: {
-          type: "object",
+          type: 'object',
           properties: {
-            name: { type: "string" },
-            url_key: { type: "string" },
+            name: { type: 'string' },
+            url_key: { type: 'string' },
           },
           examples: [
             {
-              name: "workspace",
-              url_key: "url_workspace",
+              name: 'workspace',
+              url_key: 'url_workspace',
             },
           ],
-          required: ["name", "url_key"],
+          required: ['name', 'url_key'],
         },
         response: {
           201: {
-            description: "Workspace details",
-            type: "object",
+            description: 'Workspace details',
+            type: 'object',
             properties: {
               data: {
-                id: { type: "string" },
-                name: { type: "string" },
-                created_at: { type: "string" },
-                updated_at: { type: "string" },
-                creator_id: { type: "string" },
-                url_key: { type: "string" },
+                id: { type: 'string' },
+                name: { type: 'string' },
+                created_at: { type: 'string' },
+                updated_at: { type: 'string' },
+                creator_id: { type: 'string' },
+                url_key: { type: 'string' },
                 labels: {
-                  type: "array",
+                  type: 'array',
                   items: {
-                    type: "object",
+                    type: 'object',
                     properties: {
-                      id: { type: "string" },
-                      name: { type: "string" },
-                      color: { type: "string" },
+                      id: { type: 'string' },
+                      name: { type: 'string' },
+                      color: { type: 'string' },
                     },
                   },
                 },
                 members: {
-                  type: "array",
+                  type: 'array',
                   items: {
-                    type: "object",
+                    type: 'object',
                     properties: {
-                      id: { type: "string" },
-                      first_name: { type: "string" },
-                      last_name: { type: "string" },
-                      full_name: { type: "string" },
-                      email: { type: "string", format: "email" },
-                      created_at: { type: "string" },
-                      username: { type: "string" },
-                      position: { type: "string" },
-                      language: { type: ["string", "null"] },
-                      permission: { type: "string"}
+                      id: { type: 'string' },
+                      first_name: { type: 'string' },
+                      last_name: { type: 'string' },
+                      full_name: { type: 'string' },
+                      email: { type: 'string', format: 'email' },
+                      created_at: { type: 'string' },
+                      username: { type: 'string' },
+                      position: { type: 'string' },
+                      language: { type: ['string', 'null'] },
+                      permission: { type: 'string' },
                     },
                   },
                 },
                 creator: {
-                  type: "object",
+                  type: 'object',
                   properties: {
-                    id: { type: "string" },
-                    first_name: { type: "string" },
-                    last_name: { type: "string" },
-                    full_name: { type: "string" },
-                    email: { type: "string", format: "email" },
-                    created_at: { type: "string" },
-                    username: { type: "string" },
-                    position: { type: "string" },
-                    language: { type: ["string", "null"] },
+                    id: { type: 'string' },
+                    first_name: { type: 'string' },
+                    last_name: { type: 'string' },
+                    full_name: { type: 'string' },
+                    email: { type: 'string', format: 'email' },
+                    created_at: { type: 'string' },
+                    username: { type: 'string' },
+                    position: { type: 'string' },
+                    language: { type: ['string', 'null'] },
                   },
                 },
               },
@@ -88,73 +88,73 @@ const workspaceRouters = async (server: FastifyInstance) => {
         },
       },
     },
-    createWorkspaceController
+    createWorkspaceController,
   );
 
   server.get(
-    "/workspaces",
+    '/workspaces',
     {
       preValidation: [server.authenticate],
       schema: {
-        tags: ["Workspace"],
+        tags: ['Workspace'],
         security: [{ bearerAuth: [] }],
         response: {
           200: {
-            description: "List of workspaces",
-            type: "object",
+            description: 'List of workspaces',
+            type: 'object',
             properties: {
               data: {
-                type: "array",
+                type: 'array',
                 items: {
-                  type: "object",
+                  type: 'object',
                   properties: {
-                    id: { type: "string" },
-                    name: { type: "string" },
-                    created_at: { type: "string" },
-                    updated_at: { type: "string" },
-                    creator_id: { type: "string" },
-                    url_key: { type: "string" },
+                    id: { type: 'string' },
+                    name: { type: 'string' },
+                    created_at: { type: 'string' },
+                    updated_at: { type: 'string' },
+                    creator_id: { type: 'string' },
+                    url_key: { type: 'string' },
                     labels: {
-                      type: "array",
+                      type: 'array',
                       items: {
-                        type: "object",
+                        type: 'object',
                         properties: {
-                          id: { type: "string" },
-                          name: { type: "string" },
-                          color: { type: "string" },
+                          id: { type: 'string' },
+                          name: { type: 'string' },
+                          color: { type: 'string' },
                         },
                       },
                     },
                     members: {
-                      type: "array",
+                      type: 'array',
                       items: {
-                        type: "object",
+                        type: 'object',
                         properties: {
-                          id: { type: "string" },
-                          first_name: { type: "string" },
-                          last_name: { type: "string" },
-                          full_name: { type: "string" },
-                          email: { type: "string", format: "email" },
-                          created_at: { type: "string" },
-                          username: { type: "string" },
-                          position: { type: "string" },
-                          language: { type: ["string", "null"] },
-                          permission: { type: "string"}
+                          id: { type: 'string' },
+                          first_name: { type: 'string' },
+                          last_name: { type: 'string' },
+                          full_name: { type: 'string' },
+                          email: { type: 'string', format: 'email' },
+                          created_at: { type: 'string' },
+                          username: { type: 'string' },
+                          position: { type: 'string' },
+                          language: { type: ['string', 'null'] },
+                          permission: { type: 'string' },
                         },
                       },
                     },
                     creator: {
-                      type: "object",
+                      type: 'object',
                       properties: {
-                        id: { type: "string" },
-                        first_name: { type: "string" },
-                        last_name: { type: "string" },
-                        full_name: { type: "string" },
-                        email: { type: "string", format: "email" },
-                        created_at: { type: "string" },
-                        username: { type: "string" },
-                        position: { type: "string" },
-                        language: { type: ["string", "null"] },
+                        id: { type: 'string' },
+                        first_name: { type: 'string' },
+                        last_name: { type: 'string' },
+                        full_name: { type: 'string' },
+                        email: { type: 'string', format: 'email' },
+                        created_at: { type: 'string' },
+                        username: { type: 'string' },
+                        position: { type: 'string' },
+                        language: { type: ['string', 'null'] },
                       },
                     },
                   },
@@ -165,68 +165,68 @@ const workspaceRouters = async (server: FastifyInstance) => {
         },
       },
     },
-    getAllWorkspaces
+    getAllWorkspaces,
   );
   server.get(
-    "/workspaces/:id",
+    '/workspaces/:id',
     {
       preValidation: [server.authenticate],
       schema: {
-        tags: ["Workspace"],
+        tags: ['Workspace'],
         security: [{ bearerAuth: [] }],
         response: {
           200: {
-            description: "Workspace details",
-            type: "object",
+            description: 'Workspace details',
+            type: 'object',
             properties: {
               data: {
-                id: { type: "string" },
-                name: { type: "string" },
-                created_at: { type: "string" },
-                updated_at: { type: "string" },
-                creator_id: { type: "string" },
-                url_key: { type: "string" },
+                id: { type: 'string' },
+                name: { type: 'string' },
+                created_at: { type: 'string' },
+                updated_at: { type: 'string' },
+                creator_id: { type: 'string' },
+                url_key: { type: 'string' },
                 labels: {
-                  type: "array",
+                  type: 'array',
                   items: {
-                    type: "object",
+                    type: 'object',
                     properties: {
-                      id: { type: "string" },
-                      name: { type: "string" },
-                      color: { type: "string" },
+                      id: { type: 'string' },
+                      name: { type: 'string' },
+                      color: { type: 'string' },
                     },
                   },
                 },
                 members: {
-                  type: "array",
+                  type: 'array',
                   items: {
-                    type: "object",
+                    type: 'object',
                     properties: {
-                      id: { type: "string" },
-                      first_name: { type: "string" },
-                      last_name: { type: "string" },
-                      full_name: { type: "string" },
-                      email: { type: "string", format: "email" },
-                      created_at: { type: "string" },
-                      username: { type: "string" },
-                      position: { type: "string" },
-                      language: { type: ["string", "null"] },
-                      permission: { type: "string"}
+                      id: { type: 'string' },
+                      first_name: { type: 'string' },
+                      last_name: { type: 'string' },
+                      full_name: { type: 'string' },
+                      email: { type: 'string', format: 'email' },
+                      created_at: { type: 'string' },
+                      username: { type: 'string' },
+                      position: { type: 'string' },
+                      language: { type: ['string', 'null'] },
+                      permission: { type: 'string' },
                     },
                   },
                 },
                 creator: {
-                  type: "object",
+                  type: 'object',
                   properties: {
-                    id: { type: "string" },
-                    first_name: { type: "string" },
-                    last_name: { type: "string" },
-                    full_name: { type: "string" },
-                    email: { type: "string", format: "email" },
-                    created_at: { type: "string" },
-                    username: { type: "string" },
-                    position: { type: "string" },
-                    language: { type: ["string", "null"] },
+                    id: { type: 'string' },
+                    first_name: { type: 'string' },
+                    last_name: { type: 'string' },
+                    full_name: { type: 'string' },
+                    email: { type: 'string', format: 'email' },
+                    created_at: { type: 'string' },
+                    username: { type: 'string' },
+                    position: { type: 'string' },
+                    language: { type: ['string', 'null'] },
                   },
                 },
               },
@@ -235,7 +235,7 @@ const workspaceRouters = async (server: FastifyInstance) => {
         },
       },
     },
-    getWorkspace
+    getWorkspace,
   );
 };
 

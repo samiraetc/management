@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -9,7 +9,7 @@ interface WorkspaceCustomLabel {
 }
 
 const addWorkspaceCustomLabel = async (
-  data: WorkspaceCustomLabel
+  data: WorkspaceCustomLabel,
 ): Promise<WorkspaceCustomLabel> => {
   const customLabel = prisma.workspaceCustomLabels.create({
     data: {
@@ -23,7 +23,7 @@ const addWorkspaceCustomLabel = async (
 
 const editWorkspaceCustomLabel = async (
   data: WorkspaceCustomLabel,
-  id: string
+  id: string,
 ): Promise<WorkspaceCustomLabel> => {
   const customLabel = prisma.workspaceCustomLabels.update({
     where: { id: id },
@@ -37,16 +37,16 @@ const editWorkspaceCustomLabel = async (
 
 const selectWorkspaceCustomLabel = async (
   id: string,
-  workspace_id: string
+  workspace_id: string,
 ): Promise<WorkspaceCustomLabel | null> => {
   const customLabel = prisma.workspaceCustomLabels.findUnique({
-    where: { id },
+    where: { id, workspace_id },
   });
   return customLabel;
 };
 
 const deleteWorkspaceCustomLabel = async (
-  id: string
+  id: string,
 ): Promise<WorkspaceCustomLabel | null> => {
   const customLabel = prisma.workspaceCustomLabels.delete({
     where: { id },

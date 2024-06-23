@@ -1,6 +1,5 @@
-import fastifyJwt from "@fastify/jwt";
-import { PrismaClient } from "@prisma/client";
-import { FastifyReply, FastifyRequest } from "fastify";
+import { PrismaClient } from '@prisma/client';
+import { FastifyReply, FastifyRequest } from 'fastify';
 
 const prisma = new PrismaClient();
 
@@ -10,13 +9,13 @@ interface JwtPayload {
 
 export async function findUserByToken(
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ) {
-  const authHeader = request.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+  const authHeader = request.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    reply.code(401).send({ error: "No token provided" });
+    reply.code(401).send({ error: 'No token provided' });
     return;
   }
 
@@ -30,12 +29,12 @@ export async function findUserByToken(
     });
 
     if (!user) {
-      reply.code(401).send({ error: "User not found" });
+      reply.code(401).send({ error: 'User not found' });
       return;
     }
 
     return user;
   } catch (err) {
-    reply.code(401).send({ error: "Invalid token" });
+    reply.code(401).send({ error: 'Invalid token' });
   }
 }

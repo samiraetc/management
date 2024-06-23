@@ -1,26 +1,20 @@
-import {
-  PrismaClient,
-  WorkspaceMembers,
-  Workspace as PrismaWorkspace,
-  Label as PrismaLabel,
-  User as PrismaUser,
-} from "@prisma/client";
-import { Label } from "../labels/labels";
-import { User } from "../user/user";
-import { MemberPermission } from "@/controllers/members/membersController";
+import { PrismaClient } from '@prisma/client';
+
+import { Label } from '../labels/labels';
+import { User } from '../user/userModel';
 
 const prisma = new PrismaClient();
 
 interface Workspace {
   name: string;
-  creator: any;
+  creator: string;
   url_key: string;
   labels: Label[];
   members?: User[];
-  permission: string
+  permission: string;
 }
 
-const createWorkspace = async (data: Workspace): Promise<any> => {
+const createWorkspace = async (data: Workspace) => {
   const newWorkspace = await prisma.workspace.create({
     data: {
       name: data.name,
@@ -36,7 +30,7 @@ const createWorkspace = async (data: Workspace): Promise<any> => {
       members: {
         create: {
           user: { connect: { id: data.creator } },
-          permission: data.permission
+          permission: data.permission,
         },
       },
     },
@@ -66,7 +60,7 @@ const selectCustomLabelByName = async (name: string, workspace_id: string) => {
   const customLabels = await prisma.workspaceCustomLabels.findFirst({
     where: {
       name,
-      workspace_id: workspace_id
+      workspace_id: workspace_id,
     },
     select: {
       id: true,
@@ -107,5 +101,5 @@ export {
   selectAllCustomLabel,
   createWorkspace,
   selectWorkspaces,
-  selectCustomLabelByName
+  selectCustomLabelByName,
 };

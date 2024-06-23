@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -16,12 +16,22 @@ interface User {
 
 type UserWithoutPassword = Omit<User, 'password'>;
 
-const createUser = async (data: User): Promise<User> => {
-
+const createUser = async (data: User): Promise<UserWithoutPassword> => {
   const user = await prisma.user.create({
     data: {
-     ...data
-    }
+      ...data,
+    },
+    select: {
+      id: true,
+      first_name: true,
+      last_name: true,
+      full_name: true,
+      email: true,
+      created_at: true,
+      username: true,
+      position: true,
+      language: true,
+    },
   });
 
   return user;
@@ -40,7 +50,7 @@ const selectUser = async (id: string): Promise<UserWithoutPassword | null> => {
       username: true,
       position: true,
       language: true,
-    }
+    },
   });
 
   return user;
@@ -72,11 +82,21 @@ const selectUsersByEmail = async (email: string): Promise<User | null> => {
   return user;
 };
 
-const selectUsersByUsername = async (username: string): Promise<User | null> => {
+const selectUsersByUsername = async (
+  username: string,
+): Promise<User | null> => {
   const user = await prisma.user.findUnique({
     where: { username },
   });
 
   return user;
 };
-export { User, UserWithoutPassword, createUser, selectUser, selectAllUsers, selectUsersByEmail, selectUsersByUsername };
+export {
+  User,
+  UserWithoutPassword,
+  createUser,
+  selectUser,
+  selectAllUsers,
+  selectUsersByEmail,
+  selectUsersByUsername,
+};

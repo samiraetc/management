@@ -1,71 +1,71 @@
-import { FastifyInstance } from "fastify";
 import {
   createUserController,
   getAllUsers,
   selectUserController,
-} from "@/controllers/user/userController";
+} from '@/controllers/user/userController';
+import { FastifyInstance } from 'fastify';
 
 const userRoutes = async (server: FastifyInstance) => {
   server.post(
-    "/users",
+    '/users',
     {
       schema: {
-        tags: ["Users"],
+        tags: ['Users'],
         body: {
-          type: "object",
+          type: 'object',
           properties: {
-            first_name: { type: "string" },
-            last_name: { type: "string" },
-            email: { type: "string", format: "email" },
-            username: { type: "string" },
-            password: { type: "string", format: "password" },
-            position: { type: "string" },
+            first_name: { type: 'string' },
+            last_name: { type: 'string' },
+            email: { type: 'string', format: 'email' },
+            username: { type: 'string' },
+            password: { type: 'string', format: 'password' },
+            position: { type: 'string' },
           },
           required: [
-            "first_name",
-            "last_name",
-            "email",
-            "username",
-            "password",
+            'first_name',
+            'last_name',
+            'email',
+            'username',
+            'password',
           ],
           examples: [
             {
-              first_name: "Admin",
-              last_name: "Dev",
-              email: "admindev@gmail.com",
-              username: "admindevv",
-              password: "password",
-              position: "Frontend Developer",
+              first_name: 'Admin',
+              last_name: 'Dev',
+              email: 'admindev@gmail.com',
+              username: 'admindevv',
+              password: 'password',
+              position: 'Frontend Developer',
             },
           ],
         },
         response: {
           201: {
-            description: "User created successfully",
-            type: "object",
+            description: 'User created successfully',
+            type: 'object',
             properties: {
               data: {
-                id: { type: "string", format: "uuid" },
-                first_name: { type: "string" },
-                last_name: { type: "string" },
-                email: { type: "string", format: "email" },
-                username: { type: "string" },
-                position: { type: "string" },
-                created_at: { type: "string" },
-                language: { type: ["string", "null"] },
+                id: { type: 'string', format: 'uuid' },
+                first_name: { type: 'string' },
+                last_name: { type: 'string' },
+                email: { type: 'string', format: 'email' },
+                username: { type: 'string' },
+                position: { type: 'string' },
+                created_at: { type: 'string' },
+                language: { type: ['string', 'null'] },
               },
             },
             examples: [
               {
                 data: {
-                  id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                  first_name: "Admin",
-                  last_name: "Dev",
-                  email: "admindev@gmail.com",
-                  username: "admindev",
-                  password: "password",
-                  position: "Frontend Developer",
-                  language: "null",
+                  id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+                  first_name: 'Admin',
+                  last_name: 'Dev',
+                  email: 'admindev@gmail.com',
+                  username: 'admindev',
+                  password: 'password',
+                  position: 'Frontend Developer',
+                  language: 'null',
                 },
               },
             ],
@@ -73,50 +73,50 @@ const userRoutes = async (server: FastifyInstance) => {
         },
       },
     },
-    createUserController
+    createUserController,
   );
 
   server.get(
-    "/users/:userId",
+    '/users/:userId',
     {
       preValidation: [server.authenticate],
       schema: {
-        tags: ["Users"],
+        tags: ['Users'],
         security: [{ bearerAuth: [] }],
         params: {
-          type: "object",
+          type: 'object',
           properties: {
-            userId: { type: "string" },
+            userId: { type: 'string' },
           },
-          required: ["userId"],
+          required: ['userId'],
         },
         response: {
           200: {
-            description: "User retrieved successfully",
-            type: "object",
+            description: 'User retrieved successfully',
+            type: 'object',
             properties: {
               data: {
-                id: { type: "string", format: "uuid" },
-                first_name: { type: "string" },
-                last_name: { type: "string" },
-                email: { type: "string", format: "email" },
-                username: { type: "string" },
-                position: { type: "string" },
-                created_at: { type: "string" },
-                language: { type: ["string", "null"] },
+                id: { type: 'string', format: 'uuid' },
+                first_name: { type: 'string' },
+                last_name: { type: 'string' },
+                email: { type: 'string', format: 'email' },
+                username: { type: 'string' },
+                position: { type: 'string' },
+                created_at: { type: 'string' },
+                language: { type: ['string', 'null'] },
               },
             },
             examples: [
               {
                 data: {
-                  id: "39c293b9-374e-41c7-b0f0-bc6502123b0c",
-                  first_name: "Admin",
-                  last_name: "Dev",
-                  full_name: "Admin Dev",
-                  email: "admindevvv@gmail.com",
-                  created_at: "2024-06-22T23:19:23.464Z",
-                  username: "admindevvvv",
-                  position: "Frontend Developer",
+                  id: '39c293b9-374e-41c7-b0f0-bc6502123b0c',
+                  first_name: 'Admin',
+                  last_name: 'Dev',
+                  full_name: 'Admin Dev',
+                  email: 'admindevvv@gmail.com',
+                  created_at: '2024-06-22T23:19:23.464Z',
+                  username: 'admindevvvv',
+                  position: 'Frontend Developer',
                   language: null,
                 },
               },
@@ -125,45 +125,45 @@ const userRoutes = async (server: FastifyInstance) => {
         },
       },
     },
-    selectUserController
+    selectUserController,
   );
 
   server.get(
-    "/users",
+    '/users',
     {
       preValidation: [server.authenticate],
       schema: {
-        tags: ["Users"],
+        tags: ['Users'],
         security: [{ bearerAuth: [] }],
         response: {
           200: {
-            description: "List of users",
-            type: "object",
+            description: 'List of users',
+            type: 'object',
             properties: {
               data: {
-                type: "array",
+                type: 'array',
                 items: {
-                  type: "object",
+                  type: 'object',
                   properties: {
-                    id: { type: "string", format: "uuid" },
-                    first_name: { type: "string" },
-                    last_name: { type: "string" },
-                    email: { type: "string", format: "email" },
-                    username: { type: "string" },
-                    position: { type: "string" },
-                    created_at: { type: "string" },
-                    language: { type: ["string", "null"] },
+                    id: { type: 'string', format: 'uuid' },
+                    first_name: { type: 'string' },
+                    last_name: { type: 'string' },
+                    email: { type: 'string', format: 'email' },
+                    username: { type: 'string' },
+                    position: { type: 'string' },
+                    created_at: { type: 'string' },
+                    language: { type: ['string', 'null'] },
                   },
                 },
                 examples: [
                   {
-                    id: "39c293b9-374e-41c7-b0f0-bc6502123b0c",
-                    first_name: "Admin",
-                    last_name: "Dev",
-                    email: "admindevvv@gmail.com",
-                    created_at: "2024-06-22T23:19:23.464Z",
-                    username: "admindevvvv",
-                    position: "Frontend Developer",
+                    id: '39c293b9-374e-41c7-b0f0-bc6502123b0c',
+                    first_name: 'Admin',
+                    last_name: 'Dev',
+                    email: 'admindevvv@gmail.com',
+                    created_at: '2024-06-22T23:19:23.464Z',
+                    username: 'admindevvvv',
+                    position: 'Frontend Developer',
                     language: null,
                   },
                 ],
@@ -173,7 +173,7 @@ const userRoutes = async (server: FastifyInstance) => {
         },
       },
     },
-    getAllUsers
+    getAllUsers,
   );
 };
 

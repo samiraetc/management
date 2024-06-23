@@ -1,80 +1,79 @@
-import { FastifyInstance } from "fastify";
-
 import {
   addWorkspaceMember,
   removeWorkspaceMember,
-} from "@/controllers/members/membersController";
+} from '@/controllers/members/membersController';
+import { FastifyInstance } from 'fastify';
 
 const workspaceMembersRouters = async (server: FastifyInstance) => {
   server.post(
-    "/workspaces/:id/members",
+    '/workspaces/:id/members',
     {
       preValidation: [server.authenticate],
       schema: {
-        tags: ["Workspace Members"],
+        tags: ['Workspace Members'],
         security: [{ bearerAuth: [] }],
         params: {
-          type: "object",
+          type: 'object',
           properties: {
-            id: { type: "string" },
+            id: { type: 'string' },
           },
-          required: ["id"],
+          required: ['id'],
         },
         body: {
-          type: "object",
+          type: 'object',
           properties: {
             user_ids: {
-              type: "array",
-              items: { type: "string" },
+              type: 'array',
+              items: { type: 'string' },
             },
           },
-          required: ["user_ids"],
+          required: ['user_ids'],
         },
         response: {
           200: {
-            description: "Members added successfully",
-            type: "object",
+            description: 'Members added successfully',
+            type: 'object',
             properties: {
               user_ids: {
-                type: "array",
-                items: { type: "string" },
+                type: 'array',
+                items: { type: 'string' },
               },
             },
           },
         },
       },
     },
-    addWorkspaceMember
+    addWorkspaceMember,
   );
 
   server.delete(
-    "/workspaces/:id/members/:member_id",
+    '/workspaces/:id/members/:member_id',
     {
       preValidation: [server.authenticate],
       schema: {
-        tags: ["Workspace Members"],
+        tags: ['Workspace Members'],
         security: [{ bearerAuth: [] }],
         params: {
-          type: "object",
+          type: 'object',
           properties: {
-            id: { type: "string" },
-            member_id: { type: "string" },
+            id: { type: 'string' },
+            member_id: { type: 'string' },
           },
-          required: ["id", "member_id"],
+          required: ['id', 'member_id'],
         },
         response: {
           200: {
-            description: "Member removed successfully",
-            type: "object",
+            description: 'Member removed successfully',
+            type: 'object',
             properties: {
-              id: { type: "string" },
-              member_id: { type: "string" },
+              id: { type: 'string' },
+              member_id: { type: 'string' },
             },
           },
         },
       },
     },
-    removeWorkspaceMember
+    removeWorkspaceMember,
   );
 };
 
