@@ -1,6 +1,6 @@
 import { findUserByToken } from '@/middleware/auth';
 import { selectAllLabels, selectLabel } from '@/models/labels/labels';
-import { selectUser } from '@/models/user/user';
+import { selectUser } from '@/models/user/userModel';
 import {
   createWorkspace,
   selectAllCustomLabel,
@@ -18,12 +18,17 @@ const createWorkspaceController = async (
 ) => {
   try {
     const user = await findUserByToken(request, reply);
+
+    if(!user) {
+      reply.code(400).send({message: "User not found"});
+      return
+    }
     const parsedBody = workspaceSchema.parse(request.body);
 
     const body = {
       name: parsedBody.name,
       url_key: parsedBody.url_key,
-      creator: user?.id,
+      creator: user.id,
       labels: await selectAllLabels(),
       permission: MemberPermission.MEMBER,
     };

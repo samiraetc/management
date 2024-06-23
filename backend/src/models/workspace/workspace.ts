@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-
 import { Label } from '../labels/labels';
 import { User } from '../user/userModel';
 
@@ -14,7 +13,7 @@ interface Workspace {
   permission: string;
 }
 
-const createWorkspace = async (data: Workspace) => {
+const createWorkspace = async (data: Workspace): Promise<any> => {
   const newWorkspace = await prisma.workspace.create({
     data: {
       name: data.name,
