@@ -6,30 +6,28 @@ import {
 import { prioritySchema } from '@/schemas/priority/prioritySchema';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-const AllLabelController = async (_: FastifyRequest, reply: FastifyReply) => {
+const AllPriorityController = async (_: FastifyRequest, reply: FastifyReply) => {
   try {
-    const labels = await selectAllPriorities();
-    reply.code(200).send({ data: labels });
+    reply.code(200).send({ data: await selectAllPriorities() });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to fetch priorities' });
   }
 };
 
-const getLabelController = async (
+const getPriorityController = async (
   request: FastifyRequest,
   reply: FastifyReply,
 ) => {
   const { id } = request.params as { id: string };
 
   try {
-    const label = await selectPriority(id);
-    reply.code(200).send({ data: label });
+    reply.code(200).send({ data:  await selectPriority(id) });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to fetch priority' });
   }
 };
 
-const createLabelController = async (
+const createPriorityController = async (
   request: FastifyRequest,
   reply: FastifyReply,
 ) => {
@@ -38,11 +36,9 @@ const createLabelController = async (
 
     const body = {
       name: parsedBody.name,
-      value: parsedBody.value,
+      value: parseInt(parsedBody.value)
     };
-
-    const label = await createPriority(body);
-    reply.code(201).send({ data: label });
+    reply.code(201).send({ data: await createPriority(body) });
   } catch (error) {
     reply
       .code(400)
@@ -50,4 +46,4 @@ const createLabelController = async (
   }
 };
 
-export { AllLabelController, createLabelController, getLabelController };
+export { AllPriorityController, createPriorityController, getPriorityController };

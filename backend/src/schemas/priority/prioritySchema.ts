@@ -1,9 +1,8 @@
 import { z } from "zod";
 
 const prioritySchema = z.object({
-  id: z.string(),
   name: z.string().min(1, "Name is required"),
-  value: z.number()
+  value: z.string()
 });
 
 export { prioritySchema };
