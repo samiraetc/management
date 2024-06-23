@@ -3,6 +3,10 @@ import { WorkspaceMembers, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 
+interface WorkspaceMembersIdentify {
+  user_id: string
+  workspace_id: string
+}
 
 const addWorkspaceMembers = async (
   members: WorkspaceMembers[]
@@ -13,6 +17,7 @@ return await prisma.$transaction(
         data: {
           workspace_id: member.workspace_id,
           user_id: member.user_id,
+          permission: member.permission
         },
       })
     )
@@ -21,7 +26,7 @@ return await prisma.$transaction(
 };
 
 const selectWorkspaceMember = async (
-  data: WorkspaceMembers
+  data: WorkspaceMembersIdentify
 ): Promise<WorkspaceMembers | null> => {
   return await prisma.workspaceMembers.findUnique({
     where: {
@@ -34,7 +39,7 @@ const selectWorkspaceMember = async (
 };
 
 const deleteWorkspaceMember = async (
-  data: WorkspaceMembers
+  data: WorkspaceMembersIdentify
 ): Promise<WorkspaceMembers | null> => {
   return await prisma.workspaceMembers.delete({
     where: {

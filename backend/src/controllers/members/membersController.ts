@@ -6,6 +6,13 @@ import {
 import { workspaceMembersSchema } from "@/schemas/workspace/members/membersSchema";
 import { FastifyReply, FastifyRequest } from "fastify";
 
+
+export const MemberPermission = {
+  MEMBER: 'member',
+  ADMIN: 'admin',
+  MANAGEMENT: 'management'
+}
+
 const addWorkspaceMember = async (
   request: FastifyRequest,
   reply: FastifyReply
@@ -17,12 +24,13 @@ const addWorkspaceMember = async (
     const body = parsedBody.user_ids.map((member: string) => ({
       workspace_id: id,
       user_id: member,
+      permission: MemberPermission.MEMBER
     }));
 
-    const customLabel = await addWorkspaceMembers(body);
-    reply.code(201).send({ data: customLabel });
+    const member = await addWorkspaceMembers(body);
+    reply.code(201).send({ data: member });
   } catch (error) {
-    reply.code(400).send({ error: "Failed to create label", details: error });
+    reply.code(400).send({ error: "Failed to create member", details: error });
   }
 };
 
