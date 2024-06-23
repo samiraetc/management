@@ -74,3 +74,9 @@ model Priority {
   name  String
   value Int @unique
 }
+
+model Estimatives {
+  id    String  @id @default(uuid()) @unique
+  name  String  @unique
+  points String[]
+}
