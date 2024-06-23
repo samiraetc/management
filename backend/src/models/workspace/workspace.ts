@@ -59,6 +59,22 @@ const selectAllCustomLabel = async (id: string) => {
   return customLabels;
 };
 
+const selectCustomLabelByName = async (name: string, workspace_id: string) => {
+  const customLabels = await prisma.workspaceCustomLabels.findFirst({
+    where: {
+      name,
+      workspace_id: workspace_id
+    },
+    select: {
+      id: true,
+      name: true,
+      color: true,
+    },
+  });
+
+  return customLabels;
+};
+
 const selectWorkspaces = async (id: string) => {
   const workspaces = await prisma.workspace.findUnique({
     where: { id: id },
@@ -88,4 +104,5 @@ export {
   selectAllCustomLabel,
   createWorkspace,
   selectWorkspaces,
+  selectCustomLabelByName
 };

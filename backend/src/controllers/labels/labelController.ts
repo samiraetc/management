@@ -2,6 +2,7 @@ import {
   createLabel,
   selectAllLabels,
   selectLabel,
+  selectLabelByName,
 } from "@/models/labels/labels";
 import { labelSchema } from "@/schemas/labels/labelsSchema";
 import { FastifyReply, FastifyRequest } from "fastify";
@@ -35,6 +36,12 @@ const createLabelController = async (
 ) => {
   try {
     const parsedBody = labelSchema.parse(request.body);
+    const labelByName  = await selectLabelByName(parsedBody.name)
+
+    if(labelByName) {
+      reply.code(404).send({ message: "Name already exist" });
+      return 
+    }
 
     const body = {
       name: parsedBody.name,

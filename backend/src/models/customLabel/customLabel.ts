@@ -8,10 +8,6 @@ interface WorkspaceCustomLabel {
   color: string;
 }
 
-interface DeleteWorkspaceCustomLabel {
-  label_id: string
-}
-
 const addWorkspaceCustomLabel = async (
   data: WorkspaceCustomLabel
 ): Promise<WorkspaceCustomLabel> => {
@@ -40,7 +36,8 @@ const editWorkspaceCustomLabel = async (
 };
 
 const selectWorkspaceCustomLabel = async (
-  id: string
+  id: string,
+  workspace_id: string
 ): Promise<WorkspaceCustomLabel | null> => {
   const customLabel = prisma.workspaceCustomLabels.findUnique({
     where: { id },

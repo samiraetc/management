@@ -1,8 +1,9 @@
 import {
   addWorkspaceMembers,
   deleteWorkspaceMember,
+  selectWorkspaceMember,
 } from "@/models/members/members";
-import { workspaceMembersSchema } from "@/schemas/members/membersSchema";
+import { workspaceMembersSchema } from "@/schemas/workspace/members/membersSchema";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 const addWorkspaceMember = async (
@@ -13,7 +14,7 @@ const addWorkspaceMember = async (
     const { id } = request.params as { id: string };
     const parsedBody = workspaceMembersSchema.parse(request.body);
 
-    const body = parsedBody.user_id.map((member: string) => ({
+    const body = parsedBody.user_ids.map((member: string) => ({
       workspace_id: id,
       user_id: member,
     }));
@@ -30,14 +31,22 @@ const removeWorkspaceMember = async (
   reply: FastifyReply
 ) => {
   try {
-    const { id } = request.params as { id: string };
-
-    const parsedBody = workspaceMembersSchema.parse(request.body);
+    const { id, member_id } = request.params as {
+      id: string;
+      member_id: string;
+    };
 
     const body = {
       workspace_id: id,
-      user_id: parsedBody.user_id[0],
+      user_id: member_id,
     };
+
+    const member = await selectWorkspaceMember(body);
+
+    if (!member) {
+      reply.code(404).send({ message: "Member not found" });
+      return;
+    }
 
     const deletedMember = await deleteWorkspaceMember(body);
     reply.code(201).send({ data: deletedMember });

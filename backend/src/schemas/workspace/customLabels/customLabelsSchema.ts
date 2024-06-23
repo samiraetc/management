@@ -5,16 +5,7 @@ const workspaceCustomLabelSchema = z.object({
   color: z.string().min(1, "Color is required"),
 });
 
-const workspaceDeleteCustomLabelSchema = z.object({
-  label_id: z.string(),
-});
-
-const workspaceEditCustomLabelSchema = workspaceCustomLabelSchema.extend({
-  label_id: z.string(),
-});
 
 export {
-  workspaceDeleteCustomLabelSchema,
-  workspaceCustomLabelSchema,
-  workspaceEditCustomLabelSchema,
+  workspaceCustomLabelSchema
 };

@@ -21,6 +21,14 @@ const selectLabel = async (id: string): Promise<Label | null> => {
   return label;
 };
 
+const selectLabelByName = async (name: string): Promise<Label | null> => {
+  const label = await prisma.label.findUnique({
+    where: { name },
+  });
+
+  return label;
+};
+
 const createLabel = async ({ name, color }: Label): Promise<Label> => {
   const label = await prisma.label.create({
     data: {
@@ -31,4 +39,4 @@ const createLabel = async ({ name, color }: Label): Promise<Label> => {
   return label;
 };
 
-export { Label, selectAllLabels, createLabel, selectLabel };
+export { Label, selectAllLabels, createLabel, selectLabel,selectLabelByName };

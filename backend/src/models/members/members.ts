@@ -2,6 +2,8 @@ import { WorkspaceMembers, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+
+
 const addWorkspaceMembers = async (
   members: WorkspaceMembers[]
 ): Promise<WorkspaceMembers[]> => {
@@ -18,8 +20,21 @@ return await prisma.$transaction(
 
 };
 
+const selectWorkspaceMember = async (
+  data: WorkspaceMembers
+): Promise<WorkspaceMembers | null> => {
+  return await prisma.workspaceMembers.findUnique({
+    where: {
+      user_id_workspace_id: {
+        user_id: data.user_id,
+        workspace_id: data.workspace_id,
+      },
+    }
+  });
+};
+
 const deleteWorkspaceMember = async (
-  data: any
+  data: WorkspaceMembers
 ): Promise<WorkspaceMembers | null> => {
   return await prisma.workspaceMembers.delete({
     where: {
@@ -31,4 +46,4 @@ const deleteWorkspaceMember = async (
   });
 };
 
-export { addWorkspaceMembers, deleteWorkspaceMember };
+export { addWorkspaceMembers, deleteWorkspaceMember, selectWorkspaceMember };

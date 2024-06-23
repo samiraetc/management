@@ -30,6 +30,7 @@ const createUserController = async (
     const user = await createUser(body);
 
     const { password, ...userWithoutPassword } = user;
+
     reply.code(201).send({ data: userWithoutPassword });
   } catch (error) {
     reply.code(400).send(error);
@@ -51,6 +52,7 @@ const selectUserController = async (
     }
 
     reply.code(200).send({ data: user });
+    
   } catch (error) {
     reply.code(400).send({ error });
   }
