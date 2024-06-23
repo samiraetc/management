@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+
 import { Label } from '../labels/labels';
 import { User } from '../user/userModel';
 
@@ -13,6 +14,7 @@ interface Workspace {
   permission: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createWorkspace = async (data: Workspace): Promise<any> => {
   const newWorkspace = await prisma.workspace.create({
     data: {

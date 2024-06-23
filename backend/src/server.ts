@@ -77,8 +77,7 @@ server.register(routes, { prefix: '/api' });
 
 server.get('/api', async (_, reply) => {
   try {
-    const res = await pool.query('SELECT NOW()');
-    reply.send({ hello: 'world', time: res.rows[0].now });
+    reply.send({ hello: 'world' });
   } catch (err) {
     server.log.error(err);
     reply.status(500).send('Database error');
