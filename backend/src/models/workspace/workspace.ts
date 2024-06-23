@@ -7,6 +7,7 @@ import {
 } from "@prisma/client";
 import { Label } from "../labels/labels";
 import { User } from "../user/user";
+import { MemberPermission } from "@/controllers/members/membersController";
 
 const prisma = new PrismaClient();
 
@@ -16,6 +17,7 @@ interface Workspace {
   url_key: string;
   labels: Label[];
   members?: User[];
+  permission: string
 }
 
 const createWorkspace = async (data: Workspace): Promise<any> => {
@@ -34,6 +36,7 @@ const createWorkspace = async (data: Workspace): Promise<any> => {
       members: {
         create: {
           user: { connect: { id: data.creator } },
+          permission: data.permission
         },
       },
     },

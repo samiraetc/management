@@ -9,6 +9,7 @@ import {
 } from "@/models/workspace/workspace";
 import { Label, selectAllLabels, selectLabel } from "@/models/labels/labels";
 import { selectUser } from "@/models/user/user";
+import { MemberPermission } from "../members/membersController";
 
 const createWorkspaceController = async (
   request: FastifyRequest,
@@ -23,6 +24,7 @@ const createWorkspaceController = async (
       url_key: parsedBody.url_key,
       creator: user?.id,
       labels: await selectAllLabels(),
+      permission: MemberPermission.MEMBER
     };
 
     const workspace = await createWorkspace(body);
@@ -72,7 +74,8 @@ const getAllWorkspaces = async (_: FastifyRequest, reply: FastifyReply) => {
 
         const members = await Promise.all(
           workspace.members.map(async (member) => {
-            return await selectUser(member.user_id);
+            const selectedMember = await selectUser(member.user_id)
+            return await {...selectedMember, permission: member.permission};
           })
         );
 
@@ -118,7 +121,8 @@ const getWorkspace = async (request: FastifyRequest, reply: FastifyReply) => {
 
         const members = await Promise.all(
           workspace.members.map(async (member) => {
-            return await selectUser(member.user_id);
+            const selectedMember = await selectUser(member.user_id)
+            return await {...selectedMember, permission: member.permission};
           })
         );
 

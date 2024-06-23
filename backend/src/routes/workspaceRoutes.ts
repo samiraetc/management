@@ -4,14 +4,6 @@ import {
   getAllWorkspaces,
   getWorkspace,
 } from "@/controllers/workspace/workspaceController";
-import {
-  createWorkspaceCustomLabel,
-  patchWorkspaceCustomLabel,
-} from "@/controllers/customLabels/customLabelController";
-import {
-  addWorkspaceMember,
-  removeWorkspaceMember,
-} from "@/controllers/members/membersController";
 
 const workspaceRouters = async (server: FastifyInstance) => {
   server.post(
@@ -72,6 +64,7 @@ const workspaceRouters = async (server: FastifyInstance) => {
                       username: { type: "string" },
                       position: { type: "string" },
                       language: { type: ["string", "null"] },
+                      permission: { type: "string"}
                     },
                   },
                 },
@@ -146,6 +139,7 @@ const workspaceRouters = async (server: FastifyInstance) => {
                           username: { type: "string" },
                           position: { type: "string" },
                           language: { type: ["string", "null"] },
+                          permission: { type: "string"}
                         },
                       },
                     },
@@ -217,6 +211,7 @@ const workspaceRouters = async (server: FastifyInstance) => {
                       username: { type: "string" },
                       position: { type: "string" },
                       language: { type: ["string", "null"] },
+                      permission: { type: "string"}
                     },
                   },
                 },

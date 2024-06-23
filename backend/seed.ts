@@ -31,7 +31,10 @@ async function main() {
 
   for (const priority of priorities) {
     await prisma.priority.create({
-      data: {...priority}
+      data: {
+        name: priority.name,
+        value: priority.value
+      }
     });
   }
 
@@ -93,6 +96,7 @@ async function main() {
     members: {
       create: {
         user: { connect: { id: adminUser.id } },
+        permission: 'admin'
       },
     },
     labels: {
@@ -103,7 +107,6 @@ async function main() {
   };
 
   try {
-    // Crie um novo workspace e associe as labels
     const newWorkspace = await prisma.workspace.create({
       data: workspaceData,
     });
