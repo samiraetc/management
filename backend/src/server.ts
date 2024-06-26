@@ -1,4 +1,3 @@
-import pool from '@/database';
 import fastifyJwt from '@fastify/jwt';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
@@ -47,8 +46,9 @@ server.register(fastifySwagger, {
 server.register(fastifySwaggerUi, {
   routePrefix: '/documentation',
   uiConfig: {
-    docExpansion: 'full',
+    docExpansion: 'list',
     deepLinking: false,
+    displayRequestDuration: true
   },
   staticCSP: true,
   transformStaticCSP: (header) => header,

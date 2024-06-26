@@ -1,14 +1,14 @@
 
-import { createWorkspaceLabel, patchWorkspaceLabel, removeWorkspaceLabel } from '@/controllers/workspace/workspaceLabel/WorkspaceLabelController';
+import { createTeamLabel, patchTeamLabel, removeTeamLabel } from '@/controllers/team/TeamLabels/TeamLabelsController';
 import { FastifyInstance } from 'fastify';
 
-const workspaceLabelsRouters = async (server: FastifyInstance) => {
+const TeamLabelsRoutes = async (server: FastifyInstance) => {
   server.post(
-    '/workspaces/:id/labels',
+    '/teams/:id/labels',
     {
       preValidation: [server.authenticate],
       schema: {
-        tags: ['Workspace Labels'],
+        tags: ['Teams Labels'],
         security: [{ bearerAuth: [] }],
         body: {
           type: 'object',
@@ -56,15 +56,15 @@ const workspaceLabelsRouters = async (server: FastifyInstance) => {
         },
       },
     },
-    createWorkspaceLabel,
+    createTeamLabel,
   );
 
   server.patch(
-    '/workspaces/:id/labels/:label_id',
+    '/teams/:id/labels/:label_id',
     {
       preValidation: [server.authenticate],
       schema: {
-        tags: ['Workspace Labels'],
+        tags: ['Teams Labels'],
         security: [{ bearerAuth: [] }],
         params: {
           type: 'object',
@@ -95,15 +95,15 @@ const workspaceLabelsRouters = async (server: FastifyInstance) => {
         },
       },
     },
-    patchWorkspaceLabel,
+    patchTeamLabel,
   );
 
   server.delete(
-    '/workspaces/:id/labels/:label_id',
+    '/teams/:id/labels/:label_id',
     {
       preValidation: [server.authenticate],
       schema: {
-        tags: ['Workspace Labels'],
+        tags: ['Teams Labels'],
         security: [{ bearerAuth: [] }],
         params: {
           type: 'object',
@@ -125,8 +125,8 @@ const workspaceLabelsRouters = async (server: FastifyInstance) => {
         },
       },
     },
-    removeWorkspaceLabel,
+    removeTeamLabel,
   );
 };
 
-export default workspaceLabelsRouters;
+export default TeamLabelsRoutes;

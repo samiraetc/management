@@ -1,83 +1,26 @@
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
+import { PrismaClient } from '@prisma/client';
+
+import { selectAllWorkspaceLabel } from './src/models/workspace/WorkspaceLabel/WorkspaceLabelModel';
+import {
+  createLabel,
+  createPriorities,
+  createEstimatives,
+  createUser,
+} from './src/seeds';
 
 const prisma = new PrismaClient();
 
 async function main() {
   // Seed data for labels
-  const labels = [
-    { name: "bug", color: "#eb5757" },
-    { name: "feature", color: "#BB87FC" },
-    { name: "improvement", color: "#4EA7FC" },
-    { name: "canceled", color: "#4EA7FC" },
-  ];
-
-  for (const label of labels) {
-    await prisma.label.upsert({
-      where: { name: label.name },
-      update: {},
-      create: label,
-    });
-  }
-
+  await createLabel();
   // Seed data for labels
-  const priorities = [
-    { name: "no_priority", value: 0 },
-    { name: "urgent", value: 1 },
-    { name: "high", value: 2 },
-    { name: "medium", value: 3 },
-    { name: "low", value: 4 },
-  ];
+  await createPriorities();
 
-  for (const priority of priorities) {
-    await prisma.priority.create({
-      data: {
-        name: priority.name,
-        value: priority.value
-      }
-    });
-  }
-
-   // Seed data for estimatives
-   const estimatives = [
-    { name: "exponential", points: ['1', '2', '4', '8', '16'] },
-    { name: "fibonacci", points: ['1','2','3','5','8'] },
-    { name: "linear", points: ['1','2','3','4','5'] },
-    { name: "t-shirt", points: ['XS', 'S', 'M', 'L', 'XL'] },
-  ];
-
-  for (const estimative of estimatives) {
-    await prisma.estimatives.upsert({
-      where: { name: estimative.name },
-      update: {},
-      create: estimative,
-    });
-  }
-
-  console.log(estimatives)
+  // Seed data for estimatives
+  await createEstimatives();
 
   // Seed data for users
-  const users = [
-    {
-      first_name: "Admin",
-      last_name: "Dev",
-      full_name: "Admin Dev",
-      email: "admin@example.com",
-      password: await bcrypt.hash("password", 10),
-      created_at: new Date(),
-      username: "admindev",
-      position: "Developer",
-      language: null,
-    },
-  ];
-
-  for (const user of users) {
-    await prisma.user.upsert({
-      where: { email: user.email },
-      update: {},
-      create: user,
-    });
-  }
+  await createUser();
 
   // Pegue todas as labels existentes
   const existingLabels = await prisma.label.findMany();
@@ -85,7 +28,7 @@ async function main() {
   // Pegar o admin
   const adminUser = await prisma.user.findUnique({
     where: {
-      email: "admin@example.com",
+      email: 'admin@example.com',
     },
     select: {
       id: true,
@@ -101,25 +44,28 @@ async function main() {
 
   // Verifica se o adminUser foi encontrado
   if (!adminUser) {
-    throw new Error("Admin user not found");
+    throw new Error('Admin user not found');
   }
 
   // Dados do workspace
   const workspaceData = {
-    name: "Meu Novo Workspace",
+    name: 'Meu Novo Workspace',
     creator: {
       connect: { id: adminUser.id },
     },
-    url_key: "meu-novo-workspace",
+    url_key: 'meu-novo-workspace',
     members: {
       create: {
         user: { connect: { id: adminUser.id } },
-        permission: 'admin'
+        permission: 'admin',
       },
     },
     labels: {
       create: existingLabels.map((label) => ({
-        label: { connect: { id: label.id } },
+        id: label.id,
+        name: label.name,
+        color: label.color,
+        can_edit: false,
       })),
     },
   };
@@ -129,15 +75,47 @@ async function main() {
       data: workspaceData,
     });
 
-    console.log("Novo Workspace criado:", newWorkspace);
+    console.log('Novo Workspace criado:', newWorkspace);
+
+    const WorkspaceLabels = await selectAllWorkspaceLabel(newWorkspace.id);
+
+    const team = {
+      name: 'My Team',
+      identifier: 'MYT',
+      creator: {
+        connect: { id: adminUser.id },
+      },
+      workspace_id: newWorkspace.id,
+      members: {
+        create: {
+          user: { connect: { id: adminUser.id } },
+          permission: 'admin',
+        },
+      },
+      labels: {
+        create: WorkspaceLabels.map((label) => ({
+          id: label.id,
+          name: label.name,
+          color: label.color,
+          can_edit: false,
+        })),
+      },
+      estimates_type: null,
+    };
+
+    const newTeam = await prisma.team.create({
+      data: team,
+    });
+
+    console.log(newTeam);
   } catch (error) {
-    console.error("Erro ao criar o workspace:", error);
+    console.error('Erro ao criar o workspace:', error);
   }
 }
 
 main()
   .then(() => {
-    console.log("Seed data inserted");
+    console.log('Seed data inserted');
   })
   .catch((e) => {
     console.error(e);

@@ -1,14 +1,15 @@
 
-import { addWorkspaceMember, removeWorkspaceMember } from '@/controllers/workspace/workspaceMembers/WorkspaceMembersController';
+import { removeTeamMember, addTeamMember } from '@/controllers/team/TeamMembers/TeamsMembersController';
+import { addTeamsMembers } from '@/models/teams/TeamsMembers/TeamsMembersModel';
 import { FastifyInstance } from 'fastify';
 
-const workspaceMembersRouters = async (server: FastifyInstance) => {
+const TeamMembersRoutes = async (server: FastifyInstance) => {
   server.post(
-    '/workspaces/:id/members',
+    '/teams/:id/members',
     {
       preValidation: [server.authenticate],
       schema: {
-        tags: ['Workspace Members'],
+        tags: ['Teams Members'],
         security: [{ bearerAuth: [] }],
         params: {
           type: 'object',
@@ -41,15 +42,15 @@ const workspaceMembersRouters = async (server: FastifyInstance) => {
         },
       },
     },
-    addWorkspaceMember,
+    addTeamMember,
   );
 
   server.delete(
-    '/workspaces/:id/members/:member_id',
+    '/teams/:id/members/:member_id',
     {
       preValidation: [server.authenticate],
       schema: {
-        tags: ['Workspace Members'],
+        tags: ['Teams Members'],
         security: [{ bearerAuth: [] }],
         params: {
           type: 'object',
@@ -71,8 +72,8 @@ const workspaceMembersRouters = async (server: FastifyInstance) => {
         },
       },
     },
-    removeWorkspaceMember,
+    removeTeamMember,
   );
 };
 
-export default workspaceMembersRouters;
+export default TeamMembersRoutes;

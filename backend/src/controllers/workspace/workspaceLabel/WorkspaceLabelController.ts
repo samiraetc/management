@@ -1,25 +1,15 @@
-import {
-  addWorkspaceCustomLabel,
-  deleteWorkspaceCustomLabel,
-  editWorkspaceCustomLabel,
-  selectWorkspaceCustomLabel,
-} from "@/models/customLabel/customLabel";
-import {
-  selectCustomLabelByName,
-  selectWorkspaces,
-} from "@/models/workspace/workspace";
-import {
-  workspaceCustomLabelSchema,
-} from "@/schemas/workspace/customLabels/customLabelsSchema";
+import { addWorkspaceLabel, deleteWorkspaceLabel, editWorkspaceLabel, selectWorkspaceLabel, selectWorkspaceLabelByName } from "@/models/workspace/WorkspaceLabel/WorkspaceLabelModel";
+import { selectWorkspaces } from "@/models/workspace/WorkspaceModel";
+import { workspaceLabelSchema } from "@/schemas/workspace/workspaceLabel/workspaceLabelSchema";
 import { FastifyReply, FastifyRequest } from "fastify";
 
-const createWorkspaceCustomLabel = async (
+const createWorkspaceLabel = async (
   request: FastifyRequest,
   reply: FastifyReply
 ) => {
   try {
     const { id: workspace_id } = request.params as { id: string };
-    const parsedBody = workspaceCustomLabelSchema.parse(request.body);
+    const parsedBody = workspaceLabelSchema.parse(request.body);
 
     const workspace = await selectWorkspaces(workspace_id);
 
@@ -28,7 +18,7 @@ const createWorkspaceCustomLabel = async (
       return;
     }
 
-    const labelByName = await selectCustomLabelByName(parsedBody.name, workspace_id);
+    const labelByName = await selectWorkspaceLabelByName(parsedBody.name, workspace_id);
 
     if (labelByName) {
       reply.code(404).send({ message: "Name already exist" });
@@ -39,16 +29,17 @@ const createWorkspaceCustomLabel = async (
       workspace_id,
       name: parsedBody.name,
       color: parsedBody.color,
+      can_edit: true
     };
 
-    const customLabel = await addWorkspaceCustomLabel(body);
-    reply.code(201).send({ data: customLabel });
+    const Label = await addWorkspaceLabel(body);
+    reply.code(201).send({ data: Label });
   } catch (error) {
     reply.code(400).send({ error: "Failed to create label", details: error });
   }
 };
 
-const patchWorkspaceCustomLabel = async (
+const patchWorkspaceLabel = async (
   request: FastifyRequest,
   reply: FastifyReply
 ) => {
@@ -62,31 +53,31 @@ const patchWorkspaceCustomLabel = async (
       return;
     }
 
-    const customLabel = await selectWorkspaceCustomLabel(label_id, workspace_id);
+    const label = await selectWorkspaceLabel(label_id, workspace_id);
 
-    console.log(customLabel)
 
-    if (!customLabel) {
+    if (!label) {
       reply.code(404).send({ message: "Label not found" });
       return;
     }
 
-    const parsedBody = workspaceCustomLabelSchema.parse(request.body);
+    const parsedBody = workspaceLabelSchema.parse(request.body);
 
     const body = {
       workspace_id,
       name: parsedBody.name,
       color: parsedBody.color,
+      can_edit: label.can_edit
     };
 
-    const editedLabel = await editWorkspaceCustomLabel(body, label_id);
+    const editedLabel = await editWorkspaceLabel(body, label_id);
     reply.code(201).send({ data: editedLabel });
   } catch (error) {
     reply.code(400).send({ error: "Failed to edit label", details: error });
   }
 };
 
-const removeWorkspaceCustomLabel = async (
+const removeWorkspaceLabel = async (
   request: FastifyRequest,
   reply: FastifyReply
 ) => {
@@ -99,13 +90,13 @@ const removeWorkspaceCustomLabel = async (
       return;
     }
 
-    const customLabel = await selectWorkspaceCustomLabel(label_id, workspace_id);
-    if (!customLabel) {
+    const Label = await selectWorkspaceLabel(label_id, workspace_id);
+    if (!Label) {
       reply.code(404).send({ message: "Label not found" });
       return;
     }
 
-    const deleteLabel = await deleteWorkspaceCustomLabel(label_id);
+    const deleteLabel = await deleteWorkspaceLabel(label_id);
     reply.code(201).send({ data: deleteLabel });
   } catch (error) {
     reply.code(400).send({ error: "Failed to delete label", details: error });
@@ -113,7 +104,7 @@ const removeWorkspaceCustomLabel = async (
 };
 
 export {
-  createWorkspaceCustomLabel,
-  patchWorkspaceCustomLabel,
-  removeWorkspaceCustomLabel,
+  createWorkspaceLabel,
+  patchWorkspaceLabel,
+  removeWorkspaceLabel,
 };

@@ -1,16 +1,13 @@
 import { findUserByToken } from '@/middleware/auth';
-import { selectAllLabels, selectLabel } from '@/models/labels/labels';
+import { selectAllLabels, selectLabel } from '@/models/labels/LabelsModel';
 import { selectUser } from '@/models/user/userModel';
-import {
-  createWorkspace,
-  selectAllCustomLabel,
-  selectAllWorkspaces,
-  selectWorkspaces,
-} from '@/models/workspace/workspace';
+import { selectAllWorkspaceLabel } from '@/models/workspace/WorkspaceLabel/WorkspaceLabelModel';
+import { createWorkspace, selectAllWorkspaces, selectWorkspaces } from '@/models/workspace/WorkspaceModel';
 import { workspaceSchema } from '@/schemas/workspace/workspaceSchema/workspaceSchema';
+import { MemberPermission } from '@/utils/MemberPermission';
 import { FastifyRequest, FastifyReply } from 'fastify';
 
-import { MemberPermission } from '../members/membersController';
+
 
 const createWorkspaceController = async (
   request: FastifyRequest,
@@ -30,12 +27,12 @@ const createWorkspaceController = async (
       url_key: parsedBody.url_key,
       creator: user.id,
       labels: await selectAllLabels(),
-      permission: MemberPermission.MEMBER,
+      permission: MemberPermission.ADMIN,
     };
 
     const workspace = await createWorkspace(body);
     const creator = await selectUser(workspace.creator_id);
-    const customLabels = await selectAllCustomLabel(workspace.id);
+    const customLabels = await selectAllWorkspaceLabel(workspace.id);
 
     const labels = await Promise.all(
       workspace.labels.map(async (label: { label_id: string }) => {
@@ -70,13 +67,7 @@ const getAllWorkspaces = async (_: FastifyRequest, reply: FastifyReply) => {
       workspaces.map(async (workspace) => {
         const creator = await selectUser(workspace.creator_id);
 
-        const customLabels = await selectAllCustomLabel(workspace.id);
-
-        const labels = await Promise.all(
-          workspace.labels.map(async (label) => {
-            return await selectLabel(label.label_id);
-          }),
-        );
+        const labels = await selectAllWorkspaceLabel(workspace.id);
 
         const members = await Promise.all(
           workspace.members.map(async (member) => {
@@ -87,7 +78,7 @@ const getAllWorkspaces = async (_: FastifyRequest, reply: FastifyReply) => {
 
         return {
           ...workspace,
-          labels: [...labels, ...customLabels],
+          labels,
           creator,
           members,
         };
@@ -115,13 +106,9 @@ const getWorkspace = async (request: FastifyRequest, reply: FastifyReply) => {
 
     const creator = await selectUser(workspace.creator_id);
 
-    const customLabels = await selectAllCustomLabel(workspace.id);
+    const labels = await selectAllWorkspaceLabel(workspace.id);
 
-    const labels = await Promise.all(
-      workspace.labels.map(async (label) => {
-        return await selectLabel(label.label_id);
-      }),
-    );
+
 
     const members = await Promise.all(
       workspace.members.map(async (member) => {
@@ -133,7 +120,7 @@ const getWorkspace = async (request: FastifyRequest, reply: FastifyReply) => {
     reply.code(200).send({
       data: {
         ...workspace,
-        labels: [...labels, ...customLabels],
+        labels,
         creator,
         members,
       },

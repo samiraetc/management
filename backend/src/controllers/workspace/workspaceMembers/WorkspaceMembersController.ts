@@ -1,17 +1,10 @@
-import {
-  addWorkspaceMembers,
-  deleteWorkspaceMember,
-  selectWorkspaceMember,
-} from "@/models/members/members";
+
+import { addWorkspaceMembers, deleteWorkspaceMember, selectWorkspaceMember } from "@/models/workspace/WorkspaceMembers/WorkspaceMembersModel";
 import { workspaceMembersSchema } from "@/schemas/workspace/members/membersSchema";
+import { MemberPermission } from "@/utils/MemberPermission";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 
-export const MemberPermission = {
-  MEMBER: 'member',
-  ADMIN: 'admin',
-  MANAGEMENT: 'management'
-}
 
 const addWorkspaceMember = async (
   request: FastifyRequest,

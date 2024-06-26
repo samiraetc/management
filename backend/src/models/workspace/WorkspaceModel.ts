@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import { Label } from '../labels/labels';
+import { Label } from '../labels/LabelsModel';
 import { User } from '../user/userModel';
 
 const prisma = new PrismaClient();
@@ -25,7 +25,10 @@ const createWorkspace = async (data: Workspace): Promise<any> => {
       url_key: data.url_key,
       labels: {
         create: data.labels.map((label) => ({
-          label: { connect: { id: label.id } },
+          id: label.id,
+          name: label.name,
+          color: label.color,
+          can_edit: false,
         })),
       },
       members: {
@@ -42,36 +45,6 @@ const createWorkspace = async (data: Workspace): Promise<any> => {
   return workspace;
 };
 
-const selectAllCustomLabel = async (id: string) => {
-  const customLabels = await prisma.workspaceCustomLabels.findMany({
-    where: {
-      workspace_id: id,
-    },
-    select: {
-      id: true,
-      name: true,
-      color: true,
-    },
-  });
-
-  return customLabels;
-};
-
-const selectCustomLabelByName = async (name: string, workspace_id: string) => {
-  const customLabels = await prisma.workspaceCustomLabels.findFirst({
-    where: {
-      name,
-      workspace_id: workspace_id,
-    },
-    select: {
-      id: true,
-      name: true,
-      color: true,
-    },
-  });
-
-  return customLabels;
-};
 
 const selectWorkspaces = async (id: string) => {
   const workspaces = await prisma.workspace.findUnique({
@@ -99,8 +72,6 @@ const selectAllWorkspaces = async () => {
 export {
   Workspace,
   selectAllWorkspaces,
-  selectAllCustomLabel,
   createWorkspace,
   selectWorkspaces,
-  selectCustomLabelByName,
 };

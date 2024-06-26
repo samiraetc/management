@@ -28,7 +28,6 @@ model Label {
   id                String              @id @default(uuid())
   name              String              @unique
   color             String
-  workspaces        WorkspaceLabels[]   @relation("LabelWorkspaces")
 }
 
 model Workspace {
@@ -41,7 +40,6 @@ model Workspace {
   url_key           String              @unique
   members           WorkspaceMembers[]
   labels            WorkspaceLabels[]
-  custom_labels     WorkspaceCustomLabels[]
   teams             WorkspaceTeams[]
 }
 
@@ -55,15 +53,6 @@ model WorkspaceMembers {
   @@id([user_id, workspace_id])
 }
 
-model WorkspaceLabels {
-  label_id          String
-  workspace_id      String
-  label             Label               @relation("LabelWorkspaces", fields: [label_id], references: [id])
-  workspace         Workspace           @relation(fields: [workspace_id], references: [id])
-
-  @@id([label_id, workspace_id])
-}
-
 model WorkspaceTeams {
   team_id           String
   workspace_id      String
@@ -73,13 +62,13 @@ model WorkspaceTeams {
   @@id([team_id, workspace_id])
 }
 
-model WorkspaceCustomLabels {
+model WorkspaceLabels {
   id                String              @id @default(uuid()) @unique
   workspace_id      String
   name              String
   color             String
   workspace         Workspace           @relation(fields: [workspace_id], references: [id])
-  teams             TeamLabels[]        @relation("TeamLabels")
+  can_edit          Boolean
 
   @@unique([workspace_id, name])
 }
@@ -103,13 +92,11 @@ model Team {
   creator_id        String
   creator           User                @relation("TeamCreator", fields: [creator_id], references: [id])
   identifier        String
-  estimates_type    String
+  estimates_type    String?
   workspace_id      String
-  members_count     Int
   workspace         WorkspaceTeams[]    @relation("WorkspaceTeams")
   members           TeamMembers[]
   labels            TeamLabels[]
-  custom_labels     TeamCustomLabels[]
 
   @@unique([workspace_id, name])
 }
@@ -125,20 +112,12 @@ model TeamMembers {
 }
 
 model TeamLabels {
-  team_id           String
-  label_id          String
-  label             WorkspaceCustomLabels @relation("TeamLabels", fields: [label_id], references: [id])
-  team              Team                @relation(fields: [team_id], references: [id])
-
-  @@id([team_id, label_id])
-}
-
-model TeamCustomLabels {
   id                String              @id @default(uuid()) @unique
   name              String
   color             String
   team_id           String
   team              Team                @relation(fields: [team_id], references: [id])
+  can_edit          Boolean
 
   @@unique([team_id, name])
 }

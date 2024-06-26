@@ -2,7 +2,7 @@ import {
   createWorkspaceController,
   getAllWorkspaces,
   getWorkspace,
-} from '@/controllers/workspace/workspaceController';
+} from '@/controllers/workspace/WorkspaceController';
 import { FastifyInstance } from 'fastify';
 
 const workspaceRouters = async (server: FastifyInstance) => {
@@ -47,6 +47,7 @@ const workspaceRouters = async (server: FastifyInstance) => {
                       id: { type: 'string' },
                       name: { type: 'string' },
                       color: { type: 'string' },
+                      can_edit: {type: 'boolean'}
                     },
                   },
                 },
@@ -122,6 +123,7 @@ const workspaceRouters = async (server: FastifyInstance) => {
                           id: { type: 'string' },
                           name: { type: 'string' },
                           color: { type: 'string' },
+                          can_edit: {type: 'boolean'}
                         },
                       },
                     },
@@ -194,6 +196,7 @@ const workspaceRouters = async (server: FastifyInstance) => {
                       id: { type: 'string' },
                       name: { type: 'string' },
                       color: { type: 'string' },
+                      can_edit: {type: 'boolean'}
                     },
                   },
                 },
