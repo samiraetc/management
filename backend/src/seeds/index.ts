@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
-
 export const createLabel = async () => {
   const labels = [
     { name: 'bug', color: '#eb5757' },
@@ -18,8 +17,7 @@ export const createLabel = async () => {
       create: label,
     });
   }
-}
-
+};
 
 export const createPriorities = async () => {
   const priorities = [
@@ -38,7 +36,7 @@ export const createPriorities = async () => {
       },
     });
   }
-}
+};
 
 export const createEstimatives = async () => {
   const estimatives = [
@@ -55,8 +53,7 @@ export const createEstimatives = async () => {
       create: estimative,
     });
   }
-}
-
+};
 
 export const createUser = async () => {
   const users = [
@@ -80,4 +77,4 @@ export const createUser = async () => {
       create: user,
     });
   }
-}
+};

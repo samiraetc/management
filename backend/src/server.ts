@@ -48,7 +48,7 @@ server.register(fastifySwaggerUi, {
   uiConfig: {
     docExpansion: 'list',
     deepLinking: false,
-    displayRequestDuration: true
+    displayRequestDuration: true,
   },
   staticCSP: true,
   transformStaticCSP: (header) => header,

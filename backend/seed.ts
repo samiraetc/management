@@ -1,12 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 
-import { selectAllWorkspaceLabel } from './src/models/workspace/WorkspaceLabel/WorkspaceLabelModel';
+import { selectAllWorkspaceLabel } from './src/models/workspace/workspace-label';
 import {
   createLabel,
   createPriorities,
   createEstimatives,
   createUser,
 } from './src/seeds';
+import { MemberPermission } from './src/utils/member-permission';
 
 const prisma = new PrismaClient();
 
@@ -57,7 +58,7 @@ async function main() {
     members: {
       create: {
         user: { connect: { id: adminUser.id } },
-        permission: 'admin',
+        permission: MemberPermission.ADMIN,
       },
     },
     labels: {

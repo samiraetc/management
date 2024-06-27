@@ -18,8 +18,8 @@ model User {
   username          String              @unique
   position          String?
   language          String?
-  workspaces        Workspace[]         @relation("WorkspaceCreator")
-  teams             Team[]              @relation("TeamCreator")
+  workspaces        Workspace[]         @relation("workspace-creator")
+  teams             Team[]              @relation("team-creator")
   member_of         WorkspaceMembers[]
   team_member_of    TeamMembers[]
 }
@@ -36,7 +36,7 @@ model Workspace {
   created_at        DateTime            @default(now())
   updated_at        DateTime            @updatedAt()
   creator_id        String
-  creator           User                @relation("WorkspaceCreator", fields: [creator_id], references: [id])
+  creator           User                @relation("workspace-creator", fields: [creator_id], references: [id])
   url_key           String              @unique
   members           WorkspaceMembers[]
   labels            WorkspaceLabels[]
@@ -56,7 +56,7 @@ model WorkspaceMembers {
 model WorkspaceTeams {
   team_id           String
   workspace_id      String
-  team              Team                @relation("WorkspaceTeams", fields: [team_id], references: [id])
+  team              Team                @relation("workspace-teams", fields: [team_id], references: [id])
   workspace         Workspace           @relation(fields: [workspace_id], references: [id])
 
   @@id([team_id, workspace_id])
@@ -90,11 +90,11 @@ model Team {
   name              String
   created_at        DateTime            @default(now())
   creator_id        String
-  creator           User                @relation("TeamCreator", fields: [creator_id], references: [id])
+  creator           User                @relation("team-creator", fields: [creator_id], references: [id])
   identifier        String
   estimates_type    String?
   workspace_id      String
-  workspace         WorkspaceTeams[]    @relation("WorkspaceTeams")
+  workspace         WorkspaceTeams[]    @relation("workspace-teams")
   members           TeamMembers[]
   labels            TeamLabels[]
 
