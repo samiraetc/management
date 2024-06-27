@@ -1,4 +1,4 @@
-import {describe, expect, beforeAll, afterAll, it} from '@jest/globals';
+import { describe, expect, beforeAll, afterAll, it } from '@jest/globals';
 
 import { server } from '../server';
 
@@ -14,7 +14,7 @@ describe('GET /', () => {
   it('responds with hello world', async () => {
     const response = await server.inject({
       method: 'GET',
-      url: '/api'
+      url: '/api',
     });
 
     expect(response.statusCode).toBe(200);

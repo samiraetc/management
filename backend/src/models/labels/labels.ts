@@ -1,9 +1,9 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 interface Label {
-  id?: string
+  id?: string;
   name: string;
   color: string;
 }
@@ -39,4 +39,4 @@ const createLabel = async ({ name, color }: Label): Promise<Label> => {
   return label;
 };
 
-export { Label, selectAllLabels, createLabel, selectLabel,selectLabelByName };
+export { Label, selectAllLabels, createLabel, selectLabel, selectLabelByName };

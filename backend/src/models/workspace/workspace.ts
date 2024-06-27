@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 
 import { Label } from '../labels/labels';
-import { User } from '../user/userModel';
+import { User } from '../user/user';
 
 const prisma = new PrismaClient();
 
@@ -25,7 +25,10 @@ const createWorkspace = async (data: Workspace): Promise<any> => {
       url_key: data.url_key,
       labels: {
         create: data.labels.map((label) => ({
-          label: { connect: { id: label.id } },
+          id: label.id,
+          name: label.name,
+          color: label.color,
+          can_edit: false,
         })),
       },
       members: {
@@ -40,37 +43,6 @@ const createWorkspace = async (data: Workspace): Promise<any> => {
   const workspace = await selectWorkspaces(newWorkspace.id);
 
   return workspace;
-};
-
-const selectAllCustomLabel = async (id: string) => {
-  const customLabels = await prisma.workspaceCustomLabels.findMany({
-    where: {
-      workspace_id: id,
-    },
-    select: {
-      id: true,
-      name: true,
-      color: true,
-    },
-  });
-
-  return customLabels;
-};
-
-const selectCustomLabelByName = async (name: string, workspace_id: string) => {
-  const customLabels = await prisma.workspaceCustomLabels.findFirst({
-    where: {
-      name,
-      workspace_id: workspace_id,
-    },
-    select: {
-      id: true,
-      name: true,
-      color: true,
-    },
-  });
-
-  return customLabels;
 };
 
 const selectWorkspaces = async (id: string) => {
@@ -96,11 +68,58 @@ const selectAllWorkspaces = async () => {
   return workspaces;
 };
 
+const deleteWorkspaces = async (id: string) => {
+  try {
+    await prisma.$transaction(async (prisma) => {
+      // Deletar os registros de team_labels relacionados aos times que pertencem ao workspace_id
+      await prisma.teamLabels.deleteMany({
+        where: {
+          team: {
+            workspace_id: id,
+          },
+        },
+      });
+
+      // Deletar os registros de team_members relacionados aos times que pertencem ao workspace_id
+      await prisma.teamMembers.deleteMany({
+        where: {
+          team: {
+            workspace_id: id,
+          },
+        },
+      });
+
+      // Deletar os times que pertencem ao workspace_id
+      await prisma.team.deleteMany({
+        where: { workspace_id: id },
+      });
+
+      // Deletar os registros de workspace_labels relacionados ao workspace_id
+      await prisma.workspaceLabels.deleteMany({
+        where: { workspace_id: id },
+      });
+
+      // Deletar os registros de workspace_members relacionados ao workspace_id
+      await prisma.workspaceMembers.deleteMany({
+        where: { workspace_id: id },
+      });
+
+      // Finalmente, deletar o workspace
+      await prisma.workspace.delete({
+        where: { id },
+      });
+    });
+
+    console.log('Workspace and related data deleted successfully');
+  } catch (error) {
+    console.error('Error deleting workspace and related data:', error);
+  }
+};
+
 export {
   Workspace,
   selectAllWorkspaces,
-  selectAllCustomLabel,
   createWorkspace,
   selectWorkspaces,
-  selectCustomLabelByName,
+  deleteWorkspaces,
 };

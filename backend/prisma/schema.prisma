@@ -8,75 +8,116 @@ generator client {
 }
 
 model User {
-  id         String            @id @default(uuid()) @unique
-  first_name String
-  last_name  String
-  full_name  String
-  email      String            @unique
-  password   String
-  created_at DateTime          @default(now())
-  username   String            @unique
-  position   String?
-  language   String?
-  workspaces Workspace[]       @relation("WorkspaceCreator")
-  member_of   WorkspaceMembers[]
+  id                String              @id @default(uuid()) @unique
+  first_name        String
+  last_name         String
+  full_name         String
+  email             String              @unique
+  password          String
+  created_at        DateTime            @default(now())
+  username          String              @unique
+  position          String?
+  language          String?
+  workspaces        Workspace[]         @relation("workspace-creator")
+  teams             Team[]              @relation("team-creator")
+  member_of         WorkspaceMembers[]
+  team_member_of    TeamMembers[]
 }
 
 model Label {
-  id            String             @id @default(uuid())
-  name          String             @unique
-  color         String
-  workspaces    WorkspaceLabels[]  @relation("LabelWorkspaces") // Relação inversa adicionada
+  id                String              @id @default(uuid())
+  name              String              @unique
+  color             String
 }
 
 model Workspace {
-  id         String            @id @default(uuid()) @unique
-  name       String
-  created_at  DateTime          @default(now())
-  updated_at  DateTime          @updatedAt()
-  creator_id  String
-  creator    User              @relation("WorkspaceCreator", fields: [creator_id], references: [id])
-  url_key    String            @unique
-  members    WorkspaceMembers[]
-  labels     WorkspaceLabels[]
-  custom_labels WorkspaceCustomLabels[]
+  id                String              @id @default(uuid()) @unique
+  name              String
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt()
+  creator_id        String
+  creator           User                @relation("workspace-creator", fields: [creator_id], references: [id])
+  url_key           String              @unique
+  members           WorkspaceMembers[]
+  labels            WorkspaceLabels[]
+  teams             WorkspaceTeams[]
 }
 
 model WorkspaceMembers {
-  user_id      String
-  workspace_id String
-  user         User      @relation(fields: [user_id], references: [id])
-  workspace    Workspace @relation(fields: [workspace_id], references: [id])
-  permission   String
+  user_id           String
+  workspace_id      String
+  user              User                @relation(fields: [user_id], references: [id])
+  workspace         Workspace           @relation(fields: [workspace_id], references: [id])
+  permission        String
 
   @@id([user_id, workspace_id])
 }
 
-model WorkspaceLabels {
-  label_id     String
-  workspace_id String
-  label       Label             @relation("LabelWorkspaces", fields: [label_id], references: [id])
-  workspace   Workspace         @relation(fields: [workspace_id], references: [id])
+model WorkspaceTeams {
+  team_id           String
+  workspace_id      String
+  team              Team                @relation("workspace-teams", fields: [team_id], references: [id])
+  workspace         Workspace           @relation(fields: [workspace_id], references: [id])
 
-  @@id([label_id, workspace_id])
+  @@id([team_id, workspace_id])
 }
 
-model WorkspaceCustomLabels {
-  id            String  @id @default(uuid()) @unique
-  workspace_id  String
-  name          String @unique
-  color         String
-  workspace    Workspace   @relation(fields: [workspace_id], references: [id])
+model WorkspaceLabels {
+  id                String              @id @default(uuid()) @unique
+  workspace_id      String
+  name              String
+  color             String
+  workspace         Workspace           @relation(fields: [workspace_id], references: [id])
+  can_edit          Boolean
+
+  @@unique([workspace_id, name])
 }
 
 model Priority {
-  id    String  @id @default(uuid()) @unique
-  name  String
-  value Int @unique
+  id                String              @id @default(uuid()) @unique
+  name              String
+  value             Int                 @unique
 }
 
 model Estimatives {
-  id    String  @id @default(uuid()) @unique
-  name  String  @unique
-  points String[]
+  id                String              @id @default(uuid()) @unique
+  name              String              @unique
+  points            String[]
+}
+
+model Team {
+  id                String              @id @default(uuid()) @unique
+  name              String
+  created_at        DateTime            @default(now())
+  creator_id        String
+  creator           User                @relation("team-creator", fields: [creator_id], references: [id])
+  identifier        String
+  estimates_type    String?
+  workspace_id      String
+  workspace         WorkspaceTeams[]    @relation("workspace-teams")
+  members           TeamMembers[]
+  labels            TeamLabels[]
+
+  @@unique([workspace_id, name])
+}
+
+model TeamMembers {
+  user_id           String
+  team_id           String
+  user              User                @relation(fields: [user_id], references: [id])
+  team              Team                @relation(fields: [team_id], references: [id])
+  permission        String
+
+  @@id([user_id, team_id])
+}
+
+model TeamLabels {
+  id                String              @id @default(uuid()) @unique
+  name              String
+  color             String
+  team_id           String
+  team              Team                @relation(fields: [team_id], references: [id])
+  can_edit          Boolean
+
+  @@unique([team_id, name])
 }

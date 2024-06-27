@@ -1,16 +1,18 @@
 import { FastifyInstance } from 'fastify';
 
-import authRoutes from './authRoutes';
-import estimativesRoutes from './estimativeRoutes';
-import labelRoutes from './labelRoutes';
-import priorityRoutes from './priorityRoutes';
-import userRoutes from './userRoutes';
-import workspaceLabelsRouters from './workspaceLabelsRoutes';
-import workspaceMembersRouters from './workspaceMembersRoutes';
-import workspaceRouters from './workspaceRoutes';
+import authRoutes from './auth';
+import estimativesRoutes from './estimatives';
+import labelRoutes from './labels';
+import priorityRoutes from './priorities';
+import teamLabelsRoutes from './team-labels';
+import teamRoutes from './team';
+import userRoutes from './user';
+import workspaceLabelsRouters from './workspace-labels';
+import workspaceMembersRouters from './workspace-members';
+import workspaceRouters from './workspace';
 
 const routes = async (app: FastifyInstance) => {
-  app.register(estimativesRoutes)
+  app.register(estimativesRoutes);
   app.register(labelRoutes);
   app.register(authRoutes);
   app.register(priorityRoutes);
@@ -18,7 +20,8 @@ const routes = async (app: FastifyInstance) => {
   app.register(workspaceRouters);
   app.register(workspaceLabelsRouters);
   app.register(workspaceMembersRouters);
-
+  app.register(teamRoutes);
+  app.register(teamLabelsRoutes);
 };
 
 export default routes;
