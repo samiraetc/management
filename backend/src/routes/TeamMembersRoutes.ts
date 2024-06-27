@@ -1,6 +1,5 @@
 
 import { removeTeamMember, addTeamMember } from '@/controllers/team/TeamMembers/TeamsMembersController';
-import { addTeamsMembers } from '@/models/teams/TeamsMembers/TeamsMembersModel';
 import { FastifyInstance } from 'fastify';
 
 const TeamMembersRoutes = async (server: FastifyInstance) => {
