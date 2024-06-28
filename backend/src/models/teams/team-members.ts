@@ -40,6 +40,28 @@ const selectTeamsMember = async (
   });
 };
 
+const selectAllTeamsMember = async (id: string): Promise<TeamsMemberss[]> => {
+  return await prisma.teamMembers.findMany({
+    where: {
+      team_id: id,
+    },
+  });
+};
+
+const editTeamsMembers = async (data: TeamMembers): Promise<TeamMembers> => {
+  return await prisma.teamMembers.update({
+    where: {
+      user_id_team_id: {
+        user_id: data.user_id,
+        team_id: data.team_id,
+      },
+    },
+    data: {
+      permission: data.permission,
+    },
+  });
+};
+
 const deleteTeamMember = async (
   data: TeamsMembersIdentify,
 ): Promise<TeamsMemberss | null> => {
@@ -53,4 +75,10 @@ const deleteTeamMember = async (
   });
 };
 
-export { addTeamsMembers, deleteTeamMember, selectTeamsMember };
+export {
+  addTeamsMembers,
+  deleteTeamMember,
+  selectTeamsMember,
+  selectAllTeamsMember,
+  editTeamsMembers,
+};
