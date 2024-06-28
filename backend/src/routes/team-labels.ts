@@ -2,10 +2,62 @@ import {
   createTeamLabel,
   patchTeamLabel,
   removeTeamLabel,
+  selectAllTeamLabels,
 } from '@/controllers/team/team-labels';
 import { FastifyInstance } from 'fastify';
 
 const teamLabelsRoutes = async (server: FastifyInstance) => {
+  server.get(
+    '/teams/:id/labels',
+    {
+      preValidation: [server.authenticate],
+      schema: {
+        tags: ['Teams Labels'],
+        security: [{ bearerAuth: [] }],
+        params: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+          },
+          required: ['id'],
+        },
+        response: {
+          200: {
+            description: 'Created successfully',
+            type: 'array',
+            properties: {
+              data: {
+                type: 'object',
+                properties: {
+                  id: {
+                    type: 'string',
+                    format: 'uuid',
+                  },
+                  name: { type: 'string' },
+                  color: { type: 'string' },
+                  can_edit: { type: 'boolean' },
+                },
+              },
+            },
+            examples: [
+              {
+                data: [
+                  {
+                    id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+                    name: 'bug',
+                    color: '#fff000',
+                    can_edit: true,
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      },
+    },
+    selectAllTeamLabels,
+  );
+
   server.post(
     '/teams/:id/labels',
     {

@@ -2,12 +2,34 @@ import {
   addTeamLabel,
   deleteTeamLabel,
   editTeamLabel,
+  selectAllTeamLabel,
   selectTeamLabel,
   selectTeamLabelByName,
-} from '@/models/teams/teams-labels';
+} from '@/models/teams/team-labels';
 import { selectTeam } from '@/models/teams/teams';
 import { teamLabelSchema } from '@/schemas/team/team-labels';
 import { FastifyReply, FastifyRequest } from 'fastify';
+
+const selectAllTeamLabels = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  try {
+    const { id } = request.params as { id: string };
+
+    const team = await selectTeam(id);
+
+    if (!team) {
+      reply.code(404).send({ message: 'Workspace not found' });
+      return;
+    }
+
+    const labels = await selectAllTeamLabel(id);
+    reply.code(201).send({ data: labels });
+  } catch (error) {
+    reply.code(400).send({ error: 'Failed to create label', details: error });
+  }
+};
 
 const createTeamLabel = async (
   request: FastifyRequest,
@@ -111,4 +133,9 @@ const removeTeamLabel = async (
   }
 };
 
-export { createTeamLabel, patchTeamLabel, removeTeamLabel };
+export {
+  createTeamLabel,
+  patchTeamLabel,
+  removeTeamLabel,
+  selectAllTeamLabels,
+};
