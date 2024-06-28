@@ -1,10 +1,7 @@
 import { findUserByToken } from '@/middleware/auth';
-import {
-  selectAllTeamLabel,
-  selectTeamLabel,
-} from '@/models/teams/teams-labels';
-import { createTeam, selectTeam } from '@/models/teams/teams';
+import { createTeam, selectAllTeams, selectTeam } from '@/models/teams/teams';
 import { selectUser } from '@/models/user/user';
+import { selectWorkspaces } from '@/models/workspace/workspace';
 import { selectAllWorkspaceLabel } from '@/models/workspace/workspace-label';
 import { teamSchema } from '@/schemas/team/team';
 import { MemberPermission } from '@/utils/member-permission';
@@ -35,24 +32,10 @@ const createTeamController = async (
     const team = await createTeam(body);
     const creator = await selectUser(team.creator_id);
 
-    const labels = await Promise.all(
-      team.labels.map(async (label: { label_id: string }) => {
-        return await selectTeamLabel(label.label_id, team.id);
-      }),
-    );
-
-    const members = await Promise.all(
-      team.members.map(async (member: { user_id: string }) => {
-        return await selectUser(member.user_id);
-      }),
-    );
-
     reply.code(201).send({
       data: {
         ...team,
-        labels,
         creator,
-        members,
       },
     });
   } catch (error) {
@@ -63,7 +46,6 @@ const createTeamController = async (
 const getTeamById = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const { id } = request.params as { id: string };
-
     const team = await selectTeam(id);
 
     if (!team) {
@@ -73,21 +55,10 @@ const getTeamById = async (request: FastifyRequest, reply: FastifyReply) => {
 
     const creator = await selectUser(team.creator_id);
 
-    const labels = await selectAllTeamLabel(team.id);
-
-    const members = await Promise.all(
-      team.members.map(async (member) => {
-        const selectedMember = await selectUser(member.user_id);
-        return await { ...selectedMember, permission: member.permission };
-      }),
-    );
-
     reply.code(200).send({
       data: {
         ...team,
-        labels,
         creator,
-        members,
       },
     });
   } catch (error) {
@@ -95,4 +66,36 @@ const getTeamById = async (request: FastifyRequest, reply: FastifyReply) => {
   }
 };
 
-export { createTeamController, getTeamById };
+const getAllTeamsByWorkspace = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  try {
+    const { id } = request.params as { id: string };
+    const workspaces = await selectWorkspaces(id);
+
+    if (!workspaces) {
+      reply.code(404).send({ message: 'Workspace not found' });
+      return;
+    }
+
+    const teams = await selectAllTeams(id);
+
+    const team = await Promise.all(
+      teams.map(async (workspace) => {
+        return {
+          ...workspace,
+          creator: await selectUser(workspace.creator_id),
+        };
+      }),
+    );
+
+    reply.code(200).send({
+      data: team,
+    });
+  } catch (error) {
+    reply.code(400).send({ error });
+  }
+};
+
+export { createTeamController, getTeamById, getAllTeamsByWorkspace };

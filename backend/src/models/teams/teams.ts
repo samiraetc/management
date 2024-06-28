@@ -53,13 +53,17 @@ const createTeam = async (data: Team): Promise<any> => {
 const selectTeam = async (id: string) => {
   const team = await prisma.team.findUnique({
     where: { id: id },
-    include: {
-      labels: true,
-      members: true,
-    },
   });
 
   return team;
 };
 
-export { createTeam, selectTeam };
+const selectAllTeams = async (id: string) => {
+  const team = await prisma.team.findMany({
+    where: { workspace_id: id },
+  });
+
+  return team;
+};
+
+export { createTeam, selectTeam, selectAllTeams };
