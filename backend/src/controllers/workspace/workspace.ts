@@ -1,7 +1,6 @@
 import { findUserByToken } from '@/middleware/auth';
-import { selectAllLabels, selectLabel } from '@/models/labels/labels';
+import { selectAllLabels } from '@/models/labels/labels';
 import { selectUser } from '@/models/user/user';
-import { selectAllWorkspaceLabel } from '@/models/workspace/workspace-label';
 import {
   createWorkspace,
   selectAllWorkspaces,
@@ -35,26 +34,11 @@ const createWorkspaceController = async (
 
     const workspace = await createWorkspace(body);
     const creator = await selectUser(workspace.creator_id);
-    const customLabels = await selectAllWorkspaceLabel(workspace.id);
-
-    const labels = await Promise.all(
-      workspace.labels.map(async (label: { label_id: string }) => {
-        return await selectLabel(label.label_id);
-      }),
-    );
-
-    const members = await Promise.all(
-      workspace.members.map(async (member: { user_id: string }) => {
-        return await selectUser(member.user_id);
-      }),
-    );
 
     reply.code(201).send({
       data: {
         ...workspace,
-        labels: [...labels, ...customLabels],
         creator,
-        members,
       },
     });
   } catch (error) {
@@ -66,30 +50,17 @@ const getAllWorkspaces = async (_: FastifyRequest, reply: FastifyReply) => {
   try {
     const workspaces = await selectAllWorkspaces();
 
-    const workspacesWithLabels = await Promise.all(
+    const workspace = await Promise.all(
       workspaces.map(async (workspace) => {
-        const creator = await selectUser(workspace.creator_id);
-
-        const labels = await selectAllWorkspaceLabel(workspace.id);
-
-        const members = await Promise.all(
-          workspace.members.map(async (member) => {
-            const selectedMember = await selectUser(member.user_id);
-            return await { ...selectedMember, permission: member.permission };
-          }),
-        );
-
         return {
           ...workspace,
-          labels,
-          creator,
-          members,
+          creator: await selectUser(workspace.creator_id),
         };
       }),
     );
 
     reply.code(200).send({
-      data: workspacesWithLabels,
+      data: workspace,
     });
   } catch (error) {
     reply.code(400).send({ error });
@@ -109,21 +80,10 @@ const getWorkspace = async (request: FastifyRequest, reply: FastifyReply) => {
 
     const creator = await selectUser(workspace.creator_id);
 
-    const labels = await selectAllWorkspaceLabel(workspace.id);
-
-    const members = await Promise.all(
-      workspace.members.map(async (member) => {
-        const selectedMember = await selectUser(member.user_id);
-        return await { ...selectedMember, permission: member.permission };
-      }),
-    );
-
     reply.code(200).send({
       data: {
         ...workspace,
-        labels,
         creator,
-        members,
       },
     });
   } catch (error) {

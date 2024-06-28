@@ -48,22 +48,13 @@ const createWorkspace = async (data: Workspace): Promise<any> => {
 const selectWorkspaces = async (id: string) => {
   const workspaces = await prisma.workspace.findUnique({
     where: { id: id },
-    include: {
-      labels: true,
-      members: true,
-    },
   });
 
   return workspaces;
 };
 
 const selectAllWorkspaces = async () => {
-  const workspaces = await prisma.workspace.findMany({
-    include: {
-      labels: true,
-      members: true,
-    },
-  });
+  const workspaces = await prisma.workspace.findMany();
 
   return workspaces;
 };
