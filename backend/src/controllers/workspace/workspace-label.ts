@@ -2,12 +2,34 @@ import {
   addWorkspaceLabel,
   deleteWorkspaceLabel,
   editWorkspaceLabel,
+  selectAllWorkspaceLabel,
   selectWorkspaceLabel,
   selectWorkspaceLabelByName,
 } from '@/models/workspace/workspace-label';
 import { selectWorkspaces } from '@/models/workspace/workspace';
 import { workspaceLabelSchema } from '@/schemas/workspace/workspace-label';
 import { FastifyReply, FastifyRequest } from 'fastify';
+
+const selectAllWorkspaceLabels = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  try {
+    const { id: workspace_id } = request.params as { id: string };
+
+    const workspace = await selectWorkspaces(workspace_id);
+
+    if (!workspace) {
+      reply.code(404).send({ message: 'Workspace not found' });
+      return;
+    }
+
+    const labels = await selectAllWorkspaceLabel(workspace_id);
+    reply.code(201).send({ data: labels });
+  } catch (error) {
+    reply.code(400).send({ error: 'Failed to create label', details: error });
+  }
+};
 
 const createWorkspaceLabel = async (
   request: FastifyRequest,
@@ -117,4 +139,9 @@ const removeWorkspaceLabel = async (
   }
 };
 
-export { createWorkspaceLabel, patchWorkspaceLabel, removeWorkspaceLabel };
+export {
+  createWorkspaceLabel,
+  patchWorkspaceLabel,
+  removeWorkspaceLabel,
+  selectAllWorkspaceLabels,
+};

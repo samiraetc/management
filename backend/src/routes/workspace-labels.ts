@@ -2,10 +2,44 @@ import {
   createWorkspaceLabel,
   patchWorkspaceLabel,
   removeWorkspaceLabel,
+  selectAllWorkspaceLabels,
 } from '@/controllers/workspace/workspace-label';
 import { FastifyInstance } from 'fastify';
 
 const workspaceLabelsRouters = async (server: FastifyInstance) => {
+  server.get(
+    '/workspaces/:id/labels',
+    {
+      preValidation: [server.authenticate],
+      schema: {
+        tags: ['Workspace Labels'],
+        security: [{ bearerAuth: [] }],
+        params: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+          },
+          required: ['id', 'label_id'],
+        },
+        response: {
+          200: {
+            type: 'array',
+            properties: {
+              data: {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  name: { type: 'string' },
+                  color: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    selectAllWorkspaceLabels,
+  );
   server.post(
     '/workspaces/:id/labels',
     {

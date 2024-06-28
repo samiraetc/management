@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import { addWorkspaceLabelInAllTeams } from '../teams/teams-labels';
+import { addWorkspaceLabelInAllTeams } from '../teams/team-labels';
 
 const prisma = new PrismaClient();
 
