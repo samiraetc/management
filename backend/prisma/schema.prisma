@@ -133,7 +133,7 @@ model Tasks {
   priority          Int
   estimative        Int
   creator_id        String
-  identifier        String
+  task_number       String
   status_id         String
   team_id           String
   url_key           String
