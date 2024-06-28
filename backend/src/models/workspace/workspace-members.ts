@@ -40,6 +40,32 @@ const selectWorkspaceMember = async (
   });
 };
 
+const selectAllWorkspaceMembers = async (
+  id: string,
+): Promise<WorkspaceMembers[] | null> => {
+  return await prisma.workspaceMembers.findMany({
+    where: {
+      workspace_id: id,
+    },
+  });
+};
+
+const editAllWorkspaceMembers = async (
+  data: WorkspaceMemberss,
+): Promise<WorkspaceMemberss> => {
+  return await prisma.workspaceMembers.update({
+    where: {
+      user_id_workspace_id: {
+        user_id: data.user_id,
+        workspace_id: data.workspace_id,
+      },
+    },
+    data: {
+      permission: data.permission,
+    },
+  });
+};
+
 const deleteWorkspaceMember = async (
   data: WorkspaceMembersIdentify,
 ): Promise<WorkspaceMembers | null> => {
@@ -53,4 +79,10 @@ const deleteWorkspaceMember = async (
   });
 };
 
-export { addWorkspaceMembers, deleteWorkspaceMember, selectWorkspaceMember };
+export {
+  addWorkspaceMembers,
+  deleteWorkspaceMember,
+  selectWorkspaceMember,
+  selectAllWorkspaceMembers,
+  editAllWorkspaceMembers,
+};

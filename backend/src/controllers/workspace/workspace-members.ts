@@ -1,11 +1,43 @@
+import { selectUser } from '@/models/user/user';
 import {
   addWorkspaceMembers,
   deleteWorkspaceMember,
+  editAllWorkspaceMembers,
+  selectAllWorkspaceMembers,
   selectWorkspaceMember,
 } from '@/models/workspace/workspace-members';
-import { workspaceMembersSchema } from '@/schemas/workspace/workspace-members';
+import {
+  editWorkspaceMemberSchema,
+  workspaceMembersSchema,
+} from '@/schemas/workspace/workspace-members';
 import { MemberPermission } from '@/utils/member-permission';
 import { FastifyReply, FastifyRequest } from 'fastify';
+
+const selectWorkspaceMembers = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  try {
+    const { id } = request.params as { id: string };
+
+    const member = await selectAllWorkspaceMembers(id);
+
+    if (!member) {
+      reply.code(404).send({ message: 'Member not found' });
+      return;
+    }
+
+    const members = await Promise.all(
+      member.map(async (member) => {
+        const selectedMember = await selectUser(member.user_id);
+        return await { ...selectedMember, permission: member.permission };
+      }),
+    );
+    reply.code(201).send({ data: members });
+  } catch (error) {
+    reply.code(400).send({ error: 'Failed to show members', details: error });
+  }
+};
 
 const addWorkspaceMember = async (
   request: FastifyRequest,
@@ -22,7 +54,53 @@ const addWorkspaceMember = async (
     }));
 
     const member = await addWorkspaceMembers(body);
-    reply.code(201).send({ data: member });
+
+    const members = await Promise.all(
+      member.map(async (member) => {
+        const selectedMember = await selectUser(member.user_id);
+        return await { ...selectedMember, permission: member.permission };
+      }),
+    );
+
+    reply.code(201).send({ data: members });
+  } catch (error) {
+    reply.code(400).send({ error: 'Failed to create member', details: error });
+  }
+};
+
+const editWorkspaceMember = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  try {
+    const { id, member_id } = request.params as {
+      id: string;
+      member_id: string;
+    };
+    const parsedBody = editWorkspaceMemberSchema.parse(request.body);
+
+    const member = await selectWorkspaceMember({
+      workspace_id: id,
+      user_id: member_id,
+    });
+
+    if (!member) {
+      reply.code(404).send({ message: 'Member not found' });
+      return;
+    }
+
+    const body = {
+      workspace_id: id,
+      user_id: member_id,
+      permission: parsedBody.permission,
+    };
+
+    const editedMember = await editAllWorkspaceMembers(body);
+    const selectedMember = await selectUser(editedMember.user_id);
+
+    reply
+      .code(201)
+      .send({ data: { ...selectedMember, permission: member.permission } });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to create member', details: error });
   }
@@ -57,4 +135,9 @@ const removeWorkspaceMember = async (
   }
 };
 
-export { addWorkspaceMember, removeWorkspaceMember };
+export {
+  addWorkspaceMember,
+  removeWorkspaceMember,
+  selectWorkspaceMembers,
+  editWorkspaceMember,
+};
