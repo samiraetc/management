@@ -129,12 +129,12 @@ model TeamLabels {
 model Tasks {
   id                String              @id @default(uuid()) @unique
   title             String
-  description       String
-  priority          Int
-  estimative        Int
+  description       String?
+  priority          Int?
+  estimative        Int?
   creator_id        String
-  task_number       String
-  status_id         String
+  task_number       Int
+  status_id         String?
   team_id           String
   url_key           String
   creator           User                @relation("task-creator", fields: [creator_id], references: [id])

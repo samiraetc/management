@@ -4,7 +4,7 @@ import {
   selectLabel,
   selectLabelByName,
 } from '@/models/labels/labels';
-import { labelSchema } from '@/schemas/labels/labels';
+import { createLabelSchema } from '@/models/labels/types';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
 const AllLabelController = async (_: FastifyRequest, reply: FastifyReply) => {
@@ -35,7 +35,7 @@ const createLabelController = async (
   reply: FastifyReply,
 ) => {
   try {
-    const parsedBody = labelSchema.parse(request.body);
+    const parsedBody = createLabelSchema.parse(request.body);
     const labelByName = await selectLabelByName(parsedBody.name);
 
     if (labelByName) {
