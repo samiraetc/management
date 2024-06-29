@@ -1,15 +1,16 @@
 import { selectUser } from '@/models/user/user';
 import {
+  createWorkspaceMembersSchema,
+  editWorkspaceMembersSchema,
+} from '@/models/workspace-members/types';
+import {
   addWorkspaceMembers,
   deleteWorkspaceMember,
   editAllWorkspaceMembers,
   selectAllWorkspaceMembers,
   selectWorkspaceMember,
-} from '@/models/workspace/workspace-members';
-import {
-  editWorkspaceMemberSchema,
-  workspaceMembersSchema,
-} from '@/schemas/workspace/workspace-members';
+} from '@/models/workspace-members/workspace-members';
+
 import { MemberPermission } from '@/utils/member-permission';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
@@ -45,7 +46,7 @@ const addWorkspaceMember = async (
 ) => {
   try {
     const { id } = request.params as { id: string };
-    const parsedBody = workspaceMembersSchema.parse(request.body);
+    const parsedBody = createWorkspaceMembersSchema.parse(request.body);
 
     const body = parsedBody.user_ids.map((member: string) => ({
       workspace_id: id,
@@ -77,7 +78,7 @@ const editWorkspaceMember = async (
       id: string;
       member_id: string;
     };
-    const parsedBody = editWorkspaceMemberSchema.parse(request.body);
+    const parsedBody = editWorkspaceMembersSchema.parse(request.body);
 
     const member = await selectWorkspaceMember({
       workspace_id: id,

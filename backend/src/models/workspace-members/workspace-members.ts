@@ -1,15 +1,7 @@
 import { WorkspaceMembers, PrismaClient } from '@prisma/client';
+import { WorkspaceMembersWithoutPermission } from './types';
 
 const prisma = new PrismaClient();
-
-export interface WorkspaceMemberss extends WorkspaceMembersIdentify {
-  permission: string;
-}
-
-interface WorkspaceMembersIdentify {
-  user_id: string;
-  workspace_id: string;
-}
 
 const addWorkspaceMembers = async (
   members: WorkspaceMembers[],
@@ -28,7 +20,7 @@ const addWorkspaceMembers = async (
 };
 
 const selectWorkspaceMember = async (
-  data: WorkspaceMembersIdentify,
+  data: WorkspaceMembersWithoutPermission,
 ): Promise<WorkspaceMembers | null> => {
   return await prisma.workspaceMembers.findUnique({
     where: {
@@ -51,8 +43,8 @@ const selectAllWorkspaceMembers = async (
 };
 
 const editAllWorkspaceMembers = async (
-  data: WorkspaceMemberss,
-): Promise<WorkspaceMemberss> => {
+  data: WorkspaceMembers,
+): Promise<WorkspaceMembersWithoutPermission> => {
   return await prisma.workspaceMembers.update({
     where: {
       user_id_workspace_id: {
@@ -67,7 +59,7 @@ const editAllWorkspaceMembers = async (
 };
 
 const deleteWorkspaceMember = async (
-  data: WorkspaceMembersIdentify,
+  data: WorkspaceMembersWithoutPermission,
 ): Promise<WorkspaceMembers | null> => {
   return await prisma.workspaceMembers.delete({
     where: {

@@ -3,7 +3,7 @@ import {
   patchTeamLabel,
   removeTeamLabel,
   selectAllTeamLabels,
-} from '@/controllers/team/team-labels';
+} from '@/controllers/team-labels/team-labels';
 import { FastifyInstance } from 'fastify';
 
 const teamLabelsRoutes = async (server: FastifyInstance) => {

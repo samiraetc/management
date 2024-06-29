@@ -1,19 +1,13 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, WorkspaceLabels } from '@prisma/client';
 
-import { addWorkspaceLabelInAllTeams } from '../teams/team-labels';
+import { addWorkspaceLabelInAllTeams } from '../team-labels/team-labels';
+import { CreateWorkspaceLabel, EditWorkspaceLabels } from './types';
 
 const prisma = new PrismaClient();
 
-interface WorkspaceLabel {
-  workspace_id: string;
-  name: string;
-  color: string;
-  can_edit: boolean;
-}
-
 const addWorkspaceLabel = async (
-  data: WorkspaceLabel,
-): Promise<WorkspaceLabel> => {
+  data: CreateWorkspaceLabel,
+): Promise<WorkspaceLabels> => {
   const newLabel = await prisma.workspaceLabels.create({
     data: {
       workspace_id: data.workspace_id,
@@ -23,18 +17,20 @@ const addWorkspaceLabel = async (
     },
   });
 
-  await addWorkspaceLabelInAllTeams(
-    { id: newLabel.id, color: newLabel.color, name: newLabel.name },
-    data.workspace_id,
-  );
+  await addWorkspaceLabelInAllTeams({
+    id: newLabel.id,
+    color: newLabel.color,
+    name: newLabel.name,
+    workspace_id: data.workspace_id,
+  });
 
   return newLabel;
 };
 
 const editWorkspaceLabel = async (
-  data: WorkspaceLabel,
+  data: EditWorkspaceLabels,
   id: string,
-): Promise<WorkspaceLabel> => {
+): Promise<WorkspaceLabels> => {
   const Label = prisma.workspaceLabels.update({
     where: { id: id, can_edit: true },
     data: {
@@ -48,7 +44,7 @@ const editWorkspaceLabel = async (
 const selectWorkspaceLabel = async (
   id: string,
   workspace_id: string,
-): Promise<WorkspaceLabel | null> => {
+): Promise<WorkspaceLabels | null> => {
   const label = prisma.workspaceLabels.findUnique({
     where: { id, workspace_id },
   });
@@ -57,7 +53,7 @@ const selectWorkspaceLabel = async (
 
 const deleteWorkspaceLabel = async (
   id: string,
-): Promise<WorkspaceLabel | null> => {
+): Promise<WorkspaceLabels | null> => {
   const label = prisma.workspaceLabels.delete({
     where: { id },
   });
@@ -101,7 +97,7 @@ const selectWorkspaceLabelByName = async (
 };
 
 export {
-  WorkspaceLabel,
+  WorkspaceLabels,
   addWorkspaceLabel,
   editWorkspaceLabel,
   selectWorkspaceLabel,

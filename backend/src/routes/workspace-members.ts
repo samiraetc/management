@@ -3,7 +3,7 @@ import {
   editWorkspaceMember,
   removeWorkspaceMember,
   selectWorkspaceMembers,
-} from '@/controllers/workspace/workspace-members';
+} from '@/controllers/workspace-members/workspace-members';
 import { FastifyInstance } from 'fastify';
 
 const workspaceMembersRouters = async (server: FastifyInstance) => {

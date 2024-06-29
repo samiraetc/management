@@ -1,31 +1,17 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, TeamLabels } from '@prisma/client';
+import {
+  CreateTeamLabel,
+  CreateTeamLabelByWorkspace,
+  EditTeamLabels,
+} from './types';
 
 const prisma = new PrismaClient();
 
-export interface WorkspaceLabel {
-  id: string;
-  name: string;
-  color: string;
-}
-
-export interface TeamLabel {
-  name: string;
-  color: string;
-  team_id: string;
-  can_edit: boolean;
-}
-
-interface EditTeam {
-  name: string;
-  color: string;
-}
-
 const addWorkspaceLabelInAllTeams = async (
-  data: WorkspaceLabel,
-  workspace_id: string,
+  data: CreateTeamLabelByWorkspace,
 ) => {
   const teams = await prisma.workspaceTeams.findMany({
-    where: { workspace_id: workspace_id },
+    where: { workspace_id: data.workspace_id },
     select: { team_id: true },
   });
 
@@ -42,7 +28,7 @@ const addWorkspaceLabelInAllTeams = async (
   });
 };
 
-const selectAllTeamLabel = async (id: string) => {
+const selectAllTeamLabel = async (id: string): Promise<TeamLabels[]> => {
   const customLabels = await prisma.teamLabels.findMany({
     where: {
       team_id: id,
@@ -52,13 +38,14 @@ const selectAllTeamLabel = async (id: string) => {
       name: true,
       color: true,
       can_edit: true,
+      team_id: true,
     },
   });
 
   return customLabels;
 };
 
-const addTeamLabel = async (data: TeamLabel): Promise<TeamLabel> => {
+const addTeamLabel = async (data: CreateTeamLabel): Promise<TeamLabels> => {
   const newLabel = await prisma.teamLabels.create({
     data: {
       team_id: data.team_id,
@@ -72,9 +59,9 @@ const addTeamLabel = async (data: TeamLabel): Promise<TeamLabel> => {
 };
 
 const editTeamLabel = async (
-  data: EditTeam,
+  data: EditTeamLabels,
   id: string,
-): Promise<TeamLabel> => {
+): Promise<TeamLabels> => {
   const Label = prisma.teamLabels.update({
     where: { id: id, can_edit: true },
     data: {
@@ -85,7 +72,7 @@ const editTeamLabel = async (
   return Label;
 };
 
-const deleteTeamLabel = async (id: string): Promise<TeamLabel | null> => {
+const deleteTeamLabel = async (id: string): Promise<TeamLabels | null> => {
   const label = prisma.teamLabels.delete({
     where: { id },
   });
@@ -95,7 +82,7 @@ const deleteTeamLabel = async (id: string): Promise<TeamLabel | null> => {
 const selectTeamLabel = async (
   id: string,
   team_id: string,
-): Promise<TeamLabel | null> => {
+): Promise<TeamLabels | null> => {
   const label = prisma.teamLabels.findUnique({
     where: { id, team_id },
   });

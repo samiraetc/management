@@ -1,3 +1,4 @@
+import { createAndEditWorkspaceLabel } from '@/models/workspace-labels/types';
 import {
   addWorkspaceLabel,
   deleteWorkspaceLabel,
@@ -5,9 +6,8 @@ import {
   selectAllWorkspaceLabel,
   selectWorkspaceLabel,
   selectWorkspaceLabelByName,
-} from '@/models/workspace/workspace-label';
+} from '@/models/workspace-labels/workspace-label';
 import { selectWorkspaces } from '@/models/workspace/workspace';
-import { workspaceLabelSchema } from '@/schemas/workspace/workspace-label';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
 const selectAllWorkspaceLabels = async (
@@ -37,7 +37,7 @@ const createWorkspaceLabel = async (
 ) => {
   try {
     const { id: workspace_id } = request.params as { id: string };
-    const parsedBody = workspaceLabelSchema.parse(request.body);
+    const parsedBody = createAndEditWorkspaceLabel.parse(request.body);
 
     const workspace = await selectWorkspaces(workspace_id);
 
@@ -94,7 +94,7 @@ const patchWorkspaceLabel = async (
       return;
     }
 
-    const parsedBody = workspaceLabelSchema.parse(request.body);
+    const parsedBody = createAndEditWorkspaceLabel.parse(request.body);
 
     const body = {
       workspace_id,

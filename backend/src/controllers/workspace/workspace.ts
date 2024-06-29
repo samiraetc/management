@@ -1,13 +1,13 @@
 import { findUserByToken } from '@/middleware/auth';
 import { selectAllLabels } from '@/models/labels/labels';
 import { selectUser } from '@/models/user/user';
+import { workspaceSchema } from '@/models/workspace/types';
 import {
   createWorkspace,
   selectAllWorkspaces,
   selectWorkspaces,
   deleteWorkspaces,
 } from '@/models/workspace/workspace';
-import { workspaceSchema } from '@/schemas/workspace/workspace';
 import { MemberPermission } from '@/utils/member-permission';
 import { FastifyRequest, FastifyReply } from 'fastify';
 

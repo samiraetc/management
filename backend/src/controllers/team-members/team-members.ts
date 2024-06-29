@@ -5,15 +5,15 @@ import {
   editTeamsMembers,
   selectAllTeamsMember,
   selectTeamsMember,
-} from '@/models/teams/team-members';
+} from '@/models/teams-members/team-members';
 import { selectUser } from '@/models/user/user';
-import {
-  editTeamMembersSchema,
-  teamMembersSchema,
-} from '@/schemas/team/team-members';
 import { MemberPermission } from '@/utils/member-permission';
 import { TeamMembers } from '@prisma/client';
 import { FastifyReply, FastifyRequest } from 'fastify';
+import {
+  createTeamMembers,
+  editTeamMembersSchema,
+} from '@/models/teams-members/types';
 
 const selectAllTeamMembers = async (
   request: FastifyRequest,
@@ -21,7 +21,6 @@ const selectAllTeamMembers = async (
 ) => {
   try {
     const { id } = request.params as { id: string };
-
     const team = await selectTeam(id);
 
     if (!team) {
@@ -48,7 +47,7 @@ const selectAllTeamMembers = async (
 const addTeamMember = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const { id } = request.params as { id: string };
-    const parsedBody = teamMembersSchema.parse(request.body);
+    const parsedBody = createTeamMembers.parse(request.body);
 
     const body = parsedBody.user_ids.map((member: string) => ({
       team_id: id,

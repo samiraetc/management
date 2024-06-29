@@ -1,15 +1,7 @@
 import { TeamMembers, PrismaClient } from '@prisma/client';
+import { TeamMembersWithoutPermission } from './types';
 
 const prisma = new PrismaClient();
-
-export interface TeamsMemberss extends TeamsMembersIdentify {
-  permission: string;
-}
-
-interface TeamsMembersIdentify {
-  user_id: string;
-  team_id: string;
-}
 
 const addTeamsMembers = async (
   members: TeamMembers[],
@@ -28,8 +20,8 @@ const addTeamsMembers = async (
 };
 
 const selectTeamsMember = async (
-  data: TeamsMembersIdentify,
-): Promise<TeamsMemberss | null> => {
+  data: TeamMembersWithoutPermission,
+): Promise<TeamMembers | null> => {
   return await prisma.teamMembers.findUnique({
     where: {
       user_id_team_id: {
@@ -40,7 +32,7 @@ const selectTeamsMember = async (
   });
 };
 
-const selectAllTeamsMember = async (id: string): Promise<TeamsMemberss[]> => {
+const selectAllTeamsMember = async (id: string): Promise<TeamMembers[]> => {
   return await prisma.teamMembers.findMany({
     where: {
       team_id: id,
@@ -63,8 +55,8 @@ const editTeamsMembers = async (data: TeamMembers): Promise<TeamMembers> => {
 };
 
 const deleteTeamMember = async (
-  data: TeamsMembersIdentify,
-): Promise<TeamsMemberss | null> => {
+  data: TeamMembersWithoutPermission,
+): Promise<TeamMembersWithoutPermission | null> => {
   return await prisma.teamMembers.delete({
     where: {
       user_id_team_id: {

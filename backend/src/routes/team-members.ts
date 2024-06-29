@@ -3,7 +3,7 @@ import {
   addTeamMember,
   selectAllTeamMembers,
   editTeamMembers,
-} from '@/controllers/team/team-members';
+} from '@/controllers/team-members/team-members';
 import { FastifyInstance } from 'fastify';
 
 const teamMembersRoutes = async (server: FastifyInstance) => {

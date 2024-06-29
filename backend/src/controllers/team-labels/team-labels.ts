@@ -5,9 +5,9 @@ import {
   selectAllTeamLabel,
   selectTeamLabel,
   selectTeamLabelByName,
-} from '@/models/teams/team-labels';
+} from '@/models/team-labels/team-labels';
+import { createAndEditTeamLabel } from '@/models/team-labels/types';
 import { selectTeam } from '@/models/teams/teams';
-import { teamLabelSchema } from '@/schemas/team/team-labels';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
 const selectAllTeamLabels = async (
@@ -37,11 +37,11 @@ const createTeamLabel = async (
 ) => {
   try {
     const { id: team_id } = request.params as { id: string };
-    const parsedBody = teamLabelSchema.parse(request.body);
+    const parsedBody = createAndEditTeamLabel.parse(request.body);
 
-    const workspace = await selectTeam(team_id);
+    const team = await selectTeam(team_id);
 
-    if (!workspace) {
+    if (!team) {
       reply.code(404).send({ message: 'Team not found' });
       return;
     }
@@ -88,7 +88,7 @@ const patchTeamLabel = async (request: FastifyRequest, reply: FastifyReply) => {
       return;
     }
 
-    const parsedBody = teamLabelSchema.parse(request.body);
+    const parsedBody = createAndEditTeamLabel.parse(request.body);
 
     const body = {
       team_id,
