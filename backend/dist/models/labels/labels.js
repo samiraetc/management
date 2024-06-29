@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createLabel = exports.selectAllLabels = void 0;
+exports.selectLabelByName = exports.selectLabel = exports.createLabel = exports.selectAllLabels = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const selectAllLabels = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -17,6 +17,20 @@ const selectAllLabels = () => __awaiter(void 0, void 0, void 0, function* () {
     return labels;
 });
 exports.selectAllLabels = selectAllLabels;
+const selectLabel = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const label = yield prisma.label.findUnique({
+        where: { id },
+    });
+    return label;
+});
+exports.selectLabel = selectLabel;
+const selectLabelByName = (name) => __awaiter(void 0, void 0, void 0, function* () {
+    const label = yield prisma.label.findUnique({
+        where: { name },
+    });
+    return label;
+});
+exports.selectLabelByName = selectLabelByName;
 const createLabel = (_a) => __awaiter(void 0, [_a], void 0, function* ({ name, color }) {
     const label = yield prisma.label.create({
         data: {

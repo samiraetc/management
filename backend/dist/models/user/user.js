@@ -8,27 +8,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.selectUsersByEmail = exports.selectAllUsers = exports.selectUser = exports.createUser = void 0;
+exports.selectUsersByUsername = exports.selectUsersByEmail = exports.selectAllUsers = exports.selectUser = exports.createUser = void 0;
 const client_1 = require("@prisma/client");
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const prisma = new client_1.PrismaClient();
 const createUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const hashedPassword = yield bcrypt_1.default.hash(data.password, 10);
     const user = yield prisma.user.create({
-        data: {
-            first_name: data.first_name,
-            last_name: data.last_name,
-            email: data.email,
-            password: hashedPassword,
-            created_at: data.created_at || new Date(),
-            username: data.username,
-            position: data.position,
-            language: data.language,
-        }
+        data: Object.assign({}, data),
+        select: {
+            id: true,
+            first_name: true,
+            last_name: true,
+            full_name: true,
+            email: true,
+            created_at: true,
+            username: true,
+            position: true,
+            language: true,
+        },
     });
     return user;
 });
@@ -40,12 +37,13 @@ const selectUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
             id: true,
             first_name: true,
             last_name: true,
+            full_name: true,
             email: true,
             created_at: true,
             username: true,
             position: true,
             language: true,
-        }
+        },
     });
     return user;
 });
@@ -57,6 +55,7 @@ const selectAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
             first_name: true,
             last_name: true,
             email: true,
+            full_name: true,
             created_at: true,
             username: true,
             position: true,
@@ -73,3 +72,10 @@ const selectUsersByEmail = (email) => __awaiter(void 0, void 0, void 0, function
     return user;
 });
 exports.selectUsersByEmail = selectUsersByEmail;
+const selectUsersByUsername = (username) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield prisma.user.findUnique({
+        where: { username },
+    });
+    return user;
+});
+exports.selectUsersByUsername = selectUsersByUsername;
