@@ -2,19 +2,21 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import api from '../api';
 
-
 export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: { label: "email", type: "email" },
-        password: { label: "password", type: "password" },
+        email: { label: 'email', type: 'email' },
+        password: { label: 'password', type: 'password' },
       },
       async authorize(credentials) {
         try {
-          const response = await api.post(`${process.env.BACKEND_API}/login`, JSON.stringify(credentials));
+          const response = await api.post(
+            `${process.env.BACKEND_API}/login`,
+            JSON.stringify(credentials),
+          );
 
           if (response.status === 200 && response.data) {
             return response.data;
@@ -32,7 +34,6 @@ export default NextAuth({
   },
   callbacks: {
     jwt: async ({ token, user }) => {
-
       if (user) {
         token.user = user;
       }

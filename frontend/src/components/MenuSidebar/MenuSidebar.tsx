@@ -25,6 +25,8 @@ import {
 import { Avatar, AvatarImage } from '../ui/avatar';
 import { ModeToggle } from '../ModeToggle/ModeToggle';
 import { translation } from '@/i18n/i18n';
+import { Button } from '@headlessui/react';
+import { signOut } from 'next-auth/react';
 
 const workspaces = [
   {
@@ -134,13 +136,13 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <Link
-                    href="/logout"
+                  <Button
+                    onClick={() => signOut()}
                     className="text-md flex w-full justify-between"
                   >
                     <p>Logout</p>
                     <LogOutIcon width={20} />{' '}
-                  </Link>
+                  </Button>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

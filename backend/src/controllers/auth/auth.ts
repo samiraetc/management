@@ -30,4 +30,15 @@ const loginController = async (
   }
 };
 
-export { loginController };
+const logoutController = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  try {
+    reply.code(200).send({ message: 'Logout successful' });
+  } catch (error) {
+    reply.code(500).send({ error: 'Failed to logout', details: error });
+  }
+};
+
+export { loginController, logoutController };

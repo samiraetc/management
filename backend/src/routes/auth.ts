@@ -1,4 +1,4 @@
-import { loginController } from '@/controllers/auth/auth';
+import { loginController, logoutController } from '@/controllers/auth/auth';
 import { FastifyInstance } from '../types';
 
 const authRoutes = async (app: FastifyInstance) => {
@@ -74,6 +74,7 @@ const authRoutes = async (app: FastifyInstance) => {
     },
     loginController,
   );
+  app.post('/logout', logoutController);
 };
 
 export default authRoutes;
