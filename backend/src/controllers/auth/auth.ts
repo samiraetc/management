@@ -24,7 +24,7 @@ const loginController = async (
     }
 
     const token = request.server.jwt.sign({ email: user.email });
-    reply.code(200).send({ token });
+    reply.code(200).send({ token, ...user });
   } catch (error) {
     reply.code(400).send({ error: 'Login failed', details: error });
   }

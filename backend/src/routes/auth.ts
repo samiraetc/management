@@ -36,23 +36,28 @@ const authRoutes = async (app: FastifyInstance) => {
               token: {
                 type: 'string',
               },
-              user: {
-                type: 'object',
-                properties: {
-                  id: {
-                    type: 'string',
-                  },
-                  email: {
-                    type: 'string',
-                    format: 'email',
-                  },
-                  username: {
-                    type: 'string',
-                  },
-                },
-              },
+              id: { type: 'string', format: 'uuid' },
+              first_name: { type: 'string' },
+              last_name: { type: 'string' },
+              email: { type: 'string', format: 'email' },
+              username: { type: 'string' },
+              position: { type: 'string' },
+              created_at: { type: 'string' },
+              language: { type: ['string', 'null'] },
             },
-            examples: [{ token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' }],
+            examples: [
+              {
+                token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+                first_name: 'Admin',
+                last_name: 'Dev',
+                email: 'admindev@gmail.com',
+                username: 'admindev',
+                password: 'password',
+                position: 'Frontend Developer',
+                language: 'null',
+              },
+            ],
           },
           401: {
             description: 'Invalid credentials',

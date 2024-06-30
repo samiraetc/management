@@ -29,7 +29,7 @@ server.register(fastifySwagger, {
       description: 'Documentação da API usando OpenAPI 3',
       version: '0.1.0',
     },
-    servers: [{ url: 'http://localhost:3000' }],
+    servers: [{ url: 'http://localhost:3003' }],
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -86,10 +86,10 @@ server.get('/api', async (_, reply) => {
 
 const start = async () => {
   try {
-    await server.listen({ port: 3000, host: '0.0.0.0' });
-    console.log('Server is running on http://localhost:3000/api');
+    await server.listen({ port: 3003, host: '0.0.0.0' });
+    console.log('Server is running on http://localhost:3003/api');
     console.log(
-      'Swagger documentation is available on http://localhost:3000/documentation',
+      'Swagger documentation is available on http://localhost:3003/documentation',
     );
   } catch (err) {
     server.log.error(err);
