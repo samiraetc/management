@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Tasks" ALTER COLUMN "description" DROP NOT NULL,
+ALTER COLUMN "priority" DROP NOT NULL,
+ALTER COLUMN "estimative" DROP NOT NULL,
+ALTER COLUMN "status_id" DROP NOT NULL;

@@ -1,5 +1,5 @@
+import { loginSchema } from '@/models/user/type';
 import { selectUsersByEmail } from '@/models/user/user';
-import { loginSchema } from '@/schemas/user/user';
 import bcrypt from 'bcrypt';
 import { FastifyReply, FastifyRequest } from 'fastify';
 

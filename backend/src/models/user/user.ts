@@ -1,22 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
+import { CreateUser, UserWithoutPassword } from './type';
 
 const prisma = new PrismaClient();
 
-interface User {
-  first_name: string;
-  last_name: string;
-  full_name: string;
-  email: string;
-  password: string;
-  created_at?: Date;
-  username: string;
-  position?: string | null;
-  language?: string | null;
-}
-
-type UserWithoutPassword = Omit<User, 'password'>;
-
-const createUser = async (data: User): Promise<UserWithoutPassword> => {
+const createUser = async (data: CreateUser): Promise<UserWithoutPassword> => {
   const user = await prisma.user.create({
     data: {
       ...data,

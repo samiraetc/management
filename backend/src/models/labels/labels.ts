@@ -1,12 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Label } from '@prisma/client';
+import { CreateLabel } from './types';
 
 const prisma = new PrismaClient();
-
-interface Label {
-  id?: string;
-  name: string;
-  color: string;
-}
 
 const selectAllLabels = async (): Promise<Label[]> => {
   const labels = await prisma.label.findMany();
@@ -29,7 +24,7 @@ const selectLabelByName = async (name: string): Promise<Label | null> => {
   return label;
 };
 
-const createLabel = async ({ name, color }: Label): Promise<Label> => {
+const createLabel = async ({ name, color }: CreateLabel): Promise<Label> => {
   const label = await prisma.label.create({
     data: {
       name,

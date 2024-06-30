@@ -1,12 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Priority } from '@prisma/client';
+import { CreatePriority } from './types';
 
 const prisma = new PrismaClient();
-
-interface Priority {
-  id?: string;
-  name: string;
-  value: number;
-}
 
 const selectAllPriorities = async (): Promise<Priority[]> => {
   const priorities = await prisma.priority.findMany();
@@ -21,11 +16,11 @@ const selectPriority = async (id: string): Promise<Priority | null> => {
   return priority;
 };
 
-const createPriority = async ({ name, value }: Priority): Promise<Priority> => {
+const createPriority = async (data: CreatePriority): Promise<Priority> => {
   const priority = await prisma.priority.create({
     data: {
-      name,
-      value,
+      name: data.name,
+      value: data.value,
     },
   });
   return priority;

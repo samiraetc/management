@@ -1,30 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Team } from '@prisma/client';
+import { CreateTeam } from './types';
 
 const prisma = new PrismaClient();
 
-interface WorkspaceLabel {
-  id: string;
-  name: string;
-  color: string;
-}
-
-interface Team {
-  name: string;
-  identifier: string;
-  creator: string;
-  permission: string;
-  labels: WorkspaceLabel[];
-  workspace_id: string;
-}
-
-const createTeam = async (data: Team): Promise<any> => {
-  const newTeam = await prisma.team.create({
+const createTeam = async (data: CreateTeam): Promise<Team> => {
+  const team = await prisma.team.create({
     data: {
       name: data.name,
       creator: {
-        connect: { id: data.creator },
+        connect: { id: data.creator_id },
       },
       identifier: data.identifier,
       workspace_id: data.workspace_id,
@@ -38,19 +24,17 @@ const createTeam = async (data: Team): Promise<any> => {
       },
       members: {
         create: {
-          user: { connect: { id: data.creator } },
+          user: { connect: { id: data.creator_id } },
           permission: data.permission,
         },
       },
     },
   });
 
-  const selectedTeam = await selectTeam(newTeam.id);
-
-  return selectedTeam;
+  return team;
 };
 
-const selectTeam = async (id: string) => {
+const selectTeam = async (id: string): Promise<Team | null> => {
   const team = await prisma.team.findUnique({
     where: { id: id },
   });
@@ -58,7 +42,7 @@ const selectTeam = async (id: string) => {
   return team;
 };
 
-const selectAllTeams = async (id: string) => {
+const selectAllTeams = async (id: string): Promise<Team[] | []> => {
   const team = await prisma.team.findMany({
     where: { workspace_id: id },
   });

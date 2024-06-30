@@ -3,7 +3,7 @@ import {
   selectAllPriorities,
   selectPriority,
 } from '@/models/priority/priority';
-import { prioritySchema } from '@/schemas/priority/priority';
+import { createPrioritySchema } from '@/models/priority/types';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
 const AllPriorityController = async (
@@ -35,7 +35,7 @@ const createPriorityController = async (
   reply: FastifyReply,
 ) => {
   try {
-    const parsedBody = prioritySchema.parse(request.body);
+    const parsedBody = createPrioritySchema.parse(request.body);
 
     const body = {
       name: parsedBody.name,

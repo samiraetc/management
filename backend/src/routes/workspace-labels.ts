@@ -3,7 +3,7 @@ import {
   patchWorkspaceLabel,
   removeWorkspaceLabel,
   selectAllWorkspaceLabels,
-} from '@/controllers/workspace/workspace-label';
+} from '@/controllers/workspace-labels/workspace-label';
 import { FastifyInstance } from 'fastify';
 
 const workspaceLabelsRouters = async (server: FastifyInstance) => {

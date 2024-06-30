@@ -1,9 +1,9 @@
 import { findUserByToken } from '@/middleware/auth';
 import { createTeam, selectAllTeams, selectTeam } from '@/models/teams/teams';
+import { teamSchema } from '@/models/teams/types';
 import { selectUser } from '@/models/user/user';
+import { selectAllWorkspaceLabel } from '@/models/workspace-labels/workspace-label';
 import { selectWorkspaces } from '@/models/workspace/workspace';
-import { selectAllWorkspaceLabel } from '@/models/workspace/workspace-label';
-import { teamSchema } from '@/schemas/team/team';
 import { MemberPermission } from '@/utils/member-permission';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
@@ -23,7 +23,7 @@ const createTeamController = async (
     const body = {
       name: parsedBody.name,
       identifier: parsedBody.identifier,
-      creator: user.id,
+      creator_id: user.id,
       labels: await selectAllWorkspaceLabel(parsedBody.workspace_id),
       permission: MemberPermission.ADMIN,
       workspace_id: parsedBody.workspace_id,
