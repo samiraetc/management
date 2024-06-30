@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import i18next from '@/i18n/i18n';
 import { Button } from '../ui/button';
 import { Menu, X } from 'lucide-react';
@@ -12,16 +12,34 @@ import {
   TransitionChild,
 } from '@headlessui/react';
 import MenuSidebar from '../MenuSidebar/MenuSidebar';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 type LayoutProps = {
   children: ReactNode;
 };
 
 const Layout = ({ children }: LayoutProps) => {
+  const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [shrink, setShrink] = useState(false);
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-  return i18next.isInitialized ? (
+  useEffect(() => {
+    if (
+      (session === null || session === undefined) &&
+      status == 'unauthenticated'
+    ) {
+      router.push('/login');
+    }
+
+    if (session && status === 'authenticated') {
+      setLoading(false);
+    }
+  }, [session, status, session?.user.token]);
+
+  return i18next.isInitialized && !loading && session ? (
     <div>
       <Transition show={sidebarOpen}>
         <Dialog className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
@@ -98,7 +116,7 @@ const Layout = ({ children }: LayoutProps) => {
       </main>
     </div>
   ) : (
-    <div>Loading...</div>
+    <div className="px-4 sm:px-6">{children}</div>
   );
 };
 
