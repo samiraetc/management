@@ -12,32 +12,13 @@ import {
   Home,
   ListTodo,
   LogOutIcon,
-  SquareKanban,
 } from 'lucide-react';
-import Link from 'next/link';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
-import { Avatar, AvatarImage } from '../ui/avatar';
 import { ModeToggle } from '../ModeToggle/ModeToggle';
 import { translation } from '@/i18n/i18n';
-import { Button } from '@headlessui/react';
-import { signOut } from 'next-auth/react';
-
-const workspaces = [
-  {
-    id: 'xpto',
-    name: 'Workspace 1',
-  },
-  {
-    id: 'xpto',
-    name: 'Workspace 2',
-  },
-];
+import { useWorkspaceTeams } from '@/hook/useTeams/useWorkspaceTeams';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import ConfigsDropdown from './components/ConfigsDropdown/ConfigsDropdown';
 
 interface IMenuSidebar {
   shrink?: boolean;
@@ -45,6 +26,19 @@ interface IMenuSidebar {
 }
 
 const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
+  const dispatch = useDispatch();
+  const workspace = useSelector(
+    (state: RootState) => state.workspace.workspace,
+  );
+  const { data: teams, loading } = useWorkspaceTeams(workspace?.id ?? '');
+
+  const handleRedirectToTeamPage = (team: any) => {
+    dispatch({
+      type: 'teams/setTeams',
+      payload: team,
+    });
+  };
+
   return (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r px-4">
       <div className="flex items-center justify-between">
@@ -66,86 +60,55 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
 
       <div className="flex flex-1 flex-col">
         {!shrink && (
-          <Accordion type="single" collapsible className="transition-all">
-            <AccordionItem value="home" className="border-none">
-              <MenuSidebarButton
-                url="/"
-                icon={<Home className="text-fruit-salad-600" />}
-                name={translation('menuSidebar:home')}
-              />
-            </AccordionItem>
+          <>
+            <Accordion type="single" collapsible className="transition-all">
+              <AccordionItem value="home" className="border-none">
+                <MenuSidebarButton
+                  url="/"
+                  icon={<Home className="text-fruit-salad-600" />}
+                  name={translation('menuSidebar:home')}
+                />
+              </AccordionItem>
 
-            <AccordionItem value="home" className="border-none">
-              <MenuSidebarButton
-                url="/my-issues"
-                icon={<ListTodo className="text-fruit-salad-600" />}
-                name={translation('menuSidebar:my_issues')}
-              />
-            </AccordionItem>
+              <AccordionItem value="home" className="border-none">
+                <MenuSidebarButton
+                  url="/my-issues"
+                  icon={<ListTodo className="text-fruit-salad-600" />}
+                  name={translation('menuSidebar:my_issues')}
+                />
+              </AccordionItem>
+            </Accordion>
 
-            <AccordionItem value="workspace" className="border-none">
-              <AccordionTrigger className="items-start rounded-md px-4 py-2 hover:bg-fruit-salad-50 hover:no-underline dark:hover:bg-muted">
-                <Link href="/workspace">
+            <Accordion type="single" collapsible defaultValue="teams">
+              <AccordionItem value="teams" className="border-none">
+                <AccordionTrigger className="items-start rounded-md px-4 py-2 text-gray-500 hover:bg-fruit-salad-50 hover:no-underline dark:hover:bg-muted">
                   <div className="flex gap-2">
-                    <SquareKanban className="text-fruit-salad-600" />
-                    <p className="text-sm">
-                      {translation('menuSidebar:workspaces')}
+                    <p className="text-xs">
+                      {translation('menuSidebar:your_teams')}
                     </p>
                   </div>
-                </Link>
-              </AccordionTrigger>
-              <AccordionContent className="border-none">
-                {workspaces.map((workspace) => {
-                  return (
-                    <MenuSidebarButton
-                      key={workspace.id}
-                      url={`/workspace/${workspace.id}`}
-                      name={workspace.name}
-                    />
-                  );
-                })}
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+                </AccordionTrigger>
+                <AccordionContent className="border-none">
+                  {!loading &&
+                    teams?.map((team: any) => {
+                      return (
+                        <MenuSidebarButton
+                          key={team.id}
+                          url={`/${workspace?.url_key}/team/${team.identifier}`}
+                          name={team.name}
+                          onClick={() => handleRedirectToTeamPage(team)}
+                        />
+                      );
+                    })}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </>
         )}
+
         <div role="list" className="flex flex-1 flex-col gap-y-7">
           <div className="-mx-5 mt-auto flex items-center justify-between border-t p-3">
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                className="flex cursor-pointer items-center gap-2"
-                asChild
-              >
-                <div>
-                  <Avatar className="size-12">
-                    <AvatarImage
-                      className="wrounded-"
-                      src="https://api.dicebear.com/8.x/lorelei/svg?backgroundColor=8fc69b&hair=variant18&earrings=variant01&mouth=happy16&eyes=variant23&scale=160"
-                    />
-                  </Avatar>
-                  <p className="font-medium">Samira Costa</p>
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="ml-4 w-64" sideOffset={10}>
-                <DropdownMenuItem>
-                  <Link
-                    href="/account"
-                    className="text-md w-full p-1 font-medium"
-                  >
-                    <p>My Account</p>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Button
-                    onClick={() => signOut()}
-                    className="text-md flex w-full justify-between"
-                  >
-                    <p>Logout</p>
-                    <LogOutIcon width={20} />{' '}
-                  </Button>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <ConfigsDropdown />
 
             <ModeToggle />
           </div>
