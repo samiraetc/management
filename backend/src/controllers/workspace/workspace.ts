@@ -46,9 +46,13 @@ const createWorkspaceController = async (
   }
 };
 
-const getAllWorkspaces = async (_: FastifyRequest, reply: FastifyReply) => {
+const getAllWorkspaces = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
   try {
-    const workspaces = await selectAllWorkspaces();
+    const { user_id } = request.params as { user_id: string };
+    const workspaces = await selectAllWorkspaces(user_id);
 
     const workspace = await Promise.all(
       workspaces.map(async (workspace) => {

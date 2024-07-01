@@ -24,7 +24,6 @@ const createWorkspace = async (data: Workspace): Promise<PrismaWorkspace> => {
       url_key: data.url_key,
       labels: {
         create: data.labels.map((label) => ({
-          id: label.id,
           name: label.name,
           color: label.color,
           can_edit: false,
@@ -50,8 +49,12 @@ const selectWorkspaces = async (id: string) => {
   return workspaces;
 };
 
-const selectAllWorkspaces = async () => {
-  const workspaces = await prisma.workspace.findMany();
+const selectAllWorkspaces = async (user_id: string) => {
+  const workspaces = await prisma.workspace.findMany({
+    where: {
+      creator_id: user_id,
+    },
+  });
 
   return workspaces;
 };

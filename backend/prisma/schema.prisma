@@ -33,10 +33,10 @@ model Label {
 }
 
 model Workspace {
-  id                String              @id @default(uuid()) @unique
+   id                String              @id @default(uuid()) @unique
   name              String
   created_at        DateTime            @default(now())
-  updated_at        DateTime            @updatedAt()
+  updated_at        DateTime
   creator_id        String
   creator           User                @relation("workspace-creator", fields: [creator_id], references: [id])
   url_key           String              @unique

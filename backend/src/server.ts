@@ -3,7 +3,7 @@ import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import dotenv from 'dotenv';
 import Fastify, { FastifyReply, FastifyRequest } from 'fastify';
-
+import { fastifyCors } from '@fastify/cors';
 import routes from './routes';
 
 dotenv.config();
@@ -21,6 +21,10 @@ const server = Fastify({
   logger: true,
 });
 
+server.register(fastifyCors, {
+  origin: '*',
+});
+
 // Configuração do fastify-swagger
 server.register(fastifySwagger, {
   openapi: {
@@ -29,7 +33,7 @@ server.register(fastifySwagger, {
       description: 'Documentação da API usando OpenAPI 3',
       version: '0.1.0',
     },
-    servers: [{ url: 'http://localhost:3003' }],
+    servers: [{ url: 'http://localhost:3000' }],
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -86,10 +90,11 @@ server.get('/api', async (_, reply) => {
 
 const start = async () => {
   try {
-    await server.listen({ port: 3003, host: '0.0.0.0' });
-    console.log('Server is running on http://localhost:3003/api');
+    await server.listen({ port: 3000, host: '0.0.0.0' });
+    server.swagger();
+    console.log('Server is running on http://localhost:3000/api');
     console.log(
-      'Swagger documentation is available on http://localhost:3003/documentation',
+      'Swagger documentation is available on http://localhost:3000/documentation',
     );
   } catch (err) {
     server.log.error(err);
