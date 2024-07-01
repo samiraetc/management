@@ -1,10 +1,13 @@
 import axios from 'axios';
 
+export const DEFAULT_HEADERS = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+};
+
 const api = axios.create({
-  baseURL: process.env.BACKEND_API,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: 'http://localhost:3000/api',
+  headers: DEFAULT_HEADERS,
 });
 
 api.interceptors.response.use(

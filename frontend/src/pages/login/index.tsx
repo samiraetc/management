@@ -19,6 +19,8 @@ const Login = () => {
 
     if (result?.error) {
       setError('email ou senha inválido');
+    } else {
+      route.push('/')
     }
   };
 
@@ -46,6 +48,7 @@ const Login = () => {
         <button
           className="rounded-md bg-fruit-salad-600 p-2 text-white shadow-sm"
           onClick={handleSignIn}
+          type='submit'
         >
           Entrar
         </button>
