@@ -39,11 +39,26 @@ const authRoutes = async (app: FastifyInstance) => {
               id: { type: 'string', format: 'uuid' },
               first_name: { type: 'string' },
               last_name: { type: 'string' },
+              full_name: { type: 'string' },
               email: { type: 'string', format: 'email' },
               username: { type: 'string' },
               position: { type: 'string' },
               created_at: { type: 'string' },
               language: { type: ['string', 'null'] },
+              workspaces: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: {
+                      type: 'string',
+                      format: 'uuid',
+                    },
+                    name: { type: 'string' },
+                    url_key: { type: 'string' },
+                  },
+                },
+              },
             },
             examples: [
               {

@@ -4,7 +4,6 @@ import {
 } from '@/controllers/estimatives/estimatives';
 import { FastifyInstance } from '../types';
 
-
 const estimativesRoutes = async (app: FastifyInstance) => {
   app.get(
     '/estimatives',

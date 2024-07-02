@@ -1,4 +1,4 @@
-import { userSchema } from '@/models/user/type';
+import { createUserSchema } from '@/models/user/type';
 import { createUser, selectAllUsers, selectUser } from '@/models/user/user';
 import bcrypt from 'bcrypt';
 import { FastifyRequest, FastifyReply } from 'fastify';
@@ -8,7 +8,7 @@ const createUserController = async (
   reply: FastifyReply,
 ) => {
   try {
-    const parsedBody = userSchema.parse(request.body);
+    const parsedBody = createUserSchema.parse(request.body);
 
     const body = {
       first_name: parsedBody.first_name,

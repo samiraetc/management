@@ -64,6 +64,9 @@ const selectAllUsers = async (): Promise<UserWithoutPassword[]> => {
 const selectUsersByEmail = async (email: string): Promise<User | null> => {
   const user = await prisma.user.findUnique({
     where: { email },
+    include: {
+      workspaces: true,
+    },
   });
 
   return user;

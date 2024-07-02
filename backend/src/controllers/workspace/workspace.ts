@@ -51,8 +51,14 @@ const getAllWorkspaces = async (
   reply: FastifyReply,
 ) => {
   try {
-    const { user_id } = request.params as { user_id: string };
-    const workspaces = await selectAllWorkspaces(user_id);
+    const user = await findUserByToken(request, reply);
+
+    if (!user) {
+      reply.code(400).send({ message: 'User not found' });
+      return;
+    }
+
+    const workspaces = await selectAllWorkspaces(user.id);
 
     const workspace = await Promise.all(
       workspaces.map(async (workspace) => {
