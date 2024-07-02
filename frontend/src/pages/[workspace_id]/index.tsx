@@ -1,3 +1,15 @@
+import Layout from '@/components/Layout/Layout';
+import { RootState } from '@/redux/store';
+import { useSelector } from 'react-redux';
+
 export default function WorkspaceArea() {
-  return <div className="text-6xl font-bold">Workspace name</div>;
+  const workspace = useSelector(
+    (state: RootState) => state.workspace.workspace,
+  );
+
+  return (
+    <Layout>
+      <div className="text-6xl font-bold">{workspace?.name}</div>
+    </Layout>
+  );
 }

@@ -21,12 +21,13 @@ import { Check } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { IUseWorkspaceData } from '@/hook/useWorkspace/types';
+import { logout } from '@/redux/actions/actions';
 
 const ConfigsDropdown = () => {
   const { data: session } = useSession();
   const dispatch = useDispatch();
   const router = useRouter();
-  const { data, loading } = useWorkspaceByUser(session?.user.id ?? '');
+  const { data, loading } = useWorkspaceByUser();
 
   const workspaceStorage = localStorage.getItem('workspace');
 
@@ -37,8 +38,15 @@ const ConfigsDropdown = () => {
       payload: workspace,
     });
 
-    router.push(workspace.url_key);
+    router.push(`/${workspace.url_key}`);
   };
+
+  const handleLogout = () => {
+    console.log('entrou aqui');
+    dispatch(logout());
+    localStorage.removeItem('workspace');
+  };
+
   return (
     !loading && (
       <DropdownMenu>
@@ -53,7 +61,7 @@ const ConfigsDropdown = () => {
                 src="https://api.dicebear.com/8.x/lorelei/svg?backgroundColor=8fc69b&hair=variant18&earrings=variant01&mouth=happy16&eyes=variant23&scale=160"
               />
             </Avatar>
-            <p className="font-medium">Samira Costa</p>
+            <p className="font-medium">{session?.user.full_name}</p>
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="ml-4 w-64" sideOffset={10}>
@@ -62,7 +70,7 @@ const ConfigsDropdown = () => {
               <>
                 {item.type === 'link' && (
                   <>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem key={item.name}>
                       <Link
                         href={item.url ?? ''}
                         className="text-md w-full p-1 font-medium"
@@ -75,8 +83,14 @@ const ConfigsDropdown = () => {
                 )}
                 {item.type === 'button' && (
                   <>
-                    <DropdownMenuItem>
-                      <Button className="text-md flex w-full justify-between p-1">
+                    <DropdownMenuItem key={item.name}>
+                      <Button
+                        className="text-md flex w-full justify-between p-1"
+                        onClick={() => {
+                          item.name === 'logout' && handleLogout();
+                          item.action && item.action();
+                        }}
+                      >
                         <p>{item.name}</p>
                         {item.icon && <item.icon width={16} />}
                       </Button>
@@ -87,7 +101,7 @@ const ConfigsDropdown = () => {
 
                 {item.type === 'list' && (
                   <>
-                    <DropdownMenuSub>
+                    <DropdownMenuSub key={item.name}>
                       <DropdownMenuSubTrigger>
                         <Button className="text-md flex w-full justify-between p-1">
                           {item.name}
@@ -95,14 +109,17 @@ const ConfigsDropdown = () => {
                       </DropdownMenuSubTrigger>
 
                       <DropdownMenuPortal>
-                        <DropdownMenuSubContent className="ml-2">
+                        <DropdownMenuSubContent
+                          className="mb-96 mr-96 sm:ml-2 sm:mb-12"
+                          key="sub-group"
+                        >
                           <DropdownMenuItem disabled>
                             {session?.user.email}
                           </DropdownMenuItem>
                           <DropdownMenuGroup>
                             {data?.map((workspace) => {
                               return (
-                                <DropdownMenuItem>
+                                <DropdownMenuItem key={workspace.name}>
                                   <Button
                                     className="text-md flex w-full items-center justify-between"
                                     onClick={() =>
@@ -125,7 +142,7 @@ const ConfigsDropdown = () => {
                               <>
                                 {child.type === 'link' && (
                                   <>
-                                    <DropdownMenuItem>
+                                    <DropdownMenuItem key={child.name}>
                                       <Link
                                         href={child.url ?? ''}
                                         className="text-md w-full p-1"

@@ -1,14 +1,34 @@
+import { ModeToggle } from '@/components/ModeToggle/ModeToggle';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Login = () => {
-  const route = useRouter();
+  const router = useRouter();
+  const { data: session, status } = useSession();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+  const [workspaceUrl, setWorkspaceUrl] = useState('');
+
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      session?.user.workspaces?.length === 0
+        ? router.push('/join')
+        : router.push(
+            `/${workspaceUrl ?? (session?.user.workspaces && session?.user.workspaces[0].url_key)}`,
+          );
+    }
+  }, [status, router, status]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setWorkspaceUrl(localStorage.getItem('workspace') ?? '');
+    }
+  }, []);
 
   const handleSignIn = async () => {
     const result = await signIn('credentials', {
@@ -18,52 +38,68 @@ const Login = () => {
     });
 
     if (result?.error) {
-      setError('email ou senha inválido');
+      setError('Email ou senha inválido');
     } else {
-      route.push('/')
+      setError(null);
     }
   };
 
-  return (
-    <section className="text-transparent-black flex h-screen items-center justify-center">
-      <div className="m-10 flex w-96 flex-col justify-between gap-4 p-8 align-middle">
-        <h1 className="text-3xl font-extrabold text-black dark:text-white">
-          Fazer login
-        </h1>
-        <div className="flex flex-col gap-2">
-          <Input
-            value={email}
-            type="email"
-            placeholder="Insira seu endereço de email..."
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Input
-            value={password}
-            type="password"
-            placeholder="•••••••••"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        {error && <div className="text-sm text-red-500">{error}</div>}
-        <button
-          className="rounded-md bg-fruit-salad-600 p-2 text-white shadow-sm"
-          onClick={handleSignIn}
-          type='submit'
-        >
-          Entrar
-        </button>
+  if (status === 'loading' || status === 'authenticated') {
+    return null;
+  }
 
-        <div className="flex justify-center gap-2 text-center text-sm">
-          <Link href="/forgot_password" className="tracking-wide underline">
-            Esqueceu sua senha?
-          </Link>
-          <span>•</span>
-          <Link href="/register" className="tracking-wide underline">
-            Criar uma conta
-          </Link>
+  return (
+    <div className="flex flex-col gap-1">
+     <div className="flex justify-end px-7 sm:px-10  pt-5">
+        <ModeToggle />
+      </div>
+      <div className="text-transparent-black mt-20 flex h-full items-center justify-center sm:mt-0 sm:h-screen">
+        <div className="flex  w-80 sm:w-1/3  flex-col justify-between gap-4  align-middle">
+          <h1 className="text-3xl font-extrabold text-black dark:text-white">
+            Log In
+          </h1>
+          <div className="flex flex-col gap-2">
+            <Input
+              value={email}
+              type="email"
+              placeholder="Enter your email address..."
+              onChange={(e) => setEmail(e.target.value)}
+              className={error ? 'border-red-500 focus:border-neutral-200' : ''}
+            />
+            <div className="flex flex-col gap-1">
+              <Input
+                value={password}
+                type="password"
+                placeholder="•••••••••"
+                onChange={(e) => setPassword(e.target.value)}
+                className={
+                  error ? 'border-red-500 focus:border-neutral-200' : ''
+                }
+              />
+              {error && <div className="text-xs text-red-500">{error}</div>}
+            </div>
+          </div>
+
+          <Button
+            className="rounded-md bg-primary p-2 shadow-sm"
+            onClick={handleSignIn}
+            type="submit"
+          >
+            Continue
+          </Button>
+
+          <div className="flex flex-col sm:flex-row justify-center gap-2 text-center text-sm">
+            <Link href="/forgot_password" className="tracking-wide underline">
+              Forgot your password?
+            </Link>
+            <span className='hidden sm:block'>•</span>
+            <Link href="/register" className="tracking-wide underline">
+              Create an account
+            </Link>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

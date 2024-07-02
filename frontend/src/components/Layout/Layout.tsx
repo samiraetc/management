@@ -4,16 +4,19 @@ import { ReactNode, useEffect, useState } from 'react';
 import i18next from '@/i18n/i18n';
 import { Button } from '../ui/button';
 import { Menu, X } from 'lucide-react';
-
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import MenuSidebar from '../MenuSidebar/MenuSidebar';
 import {
   Dialog,
   DialogPanel,
   Transition,
   TransitionChild,
 } from '@headlessui/react';
-import MenuSidebar from '../MenuSidebar/MenuSidebar';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
+import api from '@/pages/api/api';
+import { IUseWorkspaceData } from '@/hook/useWorkspace/types';
 
 type LayoutProps = {
   children: ReactNode;
@@ -25,6 +28,11 @@ const Layout = ({ children }: LayoutProps) => {
   const [shrink, setShrink] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
+  const dispatch = useDispatch();
+  const workspace = useSelector(
+    (state: RootState) => state.workspace.workspace,
+  );
+  const [workspaceUrl, setWorkspaceUrl] = useState('');
 
   useEffect(() => {
     if (
@@ -35,11 +43,51 @@ const Layout = ({ children }: LayoutProps) => {
     }
 
     if (session && status === 'authenticated') {
+      setWorkspaceInRedux();
       setLoading(false);
     }
-  }, [session, status, session?.user.token]);
+  }, [session, status, workspaceUrl]);
 
-  return i18next.isInitialized && !loading && session ? (
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setWorkspaceUrl(localStorage.getItem('workspace') ?? '');
+    }
+  }, []);
+
+  const setWorkspaceInRedux = async () => {
+    const works = await api
+      .get(`/workspaces`, {
+        headers: {
+          Authorization: `Bearer ${session?.user.token}`,
+        },
+        params: { user_id: session?.user.id },
+      })
+      .then((res) => res.data)
+      .catch((err) => {
+        console.error(err);
+        return [];
+      });
+
+    const defaultWorkspace = works.data?.[0] ?? [];
+    const foundWorkspace = works.data?.find(
+      (item: IUseWorkspaceData) => item.url_key === workspaceUrl,
+    );
+
+    if (workspaceUrl && foundWorkspace) {
+      dispatch({
+        type: 'workspace/setWorkspace',
+        payload: foundWorkspace,
+      });
+    } else {
+      localStorage.setItem('workspace', defaultWorkspace.url_key);
+      dispatch({
+        type: 'workspace/setWorkspace',
+        payload: defaultWorkspace,
+      });
+    }
+  };
+
+  return i18next.isInitialized && !loading && session && workspace ? (
     <div>
       <Transition show={sidebarOpen}>
         <Dialog className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
@@ -84,7 +132,7 @@ const Layout = ({ children }: LayoutProps) => {
                   </div>
                 </TransitionChild>
 
-                <MenuSidebar />
+                <MenuSidebar workspace={workspace} />
               </DialogPanel>
             </TransitionChild>
           </div>
@@ -94,7 +142,11 @@ const Layout = ({ children }: LayoutProps) => {
       <div
         className={`hidden md:w-72 lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col ${shrink ? 'lg:w-16' : ''}`}
       >
-        <MenuSidebar shrink={shrink} setShrink={setShrink} />
+        <MenuSidebar
+          shrink={shrink}
+          setShrink={setShrink}
+          workspace={workspace}
+        />
       </div>
 
       <div className="sticky top-0 z-40 flex items-center gap-x-6 p-4 shadow-sm sm:px-6 lg:hidden">

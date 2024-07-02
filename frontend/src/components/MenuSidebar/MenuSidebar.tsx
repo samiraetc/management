@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -6,23 +6,20 @@ import {
   AccordionTrigger,
 } from '../ui/accordion';
 import MenuSidebarButton from './components/MenuSidebarButton';
-import {
-  ChevronsLeft,
-  ChevronsRight,
-  Home,
-  ListTodo,
-  LogOutIcon,
-} from 'lucide-react';
+import { ChevronsLeft, ChevronsRight, Home, ListTodo } from 'lucide-react';
 import { ModeToggle } from '../ModeToggle/ModeToggle';
 import { translation } from '@/i18n/i18n';
 import { useWorkspaceTeams } from '@/hook/useTeams/useWorkspaceTeams';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import ConfigsDropdown from './components/ConfigsDropdown/ConfigsDropdown';
+import { IUseWorkspaceData } from '@/hook/useWorkspace/types';
+import { useSession } from 'next-auth/react';
 
 interface IMenuSidebar {
   shrink?: boolean;
   setShrink?: (value: boolean) => void;
+  workspace: IUseWorkspaceData;
 }
 
 const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
@@ -31,6 +28,15 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
     (state: RootState) => state.workspace.workspace,
   );
   const { data: teams, loading } = useWorkspaceTeams(workspace?.id ?? '');
+
+  useEffect(() => {
+    if (!loading && teams) {
+      dispatch({
+        type: 'teams/setTeams',
+        payload: teams[0],
+      });
+    }
+  }, [teams, loading, workspace]);
 
   const handleRedirectToTeamPage = (team: any) => {
     dispatch({
@@ -64,7 +70,7 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
             <Accordion type="single" collapsible className="transition-all">
               <AccordionItem value="home" className="border-none">
                 <MenuSidebarButton
-                  url="/"
+                  url={`/${workspace?.url_key}`}
                   icon={<Home className="text-fruit-salad-600" />}
                   name={translation('menuSidebar:home')}
                 />
@@ -72,7 +78,7 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
 
               <AccordionItem value="home" className="border-none">
                 <MenuSidebarButton
-                  url="/my-issues"
+                  url={`/${workspace?.url_key}`}
                   icon={<ListTodo className="text-fruit-salad-600" />}
                   name={translation('menuSidebar:my_issues')}
                 />

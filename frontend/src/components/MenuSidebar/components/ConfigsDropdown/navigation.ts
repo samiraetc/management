@@ -1,5 +1,6 @@
 import { LogOutIcon } from 'lucide-react';
 import { signOut } from 'next-auth/react';
+import { useDispatch } from 'react-redux';
 
 export const dropdownNavigation = [
   {
@@ -26,13 +27,13 @@ export const dropdownNavigation = [
       },
       {
         type: 'button',
-        name: ''
-      }
+        name: '',
+      },
     ],
   },
   {
     type: 'button',
-    name: 'Log out',
+    name: 'logout',
     action: signOut,
     icon: LogOutIcon,
   },
