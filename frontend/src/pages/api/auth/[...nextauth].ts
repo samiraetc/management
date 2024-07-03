@@ -47,7 +47,6 @@ export default NextAuth({
     },
     redirect: async ({ url, baseUrl }) => {
       const finalUrl = url.startsWith(baseUrl) ? url : baseUrl;
-      console.log('Redirecionando para:', finalUrl);
       return finalUrl;
     },
   },

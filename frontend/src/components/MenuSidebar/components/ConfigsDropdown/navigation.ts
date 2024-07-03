@@ -1,12 +1,11 @@
-import { LogOutIcon } from 'lucide-react';
+import { Divide, LogOutIcon } from 'lucide-react';
 import { signOut } from 'next-auth/react';
-import { useDispatch } from 'react-redux';
 
 export const dropdownNavigation = [
   {
     type: 'link',
     name: 'My Account',
-    url: '/my-acocunt',
+    url: '/my-account',
     separator: true,
   },
   {
@@ -16,7 +15,7 @@ export const dropdownNavigation = [
   },
   {
     type: 'list',
-    name: 'Switch workspaces',
+    name: 'Switch Workspace',
     url: null,
     children: [
       {
@@ -24,10 +23,6 @@ export const dropdownNavigation = [
         name: 'Create or join a workspace',
         url: '/join',
         separator: false,
-      },
-      {
-        type: 'button',
-        name: '',
       },
     ],
   },
@@ -38,3 +33,4 @@ export const dropdownNavigation = [
     icon: LogOutIcon,
   },
 ];
+

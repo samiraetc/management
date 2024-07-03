@@ -1,11 +1,17 @@
 import Layout from '@/components/Layout/Layout';
-import { RootState } from '@/redux/store';
-import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 export default function Home() {
-  const workspace = useSelector((state: RootState) => state.workspace);
+  const router = useRouter();
 
-  console.log(workspace);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const workspace = localStorage.getItem('workspace') ?? '';
+      router.push(`/${workspace}`);
+    }
+  }, []);
+
   return (
     <Layout>
       <div>oi</div>
