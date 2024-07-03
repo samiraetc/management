@@ -41,11 +41,11 @@ const JoinPage = () => {
     setUrl(name.trim().toLowerCase().replace(/\s+/g, '-'));
   }, [name]);
 
-  if (loading) <div>loading...</div>;
+  if (loading) return <div>loading...</div>;
 
   return (
-    <div className="p-10">
-      <div className="flex items-center justify-between">
+    <div className="flex flex-col gap-1 min-h-screen">
+      <div className="flex justify-between px-7 pt-5 sm:px-10">
         <Link href="/" className="flex items-center gap-1">
           <ChevronLeft width={14} height={14} />
           Back
@@ -56,49 +56,51 @@ const JoinPage = () => {
         </div>
       </div>
 
-      <div className="mt-20 flex flex-col items-center justify-center gap-8">
-        <div className="text-center">
-          <p className="text-3xl">Create a new workspace</p>
-          <p className="mt-5 w-96 text-base text-gray-500">
-            Workspace are shared environments where teams can work on projects
-            and issues.
-          </p>
+      <div className="flex flex-1 items-center justify-center">
+        <div className="flex w-80 flex-col justify-between gap-4 sm:w-1/3">
+          <div className="text-center">
+            <p className="text-3xl">Create a new workspace</p>
+            <p className="w-88 mt-5 text-base text-gray-500 lg:w-96">
+              Workspaces are shared environments where teams can work on projects
+              and issues.
+            </p>
+          </div>
+
+          <Card className="flex flex-col gap-2">
+            <CardContent className="flex flex-col gap-8 p-6">
+              <div className="flex flex-col justify-start gap-2">
+                <Label htmlFor="name">Workspace Name</Label>
+                <Input
+                  value={name}
+                  id="name"
+                  onChange={(e) => setName(e.target.value)}
+                  className={
+                    error ? 'border-red-500 focus:border-neutral-200' : 'h-12'
+                  }
+                />
+              </div>
+
+              <div className="flex flex-col justify-start gap-2">
+                <Label htmlFor="url">Workspace URL</Label>
+                <Input
+                  value={url}
+                  id="url"
+                  onChange={(e) => setUrl(e.target.value)}
+                  className={
+                    error ? 'border-red-500 focus:border-neutral-200' : 'h-12'
+                  }
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Button
+            className="flex flex-col gap-2"
+            onClick={handleClickCreateWorkspace}
+          >
+            Create Workspace
+          </Button>
         </div>
-
-        <Card className="w-1/3 shadow-lg">
-          <CardContent className="flex flex-col gap-8 p-6">
-            <div className="flex flex-col justify-start gap-2">
-              <Label htmlFor="name">Workspace Name</Label>
-              <Input
-                value={name}
-                id="name"
-                onChange={(e) => setName(e.target.value)}
-                className={
-                  error ? 'border-red-500 focus:border-neutral-200' : 'h-12'
-                }
-              />
-            </div>
-
-            <div className="flex flex-col justify-start gap-2">
-              <Label htmlFor="url">Workspace URL</Label>
-              <Input
-                value={url}
-                id="url"
-                onChange={(e) => setUrl(e.target.value)}
-                className={
-                  error ? 'border-red-500 focus:border-neutral-200' : 'h-12'
-                }
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Button
-          className="h-12 w-1/4 rounded-md bg-primary p-2 shadow-sm"
-          onClick={handleClickCreateWorkspace}
-        >
-          Create Workspace
-        </Button>
       </div>
     </div>
   );

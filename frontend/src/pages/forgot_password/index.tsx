@@ -2,7 +2,6 @@ import { ModeToggle } from '@/components/ModeToggle/ModeToggle';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
-
 import React, { useEffect, useState } from 'react';
 import {
   InputOTP,
@@ -14,7 +13,7 @@ import { ChevronLeft } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 
-const Login = () => {
+const ForgotPassword = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [email, setEmail] = useState<string>('');
@@ -32,17 +31,17 @@ const Login = () => {
       session?.user.workspaces?.length === 0
         ? router.push('/join')
         : router.push(
-            `/${workspaceUrl ?? (session?.user.workspaces && session?.user.workspaces[0].url_key)}`,
+            `/${workspaceUrl ?? (session?.user.workspaces && session?.user.workspaces[0].url_key)}`
           );
     }
-  }, [status, router, status]);
+  }, [status, router, session, workspaceUrl]);
 
   if (status === 'loading' || status === 'authenticated') {
     return null;
   }
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 min-h-screen">
       <div className="flex justify-between px-7 pt-5 sm:px-10">
         <Link href="/" className="flex items-center gap-1">
           <ChevronLeft width={14} height={14} />
@@ -50,7 +49,7 @@ const Login = () => {
         </Link>
         <ModeToggle />
       </div>
-      <div className="text-transparent-black mt-20 flex h-full items-center justify-center sm:mt-0 sm:h-screen">
+      <div className="flex flex-1 items-center justify-center">
         <div className="flex w-80 flex-col justify-between gap-4 align-middle sm:w-1/3">
           <h1 className="text-3xl font-extrabold text-black dark:text-white">
             Forgot Password
@@ -103,4 +102,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;

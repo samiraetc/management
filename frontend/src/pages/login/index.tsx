@@ -22,7 +22,7 @@ const Login = () => {
             `/${workspaceUrl ?? (session?.user.workspaces && session?.user.workspaces[0].url_key)}`,
           );
     }
-  }, [status, router, status]);
+  }, [status, router, session, workspaceUrl]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -49,12 +49,12 @@ const Login = () => {
   }
 
   return (
-    <div className="flex flex-col gap-1">
-     <div className="flex justify-end px-7 sm:px-10  pt-5">
+    <div className="flex flex-col gap-1 min-h-screen">
+      <div className="flex justify-end px-7 sm:px-10 pt-5">
         <ModeToggle />
       </div>
-      <div className="text-transparent-black mt-20 flex h-full items-center justify-center sm:mt-0 sm:h-screen">
-        <div className="flex  w-80 sm:w-1/3  flex-col justify-between gap-4  align-middle">
+      <div className="flex flex-1 items-center justify-center">
+        <div className="flex w-80 flex-col justify-between gap-4 sm:w-1/3">
           <h1 className="text-3xl font-extrabold text-black dark:text-white">
             Log In
           </h1>
@@ -92,7 +92,7 @@ const Login = () => {
             <Link href="/forgot_password" className="tracking-wide underline">
               Forgot your password?
             </Link>
-            <span className='hidden sm:block'>•</span>
+            <span className="hidden sm:block">•</span>
             <Link href="/register" className="tracking-wide underline">
               Create an account
             </Link>

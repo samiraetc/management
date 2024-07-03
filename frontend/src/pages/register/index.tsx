@@ -1,15 +1,14 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { signIn, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { passwordRequeriment, validatePassword } from './utils';
-import { verify } from 'crypto';
 import { Check, ChevronLeft } from 'lucide-react';
 import { ModeToggle } from '@/components/ModeToggle/ModeToggle';
 import { useRouter } from 'next/router';
 
-const Login = () => {
+const Register = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [email, setEmail] = useState<string>('');
@@ -17,13 +16,10 @@ const Login = () => {
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>();
-  const [username, setUsername] = useState<string>();
-  const [passwordRequirements, setPasswordRequirements] =
-    useState(passwordRequeriment);
-
+  const [username, setUsername] = useState<string>('');
+  const [passwordRequirements, setPasswordRequirements] = useState(passwordRequeriment);
   const [showRequeriment, setShowRequeriment] = useState(false);
   const [workspaceUrl, setWorkspaceUrl] = useState('');
-
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -36,17 +32,13 @@ const Login = () => {
       session?.user.workspaces?.length === 0
         ? router.push('/join')
         : router.push(
-            `/${workspaceUrl ?? (session?.user.workspaces && session?.user.workspaces[0].url_key)}`,
+            `/${workspaceUrl ?? (session?.user.workspaces && session?.user.workspaces[0].url_key)}`
           );
     }
-  }, [status, router, status]);
-
-  if (status === 'loading' || status === 'authenticated') {
-    return null;
-  }
+  }, [status, router, session, workspaceUrl]);
 
   useEffect(() => {
-    const [user, _] = email.split('@');
+    const [user] = email.split('@');
     setUsername(user);
   }, [email]);
 
@@ -54,19 +46,21 @@ const Login = () => {
     validatePassword(password, confirmPassword, setPasswordRequirements);
   }, [password, confirmPassword]);
 
+  if (status === 'loading' || status === 'authenticated') {
+    return null;
+  }
+
   return (
-    <div className="flex flex-col gap-1">
-      <div className="flex justify-between px-7 sm:px-10  pt-5">
+    <div className="flex flex-col gap-1 min-h-screen">
+      <div className="flex justify-between px-7 sm:px-10 pt-5">
         <Link href="/" className="flex items-center gap-1">
           <ChevronLeft width={14} height={14} />
           Back
         </Link>
         <ModeToggle />
       </div>
-      <div
-        className={`text-transparent-black flex  ${showRequeriment ? 'h-full mb-10 flex-col items-center' : ' mt-5 sm:mt-0 h-full sm:h-screen items-center justify-center'}`}
-      >
-        <div className="flex w-80 flex-col justify-between gap-4 align-middle sm:w-1/4">
+      <div className={`flex flex-1 ${showRequeriment ? 'mb-10' : 'mt-5 sm:mt-0'} items-center justify-center`}>
+        <div className="flex w-80 flex-col justify-between gap-4 sm:w-1/4">
           <h1 className="text-3xl font-extrabold text-black dark:text-white">
             Create Account
           </h1>
@@ -88,7 +82,6 @@ const Login = () => {
                 <Label htmlFor="last_name" className="text-xs font-normal">
                   Last Name
                 </Label>
-
                 <Input
                   value={lastName}
                   type="text"
@@ -142,22 +135,21 @@ const Login = () => {
               <div className="mt-2 flex flex-col gap-1 text-xs">
                 <p className="font-semibold">Password must contain</p>
                 <div>
-                  {passwordRequirements.map((item) => {
-                    return (
-                      <p
-                        className={`${item.check && 'text-green-600'} flex items-center gap-1`}
-                      >
-                        <Check width={12} />
-                        {item.name}
-                      </p>
-                    );
-                  })}
+                  {passwordRequirements.map((item) => (
+                    <p
+                      key={item.name}
+                      className={`flex items-center gap-1 ${item.check && 'text-green-600'}`}
+                    >
+                      <Check width={12} />
+                      {item.name}
+                    </p>
+                  ))}
                 </div>
               </div>
             )}
           </div>
           <button
-            disabled={password != confirmPassword}
+            disabled={password !== confirmPassword}
             className="rounded-md bg-black p-2 text-white shadow-sm disabled:bg-gray-400"
             // onClick={handleSingin}
           >
@@ -173,4 +165,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
