@@ -1,6 +1,6 @@
 export interface IMenuSidebarButton {
-  url: string;
+  url?: string;
   icon?: React.ReactElement;
-  name?: string;
+  name: string;
   onClick?: () => void;
 }

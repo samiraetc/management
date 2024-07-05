@@ -7,10 +7,10 @@ import { IMenuSidebarButton } from "./types";
 
 const MenuSidebarButton: FC<IMenuSidebarButton> = ({ icon, name, url, onClick }) => {
   return (
-    <Link href={url}>
+    <Link href={url ?? ''}>
       <Button
         variant="ghost"
-        className="gap-2 w-full justify-start hover:bg-fruit-salad-50  dark:hover:bg-muted"
+        className="gap-2 w-full justify-start hover:bg-muted h-8"
         onClick={onClick}
       >
         {icon}

@@ -27,7 +27,7 @@ import {
   CommandShortcut,
 } from '@/components/ui/command';
 
-const ConfigsDropdown = () => {
+const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
   const { data: session } = useSession();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -35,6 +35,7 @@ const ConfigsDropdown = () => {
   const [open, setOpen] = useState(false);
 
   const workspaceStorage = localStorage.getItem('workspace');
+
 
   const setWorkspaceStorage = (workspace: IUseWorkspaceData) => {
     localStorage.setItem('workspace', workspace.url_key);
@@ -53,7 +54,7 @@ const ConfigsDropdown = () => {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === 'K' && (e.metaKey || e.ctrlKey)) {
+      if ((e.key === 'K' || e.key === 'k') && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setOpen((open) => !open);
       }
@@ -61,8 +62,7 @@ const ConfigsDropdown = () => {
 
     document.addEventListener('keydown', down);
     return () => document.removeEventListener('keydown', down);
-  }, [open]);
-
+  });
 
   return (
     !loading && (
@@ -79,7 +79,9 @@ const ConfigsDropdown = () => {
                   src="https://api.dicebear.com/8.x/lorelei/svg?backgroundColor=8fc69b&hair=variant18&earrings=variant01&mouth=happy16&eyes=variant23&scale=160"
                 />
               </Avatar>
-              <p className="font-medium">{session?.user.full_name}</p>
+              {!shrink && (
+                <p className="font-medium">{session?.user.full_name}</p>
+              )}
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="ml-4 w-72 sm:w-64" sideOffset={10}>

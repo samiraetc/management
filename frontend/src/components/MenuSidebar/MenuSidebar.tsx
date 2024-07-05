@@ -6,7 +6,13 @@ import {
   AccordionTrigger,
 } from '../ui/accordion';
 import MenuSidebarButton from './components/MenuSidebarButton';
-import { ChevronsLeft, ChevronsRight, Home, ListTodo } from 'lucide-react';
+import {
+  ChevronsLeft,
+  ChevronsRight,
+  ListTodo,
+  SquarePen,
+  UsersRound,
+} from 'lucide-react';
 import { ModeToggle } from '../ModeToggle/ModeToggle';
 import { translation } from '@/i18n/i18n';
 import { useWorkspaceTeams } from '@/hook/useTeams/useWorkspaceTeams';
@@ -14,7 +20,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import ConfigsDropdown from './components/ConfigsDropdown/ConfigsDropdown';
 import { IUseWorkspaceData } from '@/hook/useWorkspace/types';
-import { useSession } from 'next-auth/react';
 
 interface IMenuSidebar {
   shrink?: boolean;
@@ -46,7 +51,7 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
   };
 
   return (
-    <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r px-4">
+    <div className="flex grow flex-col gap-y-7 overflow-y-auto border-r px-4">
       <div className="flex items-center justify-between">
         {!shrink ? (
           <>
@@ -69,25 +74,33 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
           <>
             <Accordion type="single" collapsible className="transition-all">
               <AccordionItem value="home" className="border-none">
-                <MenuSidebarButton
-                  url={`/${workspace?.url_key}`}
-                  icon={<Home className="text-fruit-salad-600" />}
-                  name={translation('menuSidebar:home')}
-                />
+                <div className="text-md mb-5 flex w-full items-center justify-between gap-7 pl-4 font-semibold">
+                  {workspace?.name}
+                  <div className="rounded-lg border p-1.5">
+                    <SquarePen width={20} height={20} />
+                  </div>
+                </div>
               </AccordionItem>
 
               <AccordionItem value="home" className="border-none">
                 <MenuSidebarButton
                   url={`/${workspace?.url_key}`}
-                  icon={<ListTodo className="text-fruit-salad-600" />}
+                  icon={<ListTodo className="text-gray-500" width={18} />}
                   name={translation('menuSidebar:my_issues')}
+                />
+              </AccordionItem>
+
+              <AccordionItem value="home" className="border-none">
+                <MenuSidebarButton
+                  icon={<UsersRound className="text-gray-500" width={18} />}
+                  name="Teams"
                 />
               </AccordionItem>
             </Accordion>
 
             <Accordion type="single" collapsible defaultValue="teams">
               <AccordionItem value="teams" className="border-none">
-                <AccordionTrigger className="items-start rounded-md px-4 py-2 text-gray-500 hover:bg-fruit-salad-50 hover:no-underline dark:hover:bg-muted">
+                <AccordionTrigger className="mt-4 items-start rounded-md px-4 py-2 text-gray-500 hover:bg-muted hover:no-underline dark:hover:bg-muted">
                   <div className="flex gap-2">
                     <p className="text-xs">
                       {translation('menuSidebar:your_teams')}
@@ -113,10 +126,12 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
         )}
 
         <div role="list" className="flex flex-1 flex-col gap-y-7">
-          <div className="-mx-5 mt-auto flex items-center justify-between border-t p-3">
-            <ConfigsDropdown />
+          <div
+            className={`${shrink ? '-mx-4 p-2 pb-3 pl-2' : '-mx-4 p-3 pl-2'} mt-auto flex items-center justify-between border-t`}
+          >
+            <ConfigsDropdown shrink={shrink} />
 
-            <ModeToggle />
+            {!shrink && <ModeToggle />}
           </div>
         </div>
       </div>

@@ -124,7 +124,7 @@ const Layout = ({ children }: LayoutProps) => {
                     <Button
                       variant="ghost"
                       className="-m-2.5 p-2.5"
-                      onClick={() => setSidebarOpen(false)}
+                      onClick={() => setSidebarOpen(!sidebarOpen)}
                     >
                       <span className="sr-only">Close sidebar</span>
                       <X className="size-6 text-white" aria-hidden="true" />
@@ -153,7 +153,7 @@ const Layout = ({ children }: LayoutProps) => {
         <Button
           type="button"
           className="-m-2.5 p-2.5 lg:hidden"
-          onClick={() => setSidebarOpen(true)}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
           variant="ghost"
         >
           <span className="sr-only">Open sidebar</span>
