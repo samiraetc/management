@@ -127,7 +127,7 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
 
         <div role="list" className="flex flex-1 flex-col gap-y-7">
           <div
-            className={`${shrink ? '-mx-4 p-2 pb-3 pl-2' : '-mx-4 p-3 pl-2'} mt-auto flex items-center justify-between border-t`}
+            className={"-mx-7 p-3 pl-2 mt-auto flex items-center justify-between border-t"}
           >
             <ConfigsDropdown shrink={shrink} />
 

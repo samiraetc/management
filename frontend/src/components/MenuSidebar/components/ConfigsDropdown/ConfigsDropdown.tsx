@@ -1,10 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import React, { useEffect, useState } from 'react';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { Button } from '@headlessui/react';
@@ -26,6 +20,16 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from '@/components/ui/command';
+import useWindowSize from '@/hook/useWindowSize/useWindowSize';
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarTrigger,
+} from '@/components/ui/menubar';
 
 const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
   const { data: session } = useSession();
@@ -35,7 +39,6 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
   const [open, setOpen] = useState(false);
 
   const workspaceStorage = localStorage.getItem('workspace');
-
 
   const setWorkspaceStorage = (workspace: IUseWorkspaceData) => {
     localStorage.setItem('workspace', workspace.url_key);
@@ -67,70 +70,79 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
   return (
     !loading && (
       <>
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className="flex cursor-pointer items-center gap-2"
-            asChild
-          >
-            <div>
-              <Avatar className="size-12">
-                <AvatarImage
-                  className="wrounded-"
-                  src="https://api.dicebear.com/8.x/lorelei/svg?backgroundColor=8fc69b&hair=variant18&earrings=variant01&mouth=happy16&eyes=variant23&scale=160"
-                />
-              </Avatar>
-              {!shrink && (
+        <Menubar className="border-none">
+          <MenubarMenu>
+            <MenubarTrigger
+              className="flex cursor-pointer items-center gap-2 focus:bg-none"
+              asChild
+            >
+              <div>
+                <Avatar className="size-12">
+                  <AvatarImage
+                    className="wrounded-"
+                    src="https://api.dicebear.com/8.x/lorelei/svg?backgroundColor=8fc69b&hair=variant18&earrings=variant01&mouth=happy16&eyes=variant23&scale=160"
+                  />
+                </Avatar>
+                {!shrink && (
                 <p className="font-medium">{session?.user.full_name}</p>
               )}
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="ml-4 w-72 sm:w-64" sideOffset={10}>
-            {dropdownNavigation.map((item) => (
-              <React.Fragment key={item.name}>
-                {item.type === 'link' && (
-                  <DropdownMenuItem>
-                    <Link
-                      href={item.url ?? ''}
-                      className="text-md w-full p-1 font-medium"
-                    >
-                      <p>{item.name}</p>
-                    </Link>
-                  </DropdownMenuItem>
-                )}
-                {item.type === 'button' && (
-                  <DropdownMenuItem>
-                    <Button
-                      className="text-md flex w-full justify-between p-1"
-                      onClick={() => {
-                        item.name === 'logout' && handleLogout();
-                        item.action && item.action();
-                      }}
-                    >
-                      <p>{item.name}</p>
-                      {item.icon && <item.icon width={16} />}
-                    </Button>
-                  </DropdownMenuItem>
-                )}
-
-                {item.type === 'list' && (
+              </div>
+            </MenubarTrigger>
+            <MenubarContent className="ml-4 w-64" sideOffset={10}>
+              {dropdownNavigation.map((item) => {
+                return (
                   <>
-                    <DropdownMenuItem className="w-full">
-                      <Button
-                        className="text-md flex w-full justify-between p-1"
-                        onClick={() => setOpen(true)}
-                      >
-                        {item.name}
-                        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-                          <span className="text-xs">⌘</span>K
-                        </kbd>
-                      </Button>
-                    </DropdownMenuItem>
+                    {item.type === 'link' && (
+                      <>
+                        <MenubarItem key={item.name}>
+                          <Link
+                            href={item.url ?? ''}
+                            className="text-md w-full p-1 font-medium"
+                          >
+                            <p>{item.name}</p>
+                          </Link>
+                        </MenubarItem>
+                        {item.separator && <MenubarSeparator />}
+                      </>
+                    )}
+                    {item.type === 'button' && (
+                      <>
+                        <MenubarItem key={item.name}>
+                          <Button
+                            className="text-md flex w-full justify-between p-1"
+                            onClick={() => {
+                              item.name === 'logout' && handleLogout();
+                              item.action && item.action();
+                            }}
+                          >
+                            <p>{item.name}</p>
+                            {item.icon && <item.icon width={16} />}
+                          </Button>
+                        </MenubarItem>
+                        {item.separator && <MenubarSeparator />}
+                      </>
+                    )}
+
+                    {item.type === 'list' && (
+                      <>
+                        <MenubarItem
+                          key={item.name}
+                          onClick={() => setOpen(true)}
+                        >
+                          <Button className="text-md flex w-full justify-between p-1">
+                            <p>{item.name}</p>
+                            {item.icon && <item.icon width={16} />}
+                            <MenubarShortcut>⌘K</MenubarShortcut>
+                          </Button>
+                        </MenubarItem>
+                      </>
+                    )}
                   </>
-                )}
-              </React.Fragment>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                );
+              })}
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
 
         <CommandDialog
           open={open}
@@ -173,7 +185,7 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
                           <p>{child.name}</p>
                         </Link>
 
-                        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+                        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-70">
                           <CommandShortcut>J</CommandShortcut>
                         </kbd>
                       </CommandItem>

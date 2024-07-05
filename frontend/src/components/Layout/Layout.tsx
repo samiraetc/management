@@ -17,6 +17,11 @@ import {
 } from '@headlessui/react';
 import api from '@/pages/api/api';
 import { IUseWorkspaceData } from '@/hook/useWorkspace/types';
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '../ui/resizable';
 
 type LayoutProps = {
   children: ReactNode;
@@ -139,16 +144,6 @@ const Layout = ({ children }: LayoutProps) => {
         </Dialog>
       </Transition>
 
-      <div
-        className={`hidden md:w-72 lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col ${shrink ? 'lg:w-16' : ''}`}
-      >
-        <MenuSidebar
-          shrink={shrink}
-          setShrink={setShrink}
-          workspace={workspace}
-        />
-      </div>
-
       <div className="sticky top-0 z-40 flex items-center gap-x-6 p-4 shadow-sm sm:px-6 lg:hidden">
         <Button
           type="button"
@@ -161,11 +156,27 @@ const Layout = ({ children }: LayoutProps) => {
         </Button>
       </div>
 
-      <main
-        className={`${shrink ? 'py-6 lg:pl-12' : 'py-6 lg:pl-72'} transition-all duration-150`}
-      >
-        <div className="px-4 sm:px-6">{children}</div>
-      </main>
+      <ResizablePanelGroup direction="horizontal">
+        <ResizablePanel
+          minSize={shrink ? 5 : 15}
+          maxSize={shrink ? 4.5 : 20}
+          className={
+            'hidden lg:inset-y-0 lg:z-50 lg:flex lg:h-screen lg:flex-col'
+          }
+        >
+          <MenuSidebar
+            shrink={shrink}
+            setShrink={setShrink}
+            workspace={workspace}
+          />
+        </ResizablePanel>
+        <ResizableHandle />
+        <ResizablePanel>
+          <main className={'py-6 transition-all duration-150'}>
+            <div className="px-4 sm:px-6">{children}</div>
+          </main>
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </div>
   ) : (
     <div className="px-4 sm:px-6">{children}</div>
