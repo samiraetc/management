@@ -1,41 +1,31 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { passwordRequeriment, validatePassword } from './utils';
 import { Check, ChevronLeft } from 'lucide-react';
 import { ModeToggle } from '@/components/ModeToggle/ModeToggle';
 import { useRouter } from 'next/router';
+import { Button } from '@/components/ui/button';
+import { UserServices } from '@/services/User/user.services';
+import { useToast } from '@/components/ui/use-toast';
+import { Toaster } from '@/components/ui/toaster';
+import useWorkspaceUrl from '@/hook/useWorkspaceStorage/useWorkspaceStorage';
 
 const Register = () => {
   const router = useRouter();
-  const { data: session, status } = useSession();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>();
   const [username, setUsername] = useState<string>('');
-  const [passwordRequirements, setPasswordRequirements] = useState(passwordRequeriment);
+  const [passwordRequirements, setPasswordRequirements] =
+    useState(passwordRequeriment);
   const [showRequeriment, setShowRequeriment] = useState(false);
-  const [workspaceUrl, setWorkspaceUrl] = useState('');
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setWorkspaceUrl(localStorage.getItem('workspace') ?? '');
-    }
-  }, []);
-
-  useEffect(() => {
-    if (status === 'authenticated' && session) {
-      session?.user.workspaces?.length === 0
-        ? router.push('/join')
-        : router.push(
-            `/${workspaceUrl ?? (session?.user.workspaces && session?.user.workspaces[0].url_key)}`
-          );
-    }
-  }, [status, router, session, workspaceUrl]);
+  const { toast } = useToast();
+  const [errors, setErrors] = useState<any>({});
+  useWorkspaceUrl();
 
   useEffect(() => {
     const [user] = email.split('@');
@@ -46,20 +36,60 @@ const Register = () => {
     validatePassword(password, confirmPassword, setPasswordRequirements);
   }, [password, confirmPassword]);
 
-  if (status === 'loading' || status === 'authenticated') {
-    return null;
-  }
+  const handleClickCreateAccount = useCallback(() => {
+    const successCallback = () => {
+      router.push(`/login`);
+    };
+
+    const errorCallback = (error: any) => {
+      if (error.response && error.response.data && error.response.data.errors) {
+        setErrors(error.response.data.errors);
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong :(',
+          description: (
+            <ul>
+              {Object.entries(error.response.data.errors).map(
+                ([field, errorMessage], index) => (
+                  <li key={index}>{`${field}: ${errorMessage}`}</li>
+                ),
+              )}
+            </ul>
+          ),
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong :(',
+          description: 'Failed to create account. Please try again later.',
+        });
+      }
+    };
+
+    UserServices.create({
+      first_name: firstName,
+      last_name: lastName,
+      username,
+      email,
+      password,
+    })
+      .then(successCallback)
+      .catch(errorCallback);
+  }, [firstName, lastName, username, email, password]);
 
   return (
-    <div className="flex flex-col gap-1 min-h-screen">
-      <div className="flex justify-between px-7 sm:px-10 pt-5">
-        <Link href="/" className="flex items-center gap-1">
+    <div className="flex min-h-screen flex-col gap-1">
+      <Toaster />
+      <div className="flex justify-between px-7 pt-5 sm:px-10">
+        <Link href="/login" className="flex items-center gap-1">
           <ChevronLeft width={14} height={14} />
           Back
         </Link>
         <ModeToggle />
       </div>
-      <div className={`flex flex-1 ${showRequeriment ? 'mb-10' : 'mt-5 sm:mt-0'} items-center justify-center`}>
+      <div
+        className={`flex flex-1 ${showRequeriment ? 'mb-10' : 'mt-5 sm:mt-0'} items-center justify-center`}
+      >
         <div className="flex w-80 flex-col justify-between gap-4 sm:w-1/4">
           <h1 className="text-3xl font-extrabold text-black dark:text-white">
             Create Account
@@ -75,6 +105,7 @@ const Register = () => {
                   type="text"
                   id="first_name"
                   onChange={(e) => setFirstName(e.target.value)}
+                  className={errors.first_name && 'border-red-500'}
                 />
               </div>
 
@@ -87,6 +118,7 @@ const Register = () => {
                   type="text"
                   id="last_name"
                   onChange={(e) => setLastName(e.target.value)}
+                  className={errors.last_name && 'border-red-500'}
                 />
               </div>
             </div>
@@ -118,6 +150,7 @@ const Register = () => {
               placeholder="•••••••••"
               onChange={(e) => setPassword(e.target.value)}
               onFocus={() => setShowRequeriment(true)}
+              className={errors.password && 'border-red-500'}
             />
 
             <Label htmlFor="confirm_password" className="text-xs font-normal">
@@ -148,13 +181,13 @@ const Register = () => {
               </div>
             )}
           </div>
-          <button
+          <Button
             disabled={password !== confirmPassword}
-            className="rounded-md bg-black p-2 text-white shadow-sm disabled:bg-gray-400"
-            // onClick={handleSingin}
+            className="rounded-md p-2 shadow-sm disabled:bg-gray-400"
+            onClick={handleClickCreateAccount}
           >
             Create
-          </button>
+          </Button>
 
           <div className="text-center text-sm tracking-wide underline">
             <Link href="/login">Do you have an account? Sign In</Link>

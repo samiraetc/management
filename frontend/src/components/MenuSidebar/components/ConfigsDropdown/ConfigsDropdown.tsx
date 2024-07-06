@@ -73,7 +73,7 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
         <Menubar className="border-none">
           <MenubarMenu>
             <MenubarTrigger
-              className="flex cursor-pointer items-center gap-2 focus:bg-none"
+              className="flex cursor-pointer items-center gap-2 focus:bg-transparent data-[state=open]:bg-transparent"
               asChild
             >
               <div>

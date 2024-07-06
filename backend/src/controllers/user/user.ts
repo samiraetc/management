@@ -2,6 +2,7 @@ import { createUserSchema } from '@/models/user/type';
 import { createUser, selectAllUsers, selectUser } from '@/models/user/user';
 import bcrypt from 'bcrypt';
 import { FastifyRequest, FastifyReply } from 'fastify';
+import { ZodError } from 'zod';
 
 const createUserController = async (
   request: FastifyRequest,
@@ -18,15 +19,23 @@ const createUserController = async (
       password: await bcrypt.hash(parsedBody.password, 10),
       created_at: new Date(),
       username: parsedBody.username,
-      position: parsedBody.position,
-      language: parsedBody.language,
+      position: parsedBody.position ?? null,
+      language: parsedBody.language ?? null,
     };
 
     const user = await createUser(body);
 
     reply.code(201).send({ data: user });
   } catch (error) {
-    reply.code(400).send(error);
+    if (error instanceof ZodError) {
+      const formattedErrors = error.errors.reduce((acc: any, err) => {
+        acc[err.path[0]] = err.message;
+        return acc;
+      }, {});
+      reply.code(400).send({ errors: formattedErrors });
+    } else {
+      reply.code(400).send(error);
+    }
   }
 };
 

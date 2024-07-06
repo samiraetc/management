@@ -16,6 +16,7 @@ const JoinPage = () => {
   const [url, setUrl] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const hasWorkspaces = session?.user.workspaces?.length === 0
 
   const handleClickCreateWorkspace = useCallback(() => {
     setLoading(true);
@@ -46,10 +47,10 @@ const JoinPage = () => {
   return (
     <div className="flex flex-col gap-1 min-h-screen">
       <div className="flex justify-between px-7 pt-5 sm:px-10">
-        <Link href="/" className="flex items-center gap-1">
+       {!hasWorkspaces ? <Link href="/" className="flex items-center gap-1">
           <ChevronLeft width={14} height={14} />
           Back
-        </Link>
+        </Link> : <div />}
         <div className="text-sm">
           <p className="text-gray-600">Logged in as:</p>
           <p className="font-semibold">{session?.user.email}</p>
@@ -57,10 +58,10 @@ const JoinPage = () => {
       </div>
 
       <div className="flex flex-1 items-center justify-center">
-        <div className="flex w-80 flex-col justify-between gap-4 sm:w-1/3">
-          <div className="text-center">
-            <p className="text-3xl">Create a new workspace</p>
-            <p className="w-88 mt-5 text-base text-gray-500 lg:w-96">
+        <div className="flex w-80 flex-col justify-between gap-4 sm:w-1/2 md:1/3 lg:w-1/3 xl:w-1/4">
+          <div className="text-center flex flex-col justify-center">
+            <p className="text-2xl font-semibold">Create a new workspace</p>
+            <p className="w-88 mt-5 text-sm sm:text-base text-center text-gray-500">
               Workspaces are shared environments where teams can work on projects
               and issues.
             </p>
