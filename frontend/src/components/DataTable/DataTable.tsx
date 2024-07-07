@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   ColumnDef,
   ColumnFilter,
-  ColumnFiltersState,
   FilterFn,
   flexRender,
   getCoreRowModel,
@@ -29,8 +28,16 @@ import {
 import { DataTablePagination } from './DataTablePagination';
 import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
 import { DataTableToolbar } from './DataTableToolbar';
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Minus,
+  Plus,
+} from 'lucide-react';
+import { getDeaphColor } from '@/lib/utils';
 
-interface DataTableProps<TData extends { children?: TData[] }, TValue> {
+interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
@@ -54,17 +61,6 @@ declare module '@tanstack/react-table' {
   }
 }
 
-function getUniqueOptions<TData>(data: TData[], accessorKey: string): string[] {
-  const uniqueOptions = new Set<string>();
-  data.forEach((item: any) => {
-    const value = item[accessorKey];
-    if (value !== undefined && value !== null) {
-      uniqueOptions.add(String(value));
-    }
-  });
-  return Array.from(uniqueOptions);
-}
-
 export function DataTable<TData extends { children?: TData[] }, TValue>({
   columns,
   data,
@@ -75,9 +71,7 @@ export function DataTable<TData extends { children?: TData[] }, TValue>({
     React.useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = React.useState('');
   const [rowSelection, setRowSelection] = React.useState({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFilter[]>(
-    [],
-  );
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFilter[]>([]);
 
   const table = useReactTable({
     data,
@@ -110,6 +104,10 @@ export function DataTable<TData extends { children?: TData[] }, TValue>({
     globalFilterFn: 'fuzzy',
   });
 
+  const hasChildren = table
+    .getRowModel()
+    .rows.some((row) => row.getCanExpand());
+
   const toggleExpand = (row: Row<TData>) => {
     setExpanded((prev: any) => ({
       ...prev,
@@ -117,35 +115,59 @@ export function DataTable<TData extends { children?: TData[] }, TValue>({
     }));
   };
 
-  console.log(table.getRowModel().rows)
+  const toggleExpandAll = () => {
+    const isAllExpanded = Object.values(expanded).some(Boolean);
+    setExpanded(
+      isAllExpanded
+        ? {}
+        : table.getRowModel().rows.reduce((acc: any, row) => {
+            acc[row.id] = true;
+            return acc;
+          }, {}),
+    );
+  };
 
   return (
     <div>
-
-     <div className='mb-5'>
-     <DataTableToolbar table={table} globalFilter={globalFilter} />
-     </div>
+      <div className="mb-5">
+        <DataTableToolbar table={table} globalFilter={globalFilter} />
+      </div>
 
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
+            <TableRow>
+              {hasChildren && (
+                <TableHead>
+                  <div
+                    onClick={toggleExpandAll}
+                    className="flex items-center rounded-sm border border-border px-1.5 focus:outline-none"
+                  >
+                    {Object.values(expanded).some(Boolean) ? (
+                      <ChevronDown width={14} />
+                    ) : (
+                      <ChevronRight width={14} />
+                    )}
+                  </div>
+                </TableHead>
+              )}
+              {table
+                .getHeaderGroups()
+                .map((headerGroup) =>
+                  headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  )),
+                )}
+            </TableRow>
           </TableHeader>
           <TableBody>
-
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -153,18 +175,37 @@ export function DataTable<TData extends { children?: TData[] }, TValue>({
                   data-state={row.getIsSelected() && 'selected'}
                   onClick={() => toggleExpand(row)}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {hasChildren && (
                     <TableCell
-                      key={cell.id}
-                      className={`bg-background p-2`}
-                      style={{ width: `${cell.column.getSize()}px` }}
+                      className={`p-2 px-4 ${getDeaphColor(row.depth)}`}
                     >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      <div className="flex">
+                        {row.getCanExpand() ? (
+                          <div className="rounded-sm border px-1.5">
+                            {row.getIsExpanded() ? (
+                              <ChevronDown width={14} />
+                            ) : (
+                              <ChevronRight width={14} />
+                            )}
+                          </div>
+                        ) : null}
+                      </div>
                     </TableCell>
-                  ))}
+                  )}
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <TableCell
+                        key={cell.id}
+                        className={`p-2 px-4 ${getDeaphColor(row.depth)}`}
+                        style={{ width: `${cell.column.getSize()}px` }}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               ))
             ) : (

@@ -42,6 +42,11 @@ export const priorities = [
     value: 'high',
     icon: ArrowUp,
   },
+  {
+    label: 'urgent',
+    value: 'urgent',
+    icon: ArrowUp,
+  },
 ];
 
 export function DataTableToolbar<TData>({

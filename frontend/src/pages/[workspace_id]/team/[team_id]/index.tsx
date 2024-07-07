@@ -1,12 +1,17 @@
+import { DataTable } from '@/components/DataTable/DataTable';
 import Layout from '@/components/Layout/Layout';
+import { convertDataBasedOnColumns } from '@/lib/convert';
+import { jsonData } from '@/pages/my-issues/teste';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
+import { columns } from './AquaporColumns';
 
 export default function TeamArea() {
   const team = useSelector((state: RootState) => state.teams.teams);
+
   return (
     <Layout>
-      <div className="text-6xl font-bold">{team?.name}</div>
+     <DataTable columns={columns} data={convertDataBasedOnColumns(jsonData)} />
     </Layout>
   );
 }
