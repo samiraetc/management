@@ -1,6 +1,8 @@
 import Layout from '@/components/Layout/Layout';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
+import { DataTable } from '@/components/DataTable/DataTable';
+import { columns, payments } from '../my-issues/PaymentColumns';
 
 export default function WorkspaceArea() {
   const workspace = useSelector(
@@ -9,7 +11,7 @@ export default function WorkspaceArea() {
 
   return (
     <Layout>
-      <div className="text-6xl font-bold">{workspace?.name}</div>
+      <DataTable columns={columns} data={payments} />
     </Layout>
   );
 }
