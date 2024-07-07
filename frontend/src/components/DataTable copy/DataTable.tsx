@@ -20,6 +20,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableHead,
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
@@ -29,7 +30,10 @@ import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
 import { DataTableToolbar } from './DataTableToolbar';
 import {
   ChevronDown,
+  ChevronLeft,
   ChevronRight,
+  Minus,
+  Plus,
 } from 'lucide-react';
 import { getDeaphColor } from '@/lib/utils';
 
@@ -64,10 +68,7 @@ export function DataTable<TData extends { children?: TData[] }, TValue>({
   const [expanded, setExpanded] = useState({});
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({
-      priority: false,
-      identifier: false
-    });
+    React.useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = React.useState('');
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFilter[]>([]);
@@ -136,7 +137,7 @@ export function DataTable<TData extends { children?: TData[] }, TValue>({
         <Table>
           <TableHeader>
             <TableRow>
-              {/* {hasChildren && (
+              {hasChildren && (
                 <TableHead>
                   <div
                     onClick={toggleExpandAll}
@@ -163,7 +164,7 @@ export function DataTable<TData extends { children?: TData[] }, TValue>({
                           )}
                     </TableHead>
                   )),
-                )} */}
+                )}
             </TableRow>
           </TableHeader>
           <TableBody>

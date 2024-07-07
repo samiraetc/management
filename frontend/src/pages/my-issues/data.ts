@@ -163,7 +163,7 @@ export const data = [
       {
         id: '04389c5e-ad55-4414-b773-fa0785f9d18f',
         priority: 'urgent',
-        identifier: 'ID-6',
+        identifier: 'IDX-6',
         title: 'Eveniet dolores sed quo voluptas impedit fugit illo corrupti.',
         labels: [
           {
@@ -191,7 +191,7 @@ export const data = [
   {
     id: '04389c5e-ad55-4414-b773-fa0785f9d18f',
     priority: 'urgent',
-    identifier: 'ID-6',
+    identifier: 'IDH-6',
     title: 'Eveniet dolores sed quo voluptas impedit fugit illo corrupti.',
     labels: [
       {
@@ -217,7 +217,7 @@ export const data = [
   {
     id: '507455d6-027f-4013-b47d-3be71d863c8f',
     priority: 'low',
-    identifier: 'ET-0',
+    identifier: 'ETL-0',
     title: 'Error maiores ut quia dolores quia tenetur.',
     labels: [
       {
@@ -243,7 +243,7 @@ export const data = [
   {
     id: '34710cfd-2020-4ec8-afdd-14098ee195ae',
     priority: 'urgent',
-    identifier: 'EA-6',
+    identifier: 'EAT-6',
     title: 'Eum laudantium aspernatur maiores non.',
     labels: [
       {
@@ -295,7 +295,7 @@ export const data = [
   {
     id: '4ea5ee7e-df3e-4fcc-bc61-b454ccea333d',
     priority: 'high',
-    identifier: 'IN-3',
+    identifier: 'INB-3',
     title: 'Harum expedita asperiores id qui quisquam ex eum incidunt fugiat.',
     labels: [
       {

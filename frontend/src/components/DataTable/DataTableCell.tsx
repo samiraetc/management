@@ -1,12 +1,16 @@
+import { cn } from '@/lib/utils';
 import React, { FC } from 'react';
 
 interface IDataTableCell {
   value: string | number | boolean;
+  className?: string;
 }
 
-const DataTableCell: FC<IDataTableCell> = ({ value }) => {
+const DataTableCell: FC<IDataTableCell> = ({ value, className = '' }) => {
   return (
-    <div className="font-normal text-gray-500 dark:text-white">{value}</div>
+    <div className={cn('font-normal text-gray-500 dark:text-white', className)}>
+      {value}
+    </div>
   );
 };
 

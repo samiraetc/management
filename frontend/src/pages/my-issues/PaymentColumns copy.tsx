@@ -1,12 +1,7 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
-import {
-  getActionIcon,
-  getDueDateIcon,
-  getPriorityProps,
-  getStatusesProps,
-} from '@/lib/utils';
+import { getActionIcon, getDueDateIcon, getPriorityProps, getStatusesProps } from '@/lib/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import { Shell } from 'lucide-react';
 import { format } from 'date-fns';
@@ -59,15 +54,7 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: 'status',
     cell: ({ row }) => {
       return (
-        <div className="flex items-center align-middle gap-1">
-          <div className='flex gap-2 items-center'>
-            {getPriorityProps(row.getValue('priority'))}
-            <DataTableCell
-              className="w-16 text-sm p-0.5"
-              value={row.getValue('identifier')}
-            />
-          </div>
-
+        <div className="flex w-12 justify-center">
           {getStatusesProps(row.getValue('status'))?.icon}
         </div>
       );
@@ -95,7 +82,9 @@ export const columns: ColumnDef<Payment>[] = [
       <DataTableColumnHeader column={column} title="Identifier" />
     ),
     cell: ({ row }) => {
-      return <DataTableCell value={row.getValue('identifier')} />;
+      return (
+        <DataTableCell value={row.getValue('identifier')} />
+      );
     },
   },
   {
@@ -171,27 +160,28 @@ export const columns: ColumnDef<Payment>[] = [
       );
     },
   },
-  // {
-  //   accessorKey: 'actions',
-  //   cell: ({ row }) => {
-  //     const keysArray = Object.keys(row.original.actions);
-  //     const route = useRouter();
+  {
+    accessorKey: 'actions',
+    cell: ({ row }) => {
+      const keysArray = Object.keys(row.original.actions);
+      const route = useRouter();
 
-  //     return (
-  //       <div className="flex gap-2">
-  //         {keysArray.map((key) => {
-  //           if (key === 'show') {
-  //             return (
-  //               <div onClick={() => route.push('/testando')}>
-  //                 {getActionIcon(key)}
-  //               </div>
-  //             );
-  //           }
-  //         })}
-  //       </div>
-  //     );
-  //   },
-  // },
+
+      return (
+        <div className="flex gap-2">
+          {keysArray.map((key) => {
+            if (key === 'show') {
+              return (
+                <div onClick={() => route.push('/testando')}>
+                  {getActionIcon(key)}
+                </div>
+              );
+            }
+          })}
+        </div>
+      );
+    },
+  },
 ];
 
 // const generateTask = () => {

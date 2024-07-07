@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import {
   Calendar,
   Circle,
+  CircleAlert,
   CircleCheck,
   CircleDashed,
   CircleX,
@@ -25,15 +26,15 @@ export function cn(...inputs: ClassValue[]) {
 export function getPriorityProps(priority: string) {
   switch (priority) {
     case 'none':
-      return <Minus width={14} />;
+      return <Minus width={18} />;
     case 'low':
-      return <SignalLow width={20} />;
+      return <SignalLow width={18} />;
     case 'medium':
-      return <SignalMedium width={20} />;
+      return <SignalMedium width={18} />;
     case 'high':
-      return <SignalHigh width={20} />;
+      return <SignalHigh width={18} />;
     case 'urgent':
-      return <Siren width={18} />;
+      return <CircleAlert width={18} />;
   }
 }
 
@@ -78,12 +79,12 @@ export const getStatusesProps = (status: string) => {
   switch (status) {
     case 'backlog':
       return {
-        icon: <CircleDashed width={18} height={18} className="text-gray-400" />,
+        icon: <CircleDashed width={18}  className="text-gray-400" />,
         label: 'Backlog',
       };
     case 'to_do':
       return {
-        icon: <Circle width={18} height={18} className="text-gray-400" />,
+        icon: <Circle width={18}  className="text-gray-400" />,
         label: 'To Do',
       };
     case 'doing':
@@ -91,7 +92,7 @@ export const getStatusesProps = (status: string) => {
         icon: (
           <LoaderCircle
             width={18}
-            height={18}
+
             className="animate-spin text-orange-500"
           />
         ),
@@ -103,7 +104,7 @@ export const getStatusesProps = (status: string) => {
         icon: (
           <CircleCheck
             width={18}
-            height={18}
+
             className="text-fruit-salad-600"
           />
         ),
@@ -111,7 +112,7 @@ export const getStatusesProps = (status: string) => {
       };
     case 'canceled':
       return {
-        icon: <CircleX width={18} height={18} className="text-red-500" />,
+        icon: <CircleX width={18}  className="text-red-500" />,
         label: 'Canceled',
       };
   }
