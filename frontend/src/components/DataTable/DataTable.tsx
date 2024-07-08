@@ -11,6 +11,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  GroupingState,
   Row,
   SortingState,
   useReactTable,
@@ -27,10 +28,7 @@ import {
 import { DataTablePagination } from './DataTablePagination';
 import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
 import { DataTableToolbar } from './DataTableToolbar';
-import {
-  ChevronDown,
-  ChevronRight,
-} from 'lucide-react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 import { getDeaphColor } from '@/lib/utils';
 
 interface DataTableProps<TData, TValue> {
@@ -65,12 +63,13 @@ export function DataTable<TData extends { children?: TData[] }, TValue>({
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({
-      priority: false,
-      identifier: false
+      priority: true,
+      identifier: true,
     });
   const [globalFilter, setGlobalFilter] = React.useState('');
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFilter[]>([]);
+  const [grouping, setGrouping] = React.useState<GroupingState>([]);
 
   const table = useReactTable({
     data,
@@ -82,6 +81,7 @@ export function DataTable<TData extends { children?: TData[] }, TValue>({
       columnVisibility,
       globalFilter,
       rowSelection,
+      grouping,
     },
     filterFns: {
       fuzzy: fuzzyFilter,
@@ -100,6 +100,7 @@ export function DataTable<TData extends { children?: TData[] }, TValue>({
     onRowSelectionChange: setRowSelection,
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    onGroupingChange: setGrouping,
     globalFilterFn: 'fuzzy',
   });
 
@@ -149,8 +150,8 @@ export function DataTable<TData extends { children?: TData[] }, TValue>({
                     )}
                   </div>
                 </TableHead>
-              )}
-              {table
+              )} */}
+              {/* {table
                 .getHeaderGroups()
                 .map((headerGroup) =>
                   headerGroup.headers.map((header) => (
@@ -172,19 +173,19 @@ export function DataTable<TData extends { children?: TData[] }, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                  onClick={() => toggleExpand(row)}
                 >
                   {hasChildren && (
                     <TableCell
-                      className={`p-2 px-4 ${getDeaphColor(row.depth)}`}
+                      className={`px-2 py-2 pr-0 ${getDeaphColor(row.depth)}`}
+                      onClick={() => toggleExpand(row)}
                     >
                       <div className="flex">
                         {row.getCanExpand() ? (
-                          <div className="rounded-sm border px-1.5">
+                          <div className="rounded-sm border px-1.5 cursor-pointer">
                             {row.getIsExpanded() ? (
-                              <ChevronDown width={14} />
+                              <ChevronDown width={10} />
                             ) : (
-                              <ChevronRight width={14} />
+                              <ChevronRight width={10} />
                             )}
                           </div>
                         ) : null}
@@ -195,7 +196,7 @@ export function DataTable<TData extends { children?: TData[] }, TValue>({
                     return (
                       <TableCell
                         key={cell.id}
-                        className={`p-2 px-4 ${getDeaphColor(row.depth)}`}
+                        className={`p-2 ${getDeaphColor(row.depth)}`}
                         style={{ width: `${cell.column.getSize()}px` }}
                       >
                         {flexRender(

@@ -33,75 +33,66 @@ export type Payment = {
 };
 
 export const columns: ColumnDef<Payment>[] = [
-  // {
-  //   id: 'select',
-  //   header: ({ table }) => (
-  //     <Checkbox
-  //       checked={
-  //         table.getIsAllPageRowsSelected() ||
-  //         (table.getIsSomePageRowsSelected() && 'indeterminate')
-  //       }
-  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-  //       aria-label="Select all"
-  //     />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <Checkbox
-  //       checked={row.getIsSelected()}
-  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-  //       aria-label="Select row"
-  //     />
-  //   ),
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
   {
-    accessorKey: 'status',
-    cell: ({ row }) => {
-      return (
-        <div className="flex items-center align-middle gap-1">
-          <div className='flex gap-2 items-center'>
-            {getPriorityProps(row.getValue('priority'))}
-            <DataTableCell
-              className="w-16 text-sm p-0.5"
-              value={row.getValue('identifier')}
-            />
-          </div>
-
-          {getStatusesProps(row.getValue('status'))?.icon}
-        </div>
-      );
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className="border-transparent hover:border-2 hover:border-neutral-900"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
   },
   {
     accessorKey: 'priority',
+    size: 20,
     cell: ({ row }) => {
-      return (
-        <div className="flex w-12 justify-center">
-          {getPriorityProps(row.getValue('priority'))}
-        </div>
-      );
+      return getPriorityProps(row.getValue('priority')).icon;
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
   },
+
   {
     accessorKey: 'identifier',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Identifier" />
     ),
     cell: ({ row }) => {
-      return <DataTableCell value={row.getValue('identifier')} />;
+      return (
+        <DataTableCell className="w-14 -ml-2" value={row.getValue('identifier')} />
+      );
+    },
+  },
+  {
+    accessorKey: 'status',
+    cell: ({ row }) => {
+      return <div className='-ml-3'>
+        {getStatusesProps(row.getValue('status'))?.icon}
+      </div>
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
     },
   },
   {
     accessorKey: 'title',
     cell: ({ row }) => {
-      return <div className="w-[40rem]">{row.getValue('title')}</div>;
+      return <div className="w-[40rem] font-medium text-base">{row.getValue('title')}</div>;
     },
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Title" />
@@ -154,7 +145,7 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: 'estimative',
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-1 font-normal text-gray-500 dark:text-white">
+        <div className="flex w-8 items-center gap-1 font-normal text-gray-500 dark:text-white">
           <Shell width={12} />
           {row.getValue('estimative')}
         </div>
@@ -166,6 +157,7 @@ export const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => {
       return (
         <DataTableCell
+          className="w-12"
           value={format(new Date(row.getValue('created_at')), 'MMM d')}
         />
       );

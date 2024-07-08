@@ -23,18 +23,56 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function getPriorityProps(priority: string) {
+export enum TaskPriority {
+  None = 'none',
+  Low = 'low',
+  Medium = 'medium',
+  High = 'high',
+  Urgent = 'urgent',
+}
+
+const priorityOptions: Record<TaskPriority, string> = {
+  [TaskPriority.Urgent]: 'Urgent',
+  [TaskPriority.High]: 'High',
+  [TaskPriority.Medium]: 'Medium',
+  [TaskPriority.Low]: 'Low',
+  [TaskPriority.None]: 'None',
+};
+
+export function getPriorityProps(priority: TaskPriority) {
+  const label = priorityOptions[priority];
   switch (priority) {
-    case 'none':
-      return <Minus width={18} />;
-    case 'low':
-      return <SignalLow width={18} />;
-    case 'medium':
-      return <SignalMedium width={18} />;
-    case 'high':
-      return <SignalHigh width={18} />;
-    case 'urgent':
-      return <CircleAlert width={18} />;
+    case TaskPriority.None:
+      return {
+        label,
+        value: TaskPriority.None,
+        icon: <Minus width={18} className="text-gray-500" />,
+      };
+    case TaskPriority.Low:
+      return {
+        label,
+        value: TaskPriority.Low,
+        icon: <SignalLow width={18} className="text-gray-500" />,
+      };
+    case TaskPriority.Medium:
+      return {
+        label,
+        value: TaskPriority.Medium,
+        icon: <SignalMedium width={18} className="text-gray-500" />,
+      };
+    case TaskPriority.High:
+      return {
+        label,
+        value: TaskPriority.High,
+        icon: <SignalHigh width={18} className="text-gray-500" />,
+      };
+
+    case TaskPriority.Urgent:
+      return {
+        label,
+        value: TaskPriority.Urgent,
+        icon: <CircleAlert width={18} className="text-gray-500" />,
+      };
   }
 }
 
@@ -79,40 +117,30 @@ export const getStatusesProps = (status: string) => {
   switch (status) {
     case 'backlog':
       return {
-        icon: <CircleDashed width={18}  className="text-gray-400" />,
+        icon: <CircleDashed width={18} className="text-gray-400" />,
         label: 'Backlog',
       };
     case 'to_do':
       return {
-        icon: <Circle width={18}  className="text-gray-400" />,
+        icon: <Circle width={18} className="text-gray-400" />,
         label: 'To Do',
       };
     case 'doing':
       return {
         icon: (
-          <LoaderCircle
-            width={18}
-
-            className="animate-spin text-orange-500"
-          />
+          <LoaderCircle width={18} className="animate-spin text-orange-500" />
         ),
         label: 'Doing',
       };
 
     case 'done':
       return {
-        icon: (
-          <CircleCheck
-            width={18}
-
-            className="text-fruit-salad-600"
-          />
-        ),
+        icon: <CircleCheck width={18} className="text-fruit-salad-600" />,
         label: 'Done',
       };
     case 'canceled':
       return {
-        icon: <CircleX width={18}  className="text-red-500" />,
+        icon: <CircleX width={18} className="text-red-500" />,
         label: 'Canceled',
       };
   }
