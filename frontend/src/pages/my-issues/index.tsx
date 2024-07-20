@@ -1,7 +1,4 @@
-import React from 'react';
-import { columns, payments } from './columns';
-import { DataTable } from './data-table';
-
+import React from 'react'
 const MyIssues = () => {
   return (
     <div>

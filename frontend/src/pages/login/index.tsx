@@ -6,6 +6,7 @@ import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 
+
 const Login = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
