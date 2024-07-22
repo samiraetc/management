@@ -51,8 +51,8 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
   };
 
   return (
-    <div className="flex grow flex-col gap-y-7 overflow-y-auto border-r px-4">
-      <div className="flex items-center justify-between">
+    <div className="flex grow flex-col justify-between">
+      <div className="flex items-center justify-between px-4">
         {!shrink ? (
           <>
             <div className="p-4 text-4xl font-bold">i.</div>
@@ -69,7 +69,7 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
         )}
       </div>
 
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col px-4">
         {!shrink && (
           <>
             <Accordion type="single" collapsible className="transition-all">
@@ -84,7 +84,7 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
 
               <AccordionItem value="home" className="border-none">
                 <MenuSidebarButton
-                  url={`/${workspace?.url_key}`}
+                  url={`${workspace?.url_key}/my-issues`}
                   icon={<ListTodo className="text-gray-500" width={18} />}
                   name={translation('menuSidebar:my_issues')}
                 />
@@ -124,15 +124,13 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
             </Accordion>
           </>
         )}
+      </div>
 
-        <div role="list" className="flex flex-1 flex-col gap-y-7">
-          <div
-            className={"-mx-7 p-3 pl-2 mt-auto flex items-center justify-between border-t"}
-          >
-            <ConfigsDropdown shrink={shrink} />
+      <div className="flex flex-1 flex-col">
+        <div className="flex justify-between pt-[5.3px] mt-auto mb-2">
+          <ConfigsDropdown shrink={shrink} />
 
-            {!shrink && <ModeToggle />}
-          </div>
+          {!shrink && <ModeToggle />}
         </div>
       </div>
     </div>

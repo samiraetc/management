@@ -9,7 +9,9 @@ export default function WorkspaceArea() {
 
   return (
     <Layout>
-      <div className="text-6xl font-bold">{workspace?.name}</div>
+      <div className="flex h-full items-center justify-center overflow-hidden">
+        <div className="text-6xl font-bold">{workspace?.name}</div>
+      </div>
     </Layout>
   );
 }

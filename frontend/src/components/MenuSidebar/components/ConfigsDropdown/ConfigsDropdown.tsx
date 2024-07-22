@@ -77,7 +77,7 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
               asChild
             >
               <div>
-                <Avatar className="size-12">
+                <Avatar className="size-10">
                   <AvatarImage
                     className="wrounded-"
                     src="https://api.dicebear.com/8.x/lorelei/svg?backgroundColor=8fc69b&hair=variant18&earrings=variant01&mouth=happy16&eyes=variant23&scale=160"

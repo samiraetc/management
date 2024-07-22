@@ -7,10 +7,10 @@ import { Check, ChevronLeft } from 'lucide-react';
 import { ModeToggle } from '@/components/ModeToggle/ModeToggle';
 import { useRouter } from 'next/router';
 import { Button } from '@/components/ui/button';
-import { UserServices } from '@/services/User/user.services';
 import { useToast } from '@/components/ui/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import useWorkspaceUrl from '@/hook/useWorkspaceStorage/useWorkspaceStorage';
+import { createUser } from '@/services/User/userService';
 
 const Register = () => {
   const router = useRouter();
@@ -66,16 +66,16 @@ const Register = () => {
       }
     };
 
-    UserServices.create({
+    createUser({
       first_name: firstName,
       last_name: lastName,
       username,
       email,
       password,
     })
-      .then(successCallback)
+      .then(() => router.push(`/login`))
       .catch(errorCallback);
-  }, [firstName, lastName, username, email, password]);
+  }, [firstName, lastName, username, email, password])
 
   return (
     <div className="flex min-h-screen flex-col gap-1">

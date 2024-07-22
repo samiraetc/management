@@ -1,9 +1,9 @@
 import React from 'react';
-import Input from '@/components/Input/Input';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { translation } from '@/i18n/i18n';
+import { useSession } from 'next-auth/react';
 
 const Account = () => {
+  const { data: session } = useSession();
   return (
     <div className="w-full">
       <div className="flex items-center gap-2">
@@ -15,7 +15,7 @@ const Account = () => {
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div>
-          <p className="text-xl font-medium">Samira Costa</p>
+          <p className="text-xl font-medium">{`${session?.user.full_name}`}</p>
           <p className="text-sm font-normal">Your personal account</p>
         </div>
       </div>

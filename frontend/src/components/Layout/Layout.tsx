@@ -22,6 +22,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '../ui/resizable';
+import { LuPanelLeft } from 'react-icons/lu';
 
 type LayoutProps = {
   children: ReactNode;
@@ -144,7 +145,7 @@ const Layout = ({ children }: LayoutProps) => {
         </Dialog>
       </Transition>
 
-      <div className="sticky top-0 z-40 flex items-center gap-x-6 p-4 shadow-sm sm:px-6 lg:hidden">
+      <div className="sticky top-0 z-40 flex items-center px-6 py-2 shadow-sm sm:px-6 lg:hidden border-b">
         <Button
           type="button"
           className="-m-2.5 p-2.5 lg:hidden"
@@ -152,7 +153,7 @@ const Layout = ({ children }: LayoutProps) => {
           variant="ghost"
         >
           <span className="sr-only">Open sidebar</span>
-          <Menu className="size-6" aria-hidden="true" />
+          <LuPanelLeft className="size-5" aria-hidden="true" />
         </Button>
       </div>
 
@@ -170,10 +171,10 @@ const Layout = ({ children }: LayoutProps) => {
             workspace={workspace}
           />
         </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel>
-          <main className={'py-6 transition-all duration-150'}>
-            <div className="px-4 sm:px-6">{children}</div>
+        <ResizableHandle className="border-none" />
+        <ResizablePanel className="flex h-lvh min-w-0 ">
+          <main className="relative sm:my-2 sm:mr-4 overflow-auto flex-1 rounded-md border border-gray-200 bg-background">
+            {children}
           </main>
         </ResizablePanel>
       </ResizablePanelGroup>
