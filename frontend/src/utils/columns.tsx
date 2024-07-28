@@ -1,15 +1,9 @@
 'use client';
 
-import {
-  getDueDateIcon,
-  getPriorityProps,
-  getStatusesProps,
-} from '@/lib/utils';
+import { getDueDateIcon } from '@/lib/utils';
 import { ColumnDef } from '@tanstack/react-table';
-import { Shell } from 'lucide-react';
 import { format } from 'date-fns';
 import DataTableCell from '@/components/DataTable/DataTableCell';
-import { data } from './data';
 import { Checkbox } from '@/components/ui/checkbox';
 import LabelList from '@/components/LabelList/LabelList';
 import {
@@ -19,33 +13,15 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { IoPrism } from "react-icons/io5";
+import StatusCell from '@/components/StatusCell/StatusCell';
+import Priority from '@/components/Priority/Priority';
+import Estimative from '@/components/Estimative/Estimative';
 
-export type Payment = {
-  id: string;
-  priority: string;
-  status: 'backlog' | 'to_do' | 'doing' | 'done';
-  labels: { name: string; color: string }[];
-  identifier: string;
-  estimative: number;
-  due_date: string;
-  title: string;
-  created_at: string;
-  updated_at: string;
-  assigned_to: {
-    first_name: string;
-    last_name: string;
-    username: string;
-    full_name: string;
-  } | null;
-  children?: Payment[];
-};
-
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Task>[] = [
   {
     id: 'select',
     cell: ({ row }) => (
-      <div className="ml-2 sm:ml-0 sm:w-8 sm:flex sm:justify-center">
+      <div className="ml-2 sm:ml-0 sm:flex sm:w-8 sm:justify-center">
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -61,9 +37,10 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: 'priority',
     cell: ({ row }) => {
       return (
-        <div className="ml-2 w-4 sm:ml-0">
-          {getPriorityProps(row.getValue('priority')).icon}
-        </div>
+        <Priority
+          priority={row.getValue('priority')}
+          taskId={row.original.id}
+        />
       );
     },
   },
@@ -81,9 +58,7 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: 'status',
     cell: ({ row }) => {
       return (
-        <div className="w-4 text-stone-600 sm:w-4">
-          {getStatusesProps(row.getValue('status') ?? '').icon}
-        </div>
+        <StatusCell status={row.getValue('status')} taskId={row.original.id} />
       );
     },
   },
@@ -93,11 +68,11 @@ export const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => {
       const labels = row.original.labels.length >= 1;
       return (
-       <div className={`${labels ? 'sm:w-[35rem]' : 'sm:w-[59rem]'} w-52`}>
-         <div className="w-full truncate font-medium text-base">
-          {row.getValue('title')}
+        <div className={`${labels ? 'sm:w-[35rem]' : 'sm:w-[59rem]'} w-52`}>
+          <div className="w-full truncate text-base font-medium">
+            {row.getValue('title')}
+          </div>
         </div>
-       </div>
       );
     },
   },
@@ -108,9 +83,11 @@ export const columns: ColumnDef<Payment>[] = [
 
       return (
         <>
-         {values.length >= 1 && <div className="hidden w-96 sm:flex sm:justify-end">
-            <LabelList labels={values} />
-          </div>}
+          {values.length >= 1 && (
+            <div className="hidden w-96 sm:flex sm:justify-end">
+              <LabelList labels={values} />
+            </div>
+          )}
         </>
       );
     },
@@ -146,12 +123,12 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: 'estimative',
     cell: ({ row }) => {
+      const point = parseInt(row.getValue('estimative')) ?? 0;
       return (
-        <div className="w-8">
-          <div className="hidden items-center justify-start gap-1 text-xs font-normal text-stone-600 dark:text-white sm:flex">
-            <IoPrism />
-            {row.getValue('estimative')}
-          </div>
+        <div>
+          {point >= 1 && (
+            <Estimative estimative={point} taskId={row.original.id} />
+          )}
         </div>
       );
     },
@@ -228,5 +205,3 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
 ];
-
-export const payments: Payment[] = data;

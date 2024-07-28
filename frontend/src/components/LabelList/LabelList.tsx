@@ -6,16 +6,23 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 interface ILabelList {
   labels: Label[];
 }
 
 const LabelList = ({ labels }: ILabelList) => {
+  const router = useRouter();
   const maxVisibleLabels = 2;
   const visibleLabels = labels.slice(0, maxVisibleLabels);
   const hiddenCount = labels.length - maxVisibleLabels;
   const hiddenLabels = labels.slice(maxVisibleLabels, labels.length);
+  const workspace = useSelector(
+    (state: RootState) => state.workspace.workspace,
+  );
 
   return (
     <div className="flex justify-end gap-1">
@@ -23,7 +30,10 @@ const LabelList = ({ labels }: ILabelList) => {
         <Badge
           variant="outline"
           key={index}
-          className="flex items-center gap-2 py-1 text-sm font-normal text-stone-600 dark:text-white"
+          className="flex cursor-pointer items-center gap-2 py-1 text-sm font-normal text-stone-600 dark:text-white"
+          onClick={() =>
+            router.push(`/${workspace?.url_key}/label/${label.name}`)
+          }
         >
           <div
             className="rounded-lg p-1.5"
@@ -46,7 +56,7 @@ const LabelList = ({ labels }: ILabelList) => {
                     .map((label, index: number) => (
                       <div
                         key={index}
-                        className="size-2.5 rounded-full -ml-1 border-white border"
+                        className="-ml-1 size-2.5 rounded-full border border-white"
                         style={{ backgroundColor: label.color }}
                       />
                     ))}
@@ -55,10 +65,16 @@ const LabelList = ({ labels }: ILabelList) => {
               </Badge>
             </TooltipTrigger>
             <TooltipContent sideOffset={6}>
-              {hiddenLabels.map((label) => (
-                <div className="flex w-24 items-center gap-2 py-1 text-sm font-normal text-stone-700 dark:text-white">
+              {hiddenLabels.map((label, index) => (
+                <div
+                  key={index}
+                  className="flex w-24 cursor-pointer items-center gap-2 py-1 text-sm font-normal text-stone-700 dark:text-white"
+                  onClick={() =>
+                    router.replace(`/${workspace?.url_key}/label/${label.name}`)
+                  }
+                >
                   <div
-                    className="rounded-lg p-1.5 "
+                    className="rounded-lg p-1.5"
                     style={{ backgroundColor: label.color }}
                   ></div>
                   <p className="font-medium">{label.name}</p>

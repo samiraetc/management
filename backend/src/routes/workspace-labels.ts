@@ -19,7 +19,7 @@ const workspaceLabelsRouters = async (server: FastifyInstance) => {
           properties: {
             id: { type: 'string' },
           },
-          required: ['id', 'label_id'],
+          required: ['id'],
         },
         response: {
           200: {

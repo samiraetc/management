@@ -26,8 +26,8 @@ export const passwordRequeriment: IPasswordRequeriment[] = [
   },
   {
     name: 'Passwords match',
-    check: false
-  }
+    check: false,
+  },
 ];
 
 export const validatePassword = (
@@ -40,7 +40,7 @@ export const validatePassword = (
   const hasLowerCase = /[a-z]/.test(pwd);
   const hasNumber = /[0-9]/.test(pwd);
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(pwd);
-  const passwordMatch = pwd == confirm
+  const passwordMatch = pwd == confirm;
 
   verify([
     {
@@ -65,7 +65,7 @@ export const validatePassword = (
     },
     {
       name: 'Passwords match',
-      check: passwordMatch
-    }
+      check: passwordMatch,
+    },
   ]);
 };

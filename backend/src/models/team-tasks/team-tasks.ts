@@ -29,7 +29,7 @@ const selectTeamTask = async (data: TeamTasks): Promise<TeamTasks | null> => {
 const selectAllTeamTasks = async (id: string): Promise<TeamTasks[] | []> => {
   return await prisma.teamTasks.findMany({
     where: {
-      task_id: id,
+      team_id: id,
     },
   });
 };

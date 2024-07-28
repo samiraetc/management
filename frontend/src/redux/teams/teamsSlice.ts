@@ -1,8 +1,7 @@
-import { IUseTeamsData } from '@/hook/useTeams/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface TeamsState {
-  teams: IUseTeamsData | null;
+  teams: Team[] | null;
 }
 
 const initialState: TeamsState = {

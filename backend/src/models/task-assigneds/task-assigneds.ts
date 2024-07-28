@@ -32,10 +32,12 @@ const selectTaskAssigned = async (
 
 const selectAllTaskAssigneds = async (
   id: string,
+  user_id: string,
 ): Promise<TaskAssigneds[] | []> => {
   return await prisma.taskAssigneds.findMany({
     where: {
       task_id: id,
+      user_id: user_id,
     },
   });
 };

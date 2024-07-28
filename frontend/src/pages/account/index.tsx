@@ -7,7 +7,7 @@ const Account = () => {
   return (
     <div className="w-full">
       <div className="flex items-center gap-2">
-        <Avatar className="h-16 w-16">
+        <Avatar className="size-16">
           <AvatarImage
             className="wrounded-"
             src="https://api.dicebear.com/8.x/lorelei/svg?backgroundColor=8fc69b&hair=variant18&earrings=variant01&mouth=happy16&eyes=variant23&scale=160"

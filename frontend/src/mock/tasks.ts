@@ -1,4 +1,4 @@
-export const data = [
+export const tasks: Tasks = [
   {
     id: 'W4W34REW',
     priority: 'high',
@@ -7,29 +7,9 @@ export const data = [
     labels: [
       {
         id: '1',
-        name: 'assumenda',
+        name: 'feature',
         color: '#534e64',
       },
-      // {
-      //   id: '3',
-      //   name: 'exercitationem',
-      //   color: '#4a696f',
-      // },
-      // {
-      //   id: '4',
-      //   name: 'teste2',
-      //   color: '#c7af95',
-      // },
-      // {
-      //   id: '5',
-      //   name: 'test3',
-      //   color: '#f79348',
-      // },
-      // {
-      //   id: '6',
-      //   name: 'test4',
-      //   color: '#4c270c',
-      // },
     ],
     due_date: '2024-07-31T21:35:08.371Z',
     estimative: 19,
@@ -37,20 +17,17 @@ export const data = [
     created_at: '2024-02-19T15:56:37.408Z',
     updated_at: '2024-07-07T09:54:24.614Z',
     assigned_to: {
-      first_name: 'Samira',
-      last_name: 'Costa',
       full_name: 'Samira Costa',
-      username: 'samiramanuelac'
-    }
+      username: 'samiramanuelac',
+    },
   },
   {
     id: '4c885624-fd79-45ab-85ca-edc03a4d2651',
     priority: 'high',
     identifier: 'DEL-3',
-    title: 'Dicta ducimus voluptatibus nesciunt sed eligendi quae quas sit. Dicta ducimus voluptatibus nesciunt sed eligendi quae quas sit.',
-    labels: [
-
-    ],
+    title:
+      'Dicta ducimus voluptatibus nesciunt sed eligendi quae quas sit. Dicta ducimus voluptatibus nesciunt sed eligendi quae quas sit.',
+    labels: [],
     due_date: '2024-10-23T21:33:55.555Z',
     estimative: 10,
     status: 'to_do',
@@ -58,8 +35,8 @@ export const data = [
     updated_at: '2024-07-07T11:02:09.472Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '04389c5e-ad55-4414-b773-fa0785f9d18f',
@@ -83,17 +60,15 @@ export const data = [
     updated_at: '2024-07-07T01:28:56.653Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '34710cfd-2020-4ec8-afdd-14098ee195ae',
     priority: 'urgent',
     identifier: 'EAT-6',
     title: 'Eum laudantium aspernatur maiores non.',
-    labels: [
-
-    ],
+    labels: [],
     due_date: null,
     estimative: 9,
     status: 'to_do',
@@ -101,8 +76,8 @@ export const data = [
     updated_at: '2024-07-07T00:03:42.817Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'b9308be4-0ddb-41d5-8f24-6442a17dc7b6',
@@ -126,8 +101,8 @@ export const data = [
     updated_at: '2024-07-06T18:00:08.965Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '4ea5ee7e-df3e-4fcc-bc61-b454ccea333d',
@@ -151,8 +126,8 @@ export const data = [
     updated_at: '2024-07-07T01:57:42.451Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '234234324',
@@ -167,7 +142,6 @@ export const data = [
       {
         name: 'enim',
         color: '#580e6a',
-
       },
     ],
     due_date: '2024-01-20T02:41:03.693Z',
@@ -177,8 +151,8 @@ export const data = [
     updated_at: '2024-07-06T15:35:46.079Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'd6deee7d-09ea-4988-9d63-b62fa39f5333',
@@ -202,8 +176,8 @@ export const data = [
     updated_at: '2024-07-07T03:20:07.803Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'RRWEFDSAAS',
@@ -227,8 +201,8 @@ export const data = [
     updated_at: '2024-07-07T11:08:06.148Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '7ccf209d-775a-4738-a19b-bbba66800526',
@@ -252,8 +226,8 @@ export const data = [
     updated_at: '2024-07-07T03:37:34.248Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '51722fb8-d701-4fe4-8eaf-4f9d4d5292ef',
@@ -277,8 +251,8 @@ export const data = [
     updated_at: '2024-07-07T04:03:56.551Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '0310e8af-6c12-4134-ad71-0b3c6aa1fe6f',
@@ -302,8 +276,8 @@ export const data = [
     updated_at: '2024-07-07T00:13:45.957Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '8b356c3e-19b7-417d-bd56-da4ab6295986',
@@ -327,8 +301,8 @@ export const data = [
     updated_at: '2024-07-06T21:05:31.046Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '1a88b97f-a99c-49b1-b759-13901dc02f75',
@@ -352,8 +326,8 @@ export const data = [
     updated_at: '2024-07-06T23:46:59.847Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '34247cc7-5a3e-4876-a525-3c5d4cabb99a',
@@ -377,8 +351,8 @@ export const data = [
     updated_at: '2024-07-07T04:37:05.510Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'cf51916e-b329-41eb-a33a-48dd31d8e148',
@@ -402,8 +376,8 @@ export const data = [
     updated_at: '2024-07-07T06:53:41.661Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '87b6f0cc-b56a-4ccd-8666-4bb8cfa68106',
@@ -427,8 +401,8 @@ export const data = [
     updated_at: '2024-07-06T22:13:49.390Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'ASDASDASD',
@@ -452,8 +426,8 @@ export const data = [
     updated_at: '2024-07-07T04:23:18.006Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '60b5e4b0-9d68-4d44-b5a9-2e39222a777a',
@@ -477,8 +451,8 @@ export const data = [
     updated_at: '2024-07-07T05:03:43.136Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '25d5d6c9-fe8d-4ef4-ac8d-abdf700d9a30',
@@ -502,8 +476,8 @@ export const data = [
     updated_at: '2024-07-06T23:42:03.156Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '64b93987-239c-4a15-8cc5-0c7f4987fef6',
@@ -512,7 +486,7 @@ export const data = [
     title: 'Quia quia ducimus corrupti est quia vel et.',
     labels: [
       {
-        name: 'assumenda',
+        name: 'feature',
         color: '#742d1e',
       },
       {
@@ -527,8 +501,8 @@ export const data = [
     updated_at: '2024-07-07T05:38:46.751Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '574e0efd-2571-4b96-9e9c-f38670352e00',
@@ -552,8 +526,8 @@ export const data = [
     updated_at: '2024-07-07T06:12:10.467Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '1342f42c-d030-4392-8e28-f4abb4a6bf3a',
@@ -562,11 +536,11 @@ export const data = [
     title: 'Et expedita repellat saepe.',
     labels: [
       {
-        name: 'assumenda',
+        name: 'feature',
         color: '#200a3e',
       },
       {
-        name: 'quibusdam',
+        name: 'bug',
         color: '#57320b',
       },
     ],
@@ -577,8 +551,8 @@ export const data = [
     updated_at: '2024-07-06T17:25:21.418Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'f27f90c9-7f7e-4352-8a56-34760f3d61d5',
@@ -602,22 +576,21 @@ export const data = [
     updated_at: '2024-07-07T00:42:02.621Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '8399c621-253e-44e7-aa9a-34d83fc3005a',
     priority: 'urgent',
     identifier: 'FAC-1',
-    title:
-      'Assumenda animi quia ',
+    title: 'Assumenda animi quia ',
     labels: [
       {
         name: 'nihil',
         color: '#522667',
       },
       {
-        name: 'praesentium',
+        name: 'improvement',
         color: '#5e173b',
       },
     ],
@@ -628,8 +601,8 @@ export const data = [
     updated_at: '2024-07-07T05:33:35.933Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '29cac741-ff50-4b40-a815-cc0af5bedcf5',
@@ -653,8 +626,8 @@ export const data = [
     updated_at: '2024-07-07T10:18:11.941Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '7c5782b9-06c2-486f-8497-dbeb9857a971',
@@ -678,15 +651,14 @@ export const data = [
     updated_at: '2024-07-07T11:43:12.307Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'a6409271-5bf0-4548-85e3-8ff4f9f5f65f',
     priority: 'high',
     identifier: 'OFF-2',
-    title:
-      'Natus praesentium',
+    title: 'Natus praesentium',
     labels: [
       {
         name: 'inventore',
@@ -704,15 +676,14 @@ export const data = [
     updated_at: '2024-07-07T12:40:38.967Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '60c1063a-edca-4a97-9418-58f83da143cb',
     priority: 'none',
     identifier: 'QUI-10',
-    title:
-      'Nihil non voluptatem',
+    title: 'Nihil non voluptatem',
     labels: [
       {
         name: 'eum',
@@ -730,8 +701,8 @@ export const data = [
     updated_at: '2024-07-07T04:37:43.466Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'b2056fef-befc-41fc-bd5c-4cf8efab9e5c',
@@ -755,8 +726,8 @@ export const data = [
     updated_at: '2024-07-06T22:07:07.659Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'bad72b0b-7233-4ccc-a450-04ac4143ed5a',
@@ -780,8 +751,8 @@ export const data = [
     updated_at: '2024-07-07T00:45:19.683Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '2f6250ab-581e-4c36-b4c5-fefa8fe05a76',
@@ -805,8 +776,8 @@ export const data = [
     updated_at: '2024-07-07T13:15:24.252Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '53c8a0dc-423b-4f25-ad75-b885fb20fa7c',
@@ -830,8 +801,8 @@ export const data = [
     updated_at: '2024-07-06T18:04:32.811Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '20542611-bc08-4bb0-8a7a-81dc0295c3cf',
@@ -855,8 +826,8 @@ export const data = [
     updated_at: '2024-07-07T05:33:05.840Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'cac12f2c-a8f4-4f36-9a69-bfc4478535a4',
@@ -880,8 +851,8 @@ export const data = [
     updated_at: '2024-07-07T11:08:35.344Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '6392f676-abed-42cf-85ce-742080164d7b',
@@ -905,8 +876,8 @@ export const data = [
     updated_at: '2024-07-06T18:30:37.151Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '25a63406-b67f-45c2-8dde-282189c3a44f',
@@ -930,14 +901,15 @@ export const data = [
     updated_at: '2024-07-07T11:45:37.895Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'b04e0823-f8b5-4e26-8f8f-7841b798dbeb',
     priority: 'urgent',
     identifier: 'OFF-6',
-    title: 'Accusantium possimus aut molestiae placeat dolore. Accusantium possimus aut molestiae placeat dolore. ',
+    title:
+      'Accusantium possimus aut molestiae placeat dolore. Accusantium possimus aut molestiae placeat dolore. ',
     labels: [
       {
         name: 'dicta',
@@ -971,15 +943,14 @@ export const data = [
     updated_at: '2024-07-07T07:17:11.271Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: '9d7ef20a-2662-4cf8-8c01-4159737cb9b8',
     priority: 'none',
     identifier: 'ET-0',
-    title:
-      'Quis pariatur asperiores',
+    title: 'Quis pariatur asperiores',
     labels: [
       {
         name: 'minima',
@@ -997,8 +968,8 @@ export const data = [
     updated_at: '2024-07-06T21:10:34.358Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   // Novos itens adicionados
   {
@@ -1023,8 +994,8 @@ export const data = [
     updated_at: '2024-07-20T12:00:00.000Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'new-item-2',
@@ -1048,8 +1019,8 @@ export const data = [
     updated_at: '2024-07-20T12:00:00.000Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'new-item-3',
@@ -1073,17 +1044,15 @@ export const data = [
     updated_at: '2024-07-20T12:00:00.000Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'new-item-4',
     priority: 'urgent',
     identifier: 'NEW-4',
     title: 'Dolorum inventore non.',
-    labels: [
-
-    ],
+    labels: [],
     due_date: null,
     estimative: 10,
     status: 'to_do',
@@ -1091,8 +1060,8 @@ export const data = [
     updated_at: '2024-07-20T12:00:00.000Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'new-item-5',
@@ -1116,8 +1085,8 @@ export const data = [
     updated_at: '2024-07-20T12:00:00.000Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'new-item-6',
@@ -1141,8 +1110,8 @@ export const data = [
     updated_at: '2024-07-20T12:00:00.000Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'new-item-7',
@@ -1166,8 +1135,8 @@ export const data = [
     updated_at: '2024-07-20T12:00:00.000Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'new-item-8',
@@ -1191,8 +1160,8 @@ export const data = [
     updated_at: '2024-07-20T12:00:00.000Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'new-item-9',
@@ -1216,8 +1185,8 @@ export const data = [
     updated_at: '2024-07-20T12:00:00.000Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
   {
     id: 'new-item-10',
@@ -1241,7 +1210,7 @@ export const data = [
     updated_at: '2024-07-20T12:00:00.000Z',
     assigned_to: {
       full_name: 'Samira Costa',
-      username: 'samiracosta'
-    }
+      username: 'samiracosta',
+    },
   },
 ];

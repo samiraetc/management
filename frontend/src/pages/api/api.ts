@@ -17,11 +17,10 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const { response } = error;
-
     if (response) {
       switch (response.status) {
         case 401:
-          signOut()
+          signOut;
           break;
         case 403:
           toast({
@@ -41,6 +40,7 @@ api.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  })
+  },
+);
 
 export default api;

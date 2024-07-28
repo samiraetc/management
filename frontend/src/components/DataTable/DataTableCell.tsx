@@ -8,7 +8,12 @@ interface IDataTableCell {
 
 const DataTableCell: FC<IDataTableCell> = ({ value, className = '' }) => {
   return (
-    <div className={cn('font-normal text-sm text-gray-500 dark:text-white', className)}>
+    <div
+      className={cn(
+        'text-sm font-normal text-gray-500 dark:text-white',
+        className,
+      )}
+    >
       {value}
     </div>
   );

@@ -6,37 +6,6 @@ import {
 import { FastifyInstance } from 'fastify';
 
 const taskAssignedsRoutes = async (server: FastifyInstance) => {
-  server.get(
-    '/task/:id/assigneds',
-    {
-      preValidation: [server.authenticate],
-      schema: {
-        tags: ['Task Assigned'],
-        security: [{ bearerAuth: [] }],
-        params: {
-          type: 'object',
-          properties: {
-            id: { type: 'string' },
-          },
-          required: ['id'],
-        },
-        response: {
-          200: {
-            description: 'Assigned added successfully',
-            type: 'object',
-            properties: {
-              user_ids: {
-                type: 'array',
-                items: { type: 'string' },
-              },
-            },
-          },
-        },
-      },
-    },
-    selectAllTaskAssigned,
-  );
-
   server.post(
     '/task/:id/assigned',
     {
@@ -106,6 +75,38 @@ const taskAssignedsRoutes = async (server: FastifyInstance) => {
       },
     },
     removeTaskAssigned,
+  );
+
+  server.get(
+    '/workspace/:id/task_assigned/:user_id',
+    {
+      preValidation: [server.authenticate],
+      schema: {
+        tags: ['Workspace Task Assigned'],
+        security: [{ bearerAuth: [] }],
+        params: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            user_id: { type: 'string' },
+          },
+          required: ['id', 'user_id'],
+        },
+        response: {
+          200: {
+            description: 'Assigned added successfully',
+            type: 'object',
+            properties: {
+              user_ids: {
+                type: 'array',
+                items: { type: 'string' },
+              },
+            },
+          },
+        },
+      },
+    },
+    selectAllTaskAssigned,
   );
 };
 

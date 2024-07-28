@@ -1,8 +1,7 @@
-import { IUseWorkspaceData } from '@/hook/useWorkspace/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface WorkspaceState {
-  workspace: IUseWorkspaceData | null;
+  workspace: Workspace | null;
 }
 
 const initialState: WorkspaceState = {

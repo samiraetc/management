@@ -1,24 +1,19 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import {
-  Calendar,
   Circle,
   CircleAlert,
   CircleCheck,
   CircleDashed,
   CircleX,
-  Eye,
-  LoaderCircle,
   Minus,
-  Pencil,
-  Trash2,
 } from 'lucide-react';
 import { differenceInDays } from 'date-fns';
 import LowPriority from '@/assets/icon/Low';
 import MediumPriority from '@/assets/icon/medium';
 import HighPriority from '@/assets/icon/High';
 import { HiCalendar } from 'react-icons/hi2';
-import { RiProgress4Line } from "react-icons/ri";
+import { RiProgress4Line } from 'react-icons/ri';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -37,7 +32,7 @@ const priorityOptions: Record<TaskPriority, string> = {
   [TaskPriority.High]: 'High',
   [TaskPriority.Medium]: 'Medium',
   [TaskPriority.Low]: 'Low',
-  [TaskPriority.None]: 'None',
+  [TaskPriority.None]: 'No priority',
 };
 
 export function getPriorityProps(priority: TaskPriority) {
@@ -82,21 +77,17 @@ export function getDueDateIcon(date: Date) {
 
   if (difference === 1) {
     return {
-      icon: <HiCalendar size={18}  className="text-red-500" />,
+      icon: <HiCalendar size={18} className="text-red-500" />,
       title: 'Today',
     };
   } else if (difference === 2) {
     return {
-      icon: (
-        <HiCalendar size={18}  className="text-orange-500" />
-      ),
+      icon: <HiCalendar size={18} className="text-orange-500" />,
       title: 'Tomorrow',
     };
   } else if (difference >= 3 && difference <= 7) {
     return {
-      icon: (
-        <HiCalendar size={18}  className="text-orange-500" />
-      ),
+      icon: <HiCalendar size={18} className="text-orange-500" />,
       title: `${difference} days remaining`,
     };
   } else if (difference >= 8) {
@@ -131,9 +122,7 @@ export const getStatusesProps = (status: string) => {
       };
     case 'doing':
       return {
-        icon: (
-          <RiProgress4Line size={18} className="text-orange-500" />
-        ),
+        icon: <RiProgress4Line size={18} className="text-orange-500" />,
         label: 'Doing',
       };
 
@@ -152,5 +141,15 @@ export const getStatusesProps = (status: string) => {
         icon: <></>,
         label: '',
       };
+  }
+};
+
+export const getEstimativeProps = (estimative: number) => {
+  if (estimative === 0) {
+    return `No estimative`;
+  } else if (estimative === 1) {
+    return `1 Point`;
+  } else if (estimative >= 2) {
+    return `${estimative} Points`;
   }
 };

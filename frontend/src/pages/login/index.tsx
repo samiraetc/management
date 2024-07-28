@@ -4,14 +4,14 @@ import { Input } from '@/components/ui/input';
 import useWorkspaceUrl from '@/hook/useWorkspaceStorage/useWorkspaceStorage';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Login = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
-  useWorkspaceUrl();
 
+  useWorkspaceUrl();
   const handleSignIn = async () => {
     const result = await signIn('credentials', {
       email,

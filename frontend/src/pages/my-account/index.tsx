@@ -1,12 +1,8 @@
-import Layout from '@/components/Layout/Layout';
+import withLayout from '@/utils/hoc/withLayout';
 import React from 'react';
 
 const MyAccount = () => {
-  return (
-    <Layout>
-      <div>MyAccount</div>
-    </Layout>
-  );
+  return <div>MyAccount</div>;
 };
 
-export default MyAccount;
+export default withLayout(MyAccount);

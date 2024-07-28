@@ -3,7 +3,7 @@
 import { ReactNode, useEffect, useState } from 'react';
 import i18next from '@/i18n/i18n';
 import { Button } from '../ui/button';
-import { Menu, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,13 +16,13 @@ import {
   TransitionChild,
 } from '@headlessui/react';
 import api from '@/pages/api/api';
-import { IUseWorkspaceData } from '@/hook/useWorkspace/types';
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from '../ui/resizable';
 import { LuPanelLeft } from 'react-icons/lu';
+import { getWorkspaces } from '@/services/Workspace/workspace.services';
 
 type LayoutProps = {
   children: ReactNode;
@@ -41,59 +41,49 @@ const Layout = ({ children }: LayoutProps) => {
   const [workspaceUrl, setWorkspaceUrl] = useState('');
 
   useEffect(() => {
-    if (
-      (session === null || session === undefined) &&
-      status == 'unauthenticated'
-    ) {
+    if (status === 'unauthenticated') {
       router.push('/login');
-    }
-
-    if (session && status === 'authenticated') {
-      setWorkspaceInRedux();
-      setLoading(false);
-    }
-  }, [session, status, workspaceUrl]);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
+    } else if (status === 'authenticated') {
+      api.defaults.headers.common['Authorization'] =
+        `Bearer ${session?.user?.token}`;
       setWorkspaceUrl(localStorage.getItem('workspace') ?? '');
     }
-  }, []);
+  }, [session, status]);
+
+  useEffect(() => {
+    if (workspaceUrl) {
+      setWorkspaceInRedux();
+    }
+  }, [workspaceUrl]);
 
   const setWorkspaceInRedux = async () => {
-    const works = await api
-      .get(`/workspaces`, {
-        headers: {
-          Authorization: `Bearer ${session?.user.token}`,
-        },
-        params: { user_id: session?.user.id },
-      })
-      .then((res) => res.data)
-      .catch((err) => {
-        console.error(err);
-        return [];
-      });
+    setLoading(true);
+    try {
+      const response = await getWorkspaces();
+      const defaultWorkspace = response[0] ?? null;
+      const foundWorkspace = response?.find(
+        (item: Workspace) => item.url_key === workspaceUrl,
+      );
 
-    const defaultWorkspace = works.data?.[0] ?? [];
-    const foundWorkspace = works.data?.find(
-      (item: IUseWorkspaceData) => item.url_key === workspaceUrl,
-    );
-
-    if (workspaceUrl && foundWorkspace) {
-      dispatch({
-        type: 'workspace/setWorkspace',
-        payload: foundWorkspace,
-      });
-    } else {
-      localStorage.setItem('workspace', defaultWorkspace.url_key);
-      dispatch({
-        type: 'workspace/setWorkspace',
-        payload: defaultWorkspace,
-      });
+      if (foundWorkspace) {
+        dispatch({
+          type: 'workspace/setWorkspace',
+          payload: foundWorkspace,
+        });
+      } else if (defaultWorkspace) {
+        localStorage.setItem('workspace', defaultWorkspace.url_key);
+        dispatch({
+          type: 'workspace/setWorkspace',
+          payload: defaultWorkspace,
+        });
+      }
+    } catch (error) {
+      console.error(error);
     }
+    setLoading(false);
   };
 
-  return i18next.isInitialized && !loading && session && workspace ? (
+  return i18next.isInitialized && workspace ? (
     <div>
       <Transition show={sidebarOpen}>
         <Dialog className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
@@ -145,7 +135,7 @@ const Layout = ({ children }: LayoutProps) => {
         </Dialog>
       </Transition>
 
-      <div className="sticky top-0 z-40 flex items-center px-6 py-2 shadow-sm sm:px-6 lg:hidden border-b">
+      <div className="sticky top-0 z-40 flex items-center border-b px-6 py-2 shadow-sm sm:px-6 lg:hidden">
         <Button
           type="button"
           className="-m-2.5 p-2.5 lg:hidden"
@@ -172,15 +162,15 @@ const Layout = ({ children }: LayoutProps) => {
           />
         </ResizablePanel>
         <ResizableHandle className="border-none" />
-        <ResizablePanel className="flex h-lvh min-w-0 ">
-          <main className="relative sm:my-2 sm:mr-4 overflow-auto flex-1 rounded-md border border-gray-200 bg-background">
+        <ResizablePanel className="flex h-lvh min-w-0">
+          <main className="relative flex-1 overflow-auto rounded-md border border-gray-200 bg-background sm:my-2 sm:mr-4">
             {children}
           </main>
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
   ) : (
-    <div className="px-4 sm:px-6">{children}</div>
+    <></>
   );
 };
 
