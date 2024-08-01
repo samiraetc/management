@@ -9,9 +9,9 @@ export const dropdownNavigation = [
     separator: true,
   },
   {
-    type: 'button',
+    type: 'link',
     name: 'Workspace Settings',
-    url: 'workspace/item',
+    url: '/meu-novo-workspace/settings/new-team',
   },
   {
     type: 'list',

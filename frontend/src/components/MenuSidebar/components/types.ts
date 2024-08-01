@@ -3,4 +3,5 @@ export interface IMenuSidebarButton {
   icon?: React.ReactElement;
   name: string;
   onClick?: () => void;
+  className?: string
 }
