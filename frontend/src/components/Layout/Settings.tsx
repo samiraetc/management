@@ -7,6 +7,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import {
+  ArrowLeft,
   Building,
   ChevronsLeft,
   ChevronsRight,
@@ -267,7 +268,10 @@ const Settings = ({ children }: ISettings) => {
             <div className="flex items-center justify-between px-4">
               {!shrink ? (
                 <>
-                  <div className="p-4 text-4xl font-bold">i.</div>
+                  <div className="py-4 px-2 text-lg font-semibold flex items-center gap-4">
+                    <ArrowLeft width={20} height={20} onClick={() => router.back()} className='cursor-pointer' />
+                    Settings
+                  </div>
                   <ChevronsLeft
                     className="hidden opacity-70 lg:flex"
                     onClick={() => setShrink && setShrink(!shrink)}
