@@ -163,7 +163,7 @@ const Layout = ({ children }: LayoutProps) => {
         </ResizablePanel>
         <ResizableHandle className="border-none" />
         <ResizablePanel className="flex h-lvh min-w-0">
-          <main className="relative flex-1 overflow-auto rounded-md sm:border border-gray-200 bg-background sm:my-2 sm:mr-2">
+          <main className="relative flex-1 overflow-auto rounded-md sm:border border-border bg-background sm:my-2 sm:mr-2">
             {children}
           </main>
         </ResizablePanel>
