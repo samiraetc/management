@@ -68,7 +68,7 @@ export const columns: ColumnDef<Task>[] = [
     cell: ({ row }) => {
       const labels = row.original.labels.length >= 1;
       return (
-        <div className={`${labels ? 'sm:w-[35rem]' : 'sm:w-[59rem]'} w-52`}>
+        <div className={`${labels ? 'sm:w-[30rem]' : 'sm:w-[59rem]'} w-52`}>
           <div className="w-full truncate text-base font-medium">
             {row.getValue('title')}
           </div>
@@ -84,7 +84,7 @@ export const columns: ColumnDef<Task>[] = [
       return (
         <>
           {values.length >= 1 && (
-            <div className="hidden w-96 sm:flex sm:justify-end">
+            <div className="hidden w-88 sm:flex sm:justify-end">
               <LabelList labels={values} />
             </div>
           )}
