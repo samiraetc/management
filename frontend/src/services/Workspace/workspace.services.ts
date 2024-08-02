@@ -13,3 +13,20 @@ export async function createWorkspaces(
 
   return data.data;
 }
+
+export async function editWorkspaces(
+  workspaceId: string,
+  payload: CreateWorkspace,
+): Promise<Workspace> {
+  const data = await api.post(`/workspaces/${workspaceId}`, payload);
+
+  return data.data;
+}
+
+export async function deleteWorkspaces(
+  workspaceId: string,
+): Promise<Workspace> {
+  const data = await api.delete(`/workspaces/${workspaceId}`);
+
+  return data.data;
+}
