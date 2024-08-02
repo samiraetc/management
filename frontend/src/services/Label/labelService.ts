@@ -5,3 +5,12 @@ export async function getLabels(workspaceId: string): Promise<Label[]> {
 
   return data.data.data;
 }
+
+export async function createWorkspaceLabel(
+  workspaceId: string,
+  payload: any,
+): Promise<Label> {
+  const data = await api.post(`/workspaces/${workspaceId}/labels`, payload);
+
+  return data.data.data;
+}
