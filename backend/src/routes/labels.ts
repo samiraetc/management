@@ -4,7 +4,6 @@ import {
 } from '@/controllers/labels/label';
 import { FastifyInstance } from '../types';
 
-
 const labelRoutes = async (app: FastifyInstance) => {
   app.get(
     '/labels',

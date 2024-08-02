@@ -237,7 +237,7 @@ const index = () => {
         <div className="space-y-1">
           {labels
             .filter((filter) =>
-              search ? filter.name.includes(search) : filter.name,
+              search ? filter.name.toLowerCase().includes(search.toLowerCase()) : filter.name
             )
             .map((label) => {
               return (
