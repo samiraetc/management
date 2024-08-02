@@ -11,7 +11,7 @@ export const dropdownNavigation = [
   {
     type: 'link',
     name: 'Workspace Settings',
-    url: '/meu-novo-workspace/settings/new-team',
+    url: '/meu-novo-workspace/settings/general',
   },
   {
     type: 'list',
@@ -33,3 +33,14 @@ export const dropdownNavigation = [
     icon: LogOutIcon,
   },
 ];
+
+export const settingsWorkspaceNavigation = [
+  {
+    name: 'General',
+    url: '/general'
+  },
+  {
+    name: 'Labels',
+    url: '/labels'
+  }
+]
