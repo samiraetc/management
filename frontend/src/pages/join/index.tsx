@@ -21,18 +21,12 @@ const JoinPage = () => {
   const handleClickCreateWorkspace = useCallback(async () => {
     setLoading(true);
 
-    const successCallback = () => {
-      localStorage.setItem('workspace', url);
-      router.push(`/${url}`);
-    };
-
-    const errorCallback = (error: { message: string }) => {
-      console.log(error);
-    };
-
     await createWorkspaces({ name, url_key: url })
-      .then(successCallback)
-      .catch(errorCallback)
+      .then(() => {
+        localStorage.setItem('workspace', url);
+        router.push(`/${url}`);
+      })
+      .catch((err) => console.log(err))
       .finally(() => {
         setLoading(false);
       });
