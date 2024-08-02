@@ -34,6 +34,7 @@ import { useRouter } from 'next/router';
 import api from '@/pages/api/api';
 import { getWorkspaces } from '@/services/Workspace/workspace.services';
 import { getTeams } from '@/services/Teams/teamsService';
+import { settingsWorkspaceNavigation } from '../MenuSidebar/components/ConfigsDropdown/navigation';
 
 interface ISettings {
   children: React.ReactElement;
@@ -42,7 +43,6 @@ interface ISettings {
 const Settings = ({ children }: ISettings) => {
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [shrink, setShrink] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -156,95 +156,79 @@ const Settings = ({ children }: ISettings) => {
                   </div>
                 </TransitionChild>
                 <div className="flex grow flex-col justify-between">
-            <div className="flex items-center justify-between px-4">
-              {!shrink ? (
-                <>
-                  <div className="p-4 text-4xl font-bold">i.</div>
-                  <ChevronsLeft
-                    className="hidden opacity-70 lg:flex"
-                    onClick={() => setShrink && setShrink(!shrink)}
-                  />
-                </>
-              ) : (
-                <ChevronsRight
-                  className="mt-5 hidden w-12 opacity-70 md:flex"
-                  onClick={() => setShrink && setShrink(!shrink)}
-                />
-              )}
-            </div>
+                  <div className="mt-4 flex flex-1 flex-col px-4">
+                    <>
+                      <Accordion
+                        type="single"
+                        collapsible
+                        className="flex flex-col justify-start transition-all"
+                      >
+                        <AccordionItem
+                          value="home"
+                          className="border-none "
+                        >
+                          <div className="text-md mb-1 flex w-full items-center justify-start gap-3 text-black/70">
+                            <div>
+                              <Building width={18} height={18} />
+                            </div>
+                            <p className="truncate">Workspace</p>
+                          </div>
 
-            <div className="flex flex-1 flex-col px-4">
-              {!shrink && (
-                <>
-                  <Accordion
-                    type="single"
-                    collapsible
-                    className="transition-all"
-                  >
-                    <AccordionItem value="home" className="border-none">
-                      <div className="text-md mb-2 flex w-full items-center gap-2 pl-4 font-normal text-black/60">
-                        <Building width={20} height={20} />
-                        Workspace
-                      </div>
+                          {settingsWorkspaceNavigation.map((item) => {
+                            return (
+                              <div className="pl-7">
+                                <MenuSidebarButton
+                                  url={`/${workspace?.url_key}/settings/${item.url}`}
+                                  name={item.name}
+                                  className="pl-1"
+                                />
+                              </div>
+                            );
+                          })}
+                        </AccordionItem>
 
-                      <MenuSidebarButton
-                        url={`/${workspace?.url_key}/settings`}
-                        name="Overview"
-                          className="pl-2"
-                      />
-                    </AccordionItem>
+                        <AccordionItem
+                          value="home"
+                          className="mt-2 border-none "
+                        >
+                          <div className="text-md mb-1 flex w-full items-center justify-start gap-3 text-black/70">
+                            <CircleUserRound width={18} height={18} />
+                            Teams
+                          </div>
 
-                    {/*<AccordionItem value="home" className="mt-2 border-none">
-                      <div className="text-md mb-2 flex w-full items-center gap-2 pl-4 font-semibold">
-                        <CircleUserRound width={20} height={20} />
-                        Account
-                      </div>
+                          <div className="pl-7">
+                            {teams?.map((team: any) => {
+                              return (
+                                <MenuSidebarButton
+                                  key={team.id}
+                                  url={`/${workspace?.url_key}/team/${team.identifier}`}
+                                  name={team.name}
+                                  className="pl-1"
+                                />
+                              );
+                            })}
+                          </div>
 
-                      <MenuSidebarButton
-                        url={`/${workspace?.url_key}/settings`}
-                        name="Overview"
-                        className="ml-7"
-                      />
-                    </AccordionItem> */}
-
-                    <AccordionItem value="home" className="mt-2 border-none">
-                      <div className="text-md mb-2 flex w-24 items-center gap-2 pl-4 font-normal text-black/60">
-                        <CircleUserRound width={20} height={20} />
-                        Teams
-                      </div>
-
-                      <div className="border-none">
-                        {teams?.map((team: any) => {
-                          return (
+                          <div className="pl-7 text-gray-600">
                             <MenuSidebarButton
-                              key={team.id}
-                              url={`/${workspace?.url_key}/team/${team.identifier}`}
-                              name={team.name}
-                              className="pl-2"
+                              url={`/${workspace?.url_key}/settings/new-team`}
+                              name="Add team"
+                              className="pl-1"
+                              icon={<Plus width={18} height={18} />}
                             />
-                          );
-                        })}
-                      </div>
-
-                      <MenuSidebarButton
-                        url={`/${workspace?.url_key}/settings/new-team`}
-                        name="Add team"
-                        className="pl-2"
-                        icon={<Plus width={20} height={20} />}
-                      />
-                    </AccordionItem>
-                  </Accordion>
-                </>
-              )}
-            </div>
-          </div>
+                          </div>
+                        </AccordionItem>
+                      </Accordion>
+                    </>
+                  </div>
+                </div>
               </DialogPanel>
             </TransitionChild>
           </div>
         </Dialog>
       </Transition>
 
-      <div className="sticky top-0 z-40 flex items-center border-b px-6 py-2 shadow-sm sm:px-6 lg:hidden">
+      <div className="sticky top-0 z-40 flex items-center gap-4 border-b bg-background px-6 py-2 shadow-sm sm:px-6 lg:hidden">
         <Button
           type="button"
           className="-m-2.5 p-2.5 lg:hidden"
@@ -254,106 +238,104 @@ const Settings = ({ children }: ISettings) => {
           <span className="sr-only">Open sidebar</span>
           <LuPanelLeft className="size-5" aria-hidden="true" />
         </Button>
+
+        <div className="flex items-center gap-4 text-lg font-semibold">
+          <ArrowLeft
+            width={20}
+            height={20}
+            onClick={() => router.push(`/${workspace?.url_key}`)}
+            className="cursor-pointer"
+          />
+          Settings
+        </div>
       </div>
 
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel
-          minSize={shrink ? 5 : 15}
-          maxSize={shrink ? 4.5 : 20}
+          minSize={15}
+          maxSize={20}
           className={
-            'hidden lg:inset-y-0 lg:z-50 lg:flex lg:h-screen lg:flex-col'
+            'hidden lg:inset-y-0 lg:z-50 lg:flex lg:h-screen lg:flex-col border-none '
           }
         >
           <div className="flex grow flex-col justify-between">
-            <div className="flex items-center justify-between px-4">
-              {!shrink ? (
-                <>
-                  <div className="py-4 px-2 text-lg font-semibold flex items-center gap-4">
-                    <ArrowLeft width={20} height={20} onClick={() => router.back()} className='cursor-pointer' />
-                    Settings
-                  </div>
-                  <ChevronsLeft
-                    className="hidden opacity-70 lg:flex"
-                    onClick={() => setShrink && setShrink(!shrink)}
-                  />
-                </>
-              ) : (
-                <ChevronsRight
-                  className="mt-5 hidden w-12 opacity-70 md:flex"
-                  onClick={() => setShrink && setShrink(!shrink)}
-                />
-              )}
+            <div className="flex items-center gap-4 p-4 text-lg font-semibold">
+              <ArrowLeft
+                width={20}
+                height={20}
+                onClick={() => router.push(`/${workspace?.url_key}`)}
+                className="cursor-pointer"
+              />
+              Settings
             </div>
 
             <div className="flex flex-1 flex-col px-4">
-              {!shrink && (
-                <>
-                  <Accordion
-                    type="single"
-                    collapsible
-                    className="transition-all"
+              <>
+                <Accordion
+                  type="single"
+                  collapsible
+                  className="flex flex-col justify-start transition-all"
+                >
+                  <AccordionItem
+                    value="home"
+                    className="border-none "
                   >
-                    <AccordionItem value="home" className="border-none">
-                      <div className="text-md mb-2 flex w-full items-center gap-2 pl-4 font-normal text-black/60">
-                        <Building width={20} height={20} />
-                        Workspace
+                    <div className="text-md mb-1 flex w-full items-center justify-start gap-3 text-black/70 dark:text-white/70">
+                      <div>
+                        <Building width={18} height={18} />
                       </div>
+                      <p className="truncate">Workspace</p>
+                    </div>
 
-                      <MenuSidebarButton
-                        url={`/${workspace?.url_key}/settings`}
-                        name="Overview"
-                          className="pl-2"
-                      />
-                    </AccordionItem>
+                    {settingsWorkspaceNavigation.map((item) => {
+                      return (
+                        <div className="pl-7">
+                          <MenuSidebarButton
+                            url={`/${workspace?.url_key}/settings/${item.url}`}
+                            name={item.name}
+                            className="pl-1"
+                          />
+                        </div>
+                      );
+                    })}
+                  </AccordionItem>
 
-                    {/*<AccordionItem value="home" className="mt-2 border-none">
-                      <div className="text-md mb-2 flex w-full items-center gap-2 pl-4 font-semibold">
-                        <CircleUserRound width={20} height={20} />
-                        Account
-                      </div>
+                  <AccordionItem value="home" className="mt-2 border-none">
+                    <div className="text-md mb-1 flex w-full items-center justify-start gap-3 text-black/70 dark:text-white/70">
+                      <CircleUserRound width={18} height={18} />
+                      Teams
+                    </div>
 
-                      <MenuSidebarButton
-                        url={`/${workspace?.url_key}/settings`}
-                        name="Overview"
-                        className="ml-7"
-                      />
-                    </AccordionItem> */}
+                    <div className="pl-7">
+                      {teams?.map((team: any) => {
+                        return (
+                          <MenuSidebarButton
+                            key={team.id}
+                            url={`/${workspace?.url_key}/team/${team.identifier}`}
+                            name={team.name}
+                            className="pl-1"
+                          />
+                        );
+                      })}
+                    </div>
 
-                    <AccordionItem value="home" className="mt-2 border-none">
-                      <div className="text-md mb-2 flex w-24 items-center gap-2 pl-4 font-normal text-black/60">
-                        <CircleUserRound width={20} height={20} />
-                        Teams
-                      </div>
-
-                      <div className="border-none">
-                        {teams?.map((team: any) => {
-                          return (
-                            <MenuSidebarButton
-                              key={team.id}
-                              url={`/${workspace?.url_key}/team/${team.identifier}`}
-                              name={team.name}
-                              className="pl-2"
-                            />
-                          );
-                        })}
-                      </div>
-
+                    <div className="pl-7 text-gray-600 dark:text-white/70">
                       <MenuSidebarButton
                         url={`/${workspace?.url_key}/settings/new-team`}
                         name="Add team"
-                        className="pl-2"
-                        icon={<Plus width={20} height={20} />}
+                        className="pl-1"
+                        icon={<Plus width={18} height={18} />}
                       />
-                    </AccordionItem>
-                  </Accordion>
-                </>
-              )}
+                    </div>
+                  </AccordionItem>
+                </Accordion>
+              </>
             </div>
           </div>
         </ResizablePanel>
-        <ResizableHandle className="border-none" />
-        <ResizablePanel className="flex h-lvh min-w-0">
-          <main className="relative flex-1 overflow-auto rounded-md sm:border border-gray-200 bg-background sm:my-2 sm:mr-2">
+        <ResizableHandle className="border-none " />
+        <ResizablePanel className="! flex h-lvh min-w-0 !border-none">
+          <main className="relative flex-1 overflow-auto rounded-md border-border bg-background sm:my-2 sm:mr-2 sm:border">
             {children}
           </main>
         </ResizablePanel>
