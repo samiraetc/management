@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import React, { FC } from 'react';
 import { IMenuSidebarButton } from './types';
+import { cn } from '@/lib/utils';
 
 const MenuSidebarButton: FC<IMenuSidebarButton> = ({
   icon,
@@ -13,10 +14,10 @@ const MenuSidebarButton: FC<IMenuSidebarButton> = ({
   className
 }) => {
   return (
-    <Link href={url ?? ''} className={className}>
+    <Link href={url ?? ''} >
       <Button
         variant="ghost"
-        className="h-8 w-full justify-start gap-2 hover:bg-muted/80"
+        className={cn("h-8 w-full justify-start gap-2 hover:bg-muted/80", className)}
         onClick={onClick}
       >
         {icon}

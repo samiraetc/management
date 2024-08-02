@@ -22,7 +22,7 @@ export const teamColumns: ColumnDef<TeamWithMembers>[] = [
         <div className="flex w-60 items-center gap-2 truncate pl-5">
           <span>{row.getValue('name')}</span>
           {row.original.joined_team && (
-            <div className="flex items-center gap-1 rounded-sm border border-gray-200 bg-gray-100 p-0.5 px-1 font-medium text-gray-500 shadow">
+            <div className="flex items-center gap-1 rounded-sm border border-border bg-accent p-0.5 px-1 font-medium text-xs text-primary/60 shadow">
               <Check size={16} />
               Joined
             </div>

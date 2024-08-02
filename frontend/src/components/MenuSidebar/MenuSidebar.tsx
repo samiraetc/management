@@ -67,13 +67,13 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
         )}
       </div>
 
-      <div className="flex flex-1 flex-col px-4">
+      <div className="flex flex-1 flex-col px-2">
         {!shrink && (
           <>
             <Accordion type="single" collapsible className="transition-all">
               <AccordionItem value="home" className="border-none">
-                <div className="text-md mb-5 flex w-full items-center justify-between gap-7 pl-4 font-semibold">
-                  {workspace?.name}
+                <div className="text-md mb-5 flex w-full items-center justify-between gap-7 pl-2 font-semibold">
+                  <p className='truncate'>{workspace?.name}</p>
                   <div className="rounded-lg border p-1.5">
                     <SquarePen width={20} height={20} />
                   </div>
@@ -99,7 +99,7 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
 
             <Accordion type="single" collapsible defaultValue="teams">
               <AccordionItem value="teams" className="border-none">
-                <AccordionTrigger className="mt-4 items-start rounded-md px-4 py-2 text-gray-500 hover:bg-muted hover:no-underline dark:hover:bg-muted">
+                <AccordionTrigger className="mt-4 items-start rounded-md px-2 py-2 text-gray-500 hover:bg-muted hover:no-underline dark:hover:bg-muted">
                   <div className="flex gap-2">
                     <p className="text-xs">
                       {translation('menuSidebar:your_teams')}
