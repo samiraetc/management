@@ -18,8 +18,7 @@ import {
 import { Accordion } from '../ui/accordion';
 import { AccordionItem } from '@radix-ui/react-accordion';
 import MenuSidebarButton from '../MenuSidebar/components/MenuSidebarButton';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { useDispatch } from 'react-redux';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import api from '@/pages/api/api';

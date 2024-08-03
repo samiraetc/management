@@ -6,8 +6,7 @@ import { Button } from '../ui/button';
 import { X } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { useDispatch } from 'react-redux';
 import MenuSidebar from '../MenuSidebar/MenuSidebar';
 import {
   Dialog,
