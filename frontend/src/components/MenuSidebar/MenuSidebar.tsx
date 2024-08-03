@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -15,10 +15,9 @@ import {
 } from 'lucide-react';
 import { ModeToggle } from '../ModeToggle/ModeToggle';
 import { translation } from '@/i18n/i18n';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import ConfigsDropdown from './components/ConfigsDropdown/ConfigsDropdown';
-import { getTeams } from '@/services/Teams/teamsService';
 
 interface IMenuSidebar {
   shrink?: boolean;
@@ -27,26 +26,10 @@ interface IMenuSidebar {
 }
 
 const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
-  const dispatch = useDispatch();
   const workspace = useSelector(
     (state: RootState) => state.workspace.workspace,
   );
-  const [teams, setTeams] = useState<Team[]>();
-
-  const fetchTeams = async () => {
-    await getTeams(workspace?.id ?? '').then((response) => {
-      setTeams(response);
-
-      dispatch({
-        type: 'teams/setTeams',
-        payload: response,
-      });
-    });
-  };
-
-  useEffect(() => {
-    fetchTeams();
-  }, [workspace]);
+  const teams = useSelector((state: RootState) => state.teams.teams);
 
   return (
     <div className="flex grow flex-col justify-between">

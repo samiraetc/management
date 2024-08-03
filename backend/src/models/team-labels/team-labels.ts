@@ -38,6 +38,7 @@ const selectAllTeamLabel = async (id: string): Promise<TeamLabels[]> => {
       name: true,
       color: true,
       can_edit: true,
+      created_at: true,
       team_id: true,
     },
   });

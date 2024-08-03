@@ -36,9 +36,7 @@ const Settings = ({ children }: ISettings) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const dispatch = useDispatch();
-  const workspace = useSelector(
-    (state: RootState) => state.workspace.workspace,
-  );
+  const [workspace, setWorkspace] = useState<Workspace>();
   const [workspaceUrl, setWorkspaceUrl] = useState('');
 
   const [teams, setTeams] = useState<Team[]>();
@@ -72,20 +70,27 @@ const Settings = ({ children }: ISettings) => {
           type: 'workspace/setWorkspace',
           payload: foundWorkspace,
         });
+
+        setWorkspace(foundWorkspace);
+
+        fetchTeams(foundWorkspace.id);
       } else if (defaultWorkspace) {
         localStorage.setItem('workspace', defaultWorkspace.url_key);
         dispatch({
           type: 'workspace/setWorkspace',
           payload: defaultWorkspace,
         });
+
+        setWorkspace(defaultWorkspace);
+        fetchTeams(defaultWorkspace.id);
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const fetchTeams = async () => {
-    await getTeams(workspace?.id ?? '').then((response) => {
+  const fetchTeams = async (id: string) => {
+    await getTeams(id).then((response) => {
       setTeams(response);
 
       dispatch({
@@ -95,11 +100,7 @@ const Settings = ({ children }: ISettings) => {
     });
   };
 
-  useEffect(() => {
-    workspace && fetchTeams();
-  }, [workspace]);
-
-  return workspace ? (
+  return (
     <div>
       <Transition show={sidebarOpen}>
         <Dialog className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
@@ -323,8 +324,6 @@ const Settings = ({ children }: ISettings) => {
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
-  ) : (
-    <></>
   );
 };
 

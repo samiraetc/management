@@ -46,10 +46,6 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => {
-    handleGetWorkspace();
-  }, []);
-
   const setWorkspaceStorage = (workspace: Workspace) => {
     localStorage.setItem('workspace', workspace.url_key);
     dispatch({
@@ -69,6 +65,7 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
     const down = (e: KeyboardEvent) => {
       if ((e.key === 'K' || e.key === 'k') && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
+        handleGetWorkspace();
         setOpen((open) => !open);
       }
     };
@@ -102,7 +99,11 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
                     <>
                       <MenubarItem key={item.name}>
                         <Link
-                          href={item.url ?? ''}
+                          href={
+                            item.workspaceUrl
+                              ? `/${workspaceStorage}/${item.url}`
+                              : item.url ?? ''
+                          }
                           className="text-md w-full p-1 font-medium"
                         >
                           <p>{item.name}</p>
@@ -133,7 +134,10 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
                     <>
                       <MenubarItem
                         key={item.name}
-                        onClick={() => setOpen(true)}
+                        onClick={() => {
+                          handleGetWorkspace();
+                          setOpen(true);
+                        }}
                       >
                         <Button className="text-md flex w-full justify-between p-1">
                           <p>{item.name}</p>

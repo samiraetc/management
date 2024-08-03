@@ -27,8 +27,7 @@ const selectAllWorkspaceLabels = async (
       return;
     }
 
-    const labels = await selectAllWorkspaceLabel(workspace_id);
-    reply.code(201).send({ data: labels });
+    reply.code(200).send({ data: await selectAllWorkspaceLabel(workspace_id) });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to create label', details: error });
   }
@@ -109,7 +108,7 @@ const patchWorkspaceLabel = async (
     };
 
     const editedLabel = await editWorkspaceLabel(body, label_id);
-    reply.code(201).send({ data: editedLabel });
+    reply.code(200).send({ data: editedLabel });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to edit label', details: error });
   }
@@ -138,7 +137,7 @@ const removeWorkspaceLabel = async (
     }
 
     const deleteLabel = await deleteWorkspaceLabel(label_id);
-    reply.code(201).send({ data: deleteLabel });
+    reply.code(200).send({ data: deleteLabel });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to delete label', details: error });
   }

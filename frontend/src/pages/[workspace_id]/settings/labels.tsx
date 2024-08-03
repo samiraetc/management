@@ -241,7 +241,7 @@ const WorkspaceLabels = () => {
 
   useEffect(() => {
     getWorkspaceLabels();
-  }, [workspace?.id]);
+  }, []);
 
   return (
     <div className="lg:mt-18 m-4 mx-auto w-[21rem] sm:mt-12 sm:w-[35rem] lg:w-[40rem]">

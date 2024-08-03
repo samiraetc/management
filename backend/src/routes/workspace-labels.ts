@@ -23,14 +23,16 @@ const workspaceLabelsRouters = async (server: FastifyInstance) => {
         },
         response: {
           200: {
-            type: 'array',
+            type: 'object',
             properties: {
               data: {
-                type: 'object',
+                type: 'array',
                 properties: {
                   id: { type: 'string' },
                   name: { type: 'string' },
                   color: { type: 'string' },
+                  created_at: { type: 'string' },
+                  can_edit: { type: 'boolean' },
                 },
               },
             },

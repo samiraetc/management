@@ -23,6 +23,7 @@ import {
 } from '../ui/resizable';
 import { LuPanelLeft } from 'react-icons/lu';
 import { getWorkspaces } from '@/services/Workspace/workspace.services';
+import { getTeams } from '@/services/Teams/teamsService';
 
 type LayoutProps = {
   children: ReactNode;
@@ -34,9 +35,7 @@ const Layout = ({ children }: LayoutProps) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const dispatch = useDispatch();
-  const workspace = useSelector(
-    (state: RootState) => state.workspace.workspace,
-  );
+  const [workspace, setWorkspace] = useState<Workspace>();
   const [workspaceUrl, setWorkspaceUrl] = useState('');
 
   useEffect(() => {
@@ -68,16 +67,31 @@ const Layout = ({ children }: LayoutProps) => {
           type: 'workspace/setWorkspace',
           payload: foundWorkspace,
         });
+
+        setWorkspace(foundWorkspace);
+
+        fetchTeams(foundWorkspace.id);
       } else if (defaultWorkspace) {
         localStorage.setItem('workspace', defaultWorkspace.url_key);
         dispatch({
           type: 'workspace/setWorkspace',
           payload: defaultWorkspace,
         });
+
+        setWorkspace(defaultWorkspace);
+        fetchTeams(defaultWorkspace.id);
       }
     } catch (error) {
       console.error(error);
     }
+  };
+  const fetchTeams = async (id: string) => {
+    await getTeams(id).then((response) => {
+      dispatch({
+        type: 'teams/setTeams',
+        payload: response,
+      });
+    });
   };
 
   return i18next.isInitialized && workspace ? (

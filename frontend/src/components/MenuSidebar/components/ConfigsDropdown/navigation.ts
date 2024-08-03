@@ -11,7 +11,8 @@ export const dropdownNavigation = [
   {
     type: 'link',
     name: 'Workspace Settings',
-    url: '/meu-novo-workspace/settings/general',
+    url: 'settings/general',
+    workspaceUrl: true,
   },
   {
     type: 'list',
@@ -37,10 +38,10 @@ export const dropdownNavigation = [
 export const settingsWorkspaceNavigation = [
   {
     name: 'General',
-    url: '/general',
+    url: 'general',
   },
   {
     name: 'Labels',
-    url: '/labels',
+    url: 'labels',
   },
 ];
