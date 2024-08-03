@@ -5,7 +5,7 @@ import { RootState } from '@/redux/store';
 import { createWorkspaceLabel, getLabels } from '@/services/Label/labelService';
 
 import withSettings from '@/utils/hoc/withSettings';
-import { Check, Palette, Search } from 'lucide-react';
+import { Brush, Check, Palette, Search } from 'lucide-react';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -147,7 +147,7 @@ const index = () => {
                         <div className="flex w-[19rem] items-center gap-2">
                           <div
                             className={cn(
-                              'flex size-6 cursor-pointer items-center justify-between rounded-full',
+                              'flex size-6 items-center justify-between rounded-full',
                               color.length === 1 &&
                                 'border border-dashed border-gray-400',
                             )}
@@ -201,12 +201,11 @@ const index = () => {
 
                       <div
                         className={cn(
-                          'cursor-pointer border px-2 text-gray-500',
-                          palette ? 'rounded-full' : 'rounded-lg',
+                          'cursor-pointer rounded-full border p-1 text-gray-500',
                         )}
                         onClick={() => setPalette(!palette)}
                       >
-                        {palette ? <p>P</p> : <p>#</p>}
+                        {palette ? <Palette size={18} /> : <Brush size={18} />}
                       </div>
                     </div>
                   </div>
@@ -237,7 +236,9 @@ const index = () => {
         <div className="space-y-1">
           {labels
             .filter((filter) =>
-              search ? filter.name.toLowerCase().includes(search.toLowerCase()) : filter.name
+              search
+                ? filter.name.toLowerCase().includes(search.toLowerCase())
+                : filter.name,
             )
             .map((label) => {
               return (
