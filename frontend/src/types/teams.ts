@@ -21,5 +21,10 @@ type Team = {
 
 type TeamWithMembers = Team & {
   members: User[];
-  joined_team: boolean
+  joined_team: boolean;
+};
+
+type CreateTeam = {
+  name: string;
+  identifier: string;
 };

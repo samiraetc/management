@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Dialog,
   DialogPanel,
@@ -6,27 +8,16 @@ import {
 } from '@headlessui/react';
 import React, { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
-import {
-  ArrowLeft,
-  Building,
-  ChevronsLeft,
-  ChevronsRight,
-  CircleUserRound,
-  ListTodo,
-  Plus,
-  X,
-} from 'lucide-react';
+import { ArrowLeft, Building, CircleUserRound, Plus, X } from 'lucide-react';
 import { LuPanelLeft } from 'react-icons/lu';
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from '../ui/resizable';
-import MenuSidebar from '../MenuSidebar/MenuSidebar';
 import { Accordion } from '../ui/accordion';
 import { AccordionItem } from '@radix-ui/react-accordion';
 import MenuSidebarButton from '../MenuSidebar/components/MenuSidebarButton';
-import { translation } from '@/i18n/i18n';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useSession } from 'next-auth/react';
@@ -41,7 +32,6 @@ interface ISettings {
 }
 
 const Settings = ({ children }: ISettings) => {
-  const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -70,7 +60,6 @@ const Settings = ({ children }: ISettings) => {
   }, [workspaceUrl]);
 
   const setWorkspaceInRedux = async () => {
-    setLoading(true);
     try {
       const response = await getWorkspaces();
       const defaultWorkspace = response[0] ?? null;
@@ -93,7 +82,6 @@ const Settings = ({ children }: ISettings) => {
     } catch (error) {
       console.error(error);
     }
-    setLoading(false);
   };
 
   const fetchTeams = async () => {
@@ -108,10 +96,10 @@ const Settings = ({ children }: ISettings) => {
   };
 
   useEffect(() => {
-    fetchTeams();
+    workspace && fetchTeams();
   }, [workspace]);
 
-  return (
+  return workspace ? (
     <div>
       <Transition show={sidebarOpen}>
         <Dialog className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
@@ -163,10 +151,7 @@ const Settings = ({ children }: ISettings) => {
                         collapsible
                         className="flex flex-col justify-start transition-all"
                       >
-                        <AccordionItem
-                          value="home"
-                          className="border-none "
-                        >
+                        <AccordionItem value="home" className="border-none">
                           <div className="text-md mb-1 flex w-full items-center justify-start gap-3 text-black/70">
                             <div>
                               <Building width={18} height={18} />
@@ -176,7 +161,7 @@ const Settings = ({ children }: ISettings) => {
 
                           {settingsWorkspaceNavigation.map((item) => {
                             return (
-                              <div className="pl-7">
+                              <div className="pl-7" key={item.name}>
                                 <MenuSidebarButton
                                   url={`/${workspace?.url_key}/settings/${item.url}`}
                                   name={item.name}
@@ -189,7 +174,7 @@ const Settings = ({ children }: ISettings) => {
 
                         <AccordionItem
                           value="home"
-                          className="mt-2 border-none "
+                          className="mt-2 border-none"
                         >
                           <div className="text-md mb-1 flex w-full items-center justify-start gap-3 text-black/70">
                             <CircleUserRound width={18} height={18} />
@@ -197,7 +182,7 @@ const Settings = ({ children }: ISettings) => {
                           </div>
 
                           <div className="pl-7">
-                            {teams?.map((team: any) => {
+                            {teams?.map((team) => {
                               return (
                                 <MenuSidebarButton
                                   key={team.id}
@@ -255,7 +240,7 @@ const Settings = ({ children }: ISettings) => {
           minSize={15}
           maxSize={20}
           className={
-            'hidden lg:inset-y-0 lg:z-50 lg:flex lg:h-screen lg:flex-col border-none '
+            'hidden border-none lg:inset-y-0 lg:z-50 lg:flex lg:h-screen lg:flex-col'
           }
         >
           <div className="flex grow flex-col justify-between">
@@ -276,10 +261,7 @@ const Settings = ({ children }: ISettings) => {
                   collapsible
                   className="flex flex-col justify-start transition-all"
                 >
-                  <AccordionItem
-                    value="home"
-                    className="border-none "
-                  >
+                  <AccordionItem value="home" className="border-none">
                     <div className="text-md mb-1 flex w-full items-center justify-start gap-3 text-black/70 dark:text-white/70">
                       <div>
                         <Building width={18} height={18} />
@@ -289,7 +271,7 @@ const Settings = ({ children }: ISettings) => {
 
                     {settingsWorkspaceNavigation.map((item) => {
                       return (
-                        <div className="pl-7">
+                        <div className="pl-7" key={item.name}>
                           <MenuSidebarButton
                             url={`/${workspace?.url_key}/settings/${item.url}`}
                             name={item.name}
@@ -307,7 +289,7 @@ const Settings = ({ children }: ISettings) => {
                     </div>
 
                     <div className="pl-7">
-                      {teams?.map((team: any) => {
+                      {teams?.map((team) => {
                         return (
                           <MenuSidebarButton
                             key={team.id}
@@ -333,14 +315,16 @@ const Settings = ({ children }: ISettings) => {
             </div>
           </div>
         </ResizablePanel>
-        <ResizableHandle className="border-none " />
-        <ResizablePanel className="! flex h-lvh min-w-0 !border-none">
+        <ResizableHandle className="border-none" />
+        <ResizablePanel className="flex h-lvh min-w-0">
           <main className="relative flex-1 overflow-auto rounded-md border-border bg-background sm:my-2 sm:mr-2 sm:border">
             {children}
           </main>
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
+  ) : (
+    <></>
   );
 };
 

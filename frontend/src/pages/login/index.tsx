@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import useWorkspaceUrl from '@/hook/useWorkspaceStorage/useWorkspaceStorage';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 const Login = () => {
   const [email, setEmail] = useState<string>('');

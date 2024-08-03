@@ -117,7 +117,6 @@ const workspaceLabelsRouters = async (server: FastifyInstance) => {
             name: { type: 'string' },
             color: { type: 'string' },
           },
-          required: ['name', 'color'],
         },
         response: {
           200: {

@@ -1,4 +1,7 @@
-import { createAndEditWorkspaceLabel } from '@/models/workspace-labels/types';
+import {
+  createWorkspaceLabelsSchema,
+  EditWorkspaceLabelSchema,
+} from '@/models/workspace-labels/types';
 import {
   addWorkspaceLabel,
   deleteWorkspaceLabel,
@@ -37,7 +40,7 @@ const createWorkspaceLabel = async (
 ) => {
   try {
     const { id: workspace_id } = request.params as { id: string };
-    const parsedBody = createAndEditWorkspaceLabel.parse(request.body);
+    const parsedBody = createWorkspaceLabelsSchema.parse(request.body);
 
     const workspace = await selectWorkspaces(workspace_id);
 
@@ -60,6 +63,7 @@ const createWorkspaceLabel = async (
       workspace_id,
       name: parsedBody.name,
       color: parsedBody.color,
+      created_at: new Date(),
       can_edit: true,
     };
 
@@ -94,12 +98,13 @@ const patchWorkspaceLabel = async (
       return;
     }
 
-    const parsedBody = createAndEditWorkspaceLabel.parse(request.body);
+    const parsedBody = EditWorkspaceLabelSchema.parse(request.body);
 
     const body = {
       workspace_id,
-      name: parsedBody.name,
-      color: parsedBody.color,
+      name: parsedBody.name ?? label.name,
+      color: parsedBody.color ?? label.color,
+      created_at: label.created_at,
       can_edit: label.can_edit,
     };
 

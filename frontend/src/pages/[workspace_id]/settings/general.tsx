@@ -3,7 +3,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { RootState } from '@/redux/store';
-import { createTeam } from '@/services/Teams/teamsService';
 import {
   deleteWorkspaces,
   editWorkspaces,
@@ -13,7 +12,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-const index = () => {
+const WorkspaceGeneral = () => {
   const workspace = useSelector(
     (state: RootState) => state.workspace.workspace,
   );
@@ -21,10 +20,7 @@ const index = () => {
   const [name, setName] = useState<string>(workspace?.name ?? '');
   const [urlKey, setUrlKey] = useState<string>(workspace?.url_key ?? '');
 
-
   const workspaceId = workspace?.id ?? '';
-
-
 
   useEffect(() => {
     setUrlKey(name.trim().toLowerCase().replace(/\s+/g, '-'));
@@ -113,4 +109,4 @@ const index = () => {
   );
 };
 
-export default withSettings(index);
+export default withSettings(WorkspaceGeneral);

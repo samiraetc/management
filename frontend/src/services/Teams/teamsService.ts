@@ -12,8 +12,11 @@ export async function getTeamMembers(teamsId: string): Promise<User[]> {
   return data.data.data;
 }
 
-export async function createTeam(workspaceId: string, payload: any): Promise<any> {
-  const data = await api.post(`/workspaces/${workspaceId}/teams`, payload)
+export async function createTeam(
+  workspaceId: string,
+  payload: CreateTeam,
+): Promise<Team> {
+  const data = await api.post(`/workspaces/${workspaceId}/teams`, payload);
 
-  return data.data.data
+  return data.data.data;
 }

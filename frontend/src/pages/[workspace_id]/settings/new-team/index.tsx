@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-const index = () => {
+const NewTeamPage = () => {
   const router = useRouter();
   const [teamName, setTeamName] = useState<string>('');
   const [identifier, setIdentifier] = useState<string>('');
@@ -84,4 +84,4 @@ const index = () => {
   );
 };
 
-export default withSettings(index);
+export default withSettings(NewTeamPage);

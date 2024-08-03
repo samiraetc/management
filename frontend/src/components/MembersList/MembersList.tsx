@@ -21,7 +21,7 @@ const MembersList = ({ members }: MembersListProps) => {
           {members.slice(0, maxMembersToShow).map((member: User) => (
             <div key={member.id}>
               <span
-                className="fist:ml-0 -ml-3 flex size-6 items-center justify-center rounded-full border-2 border-white dark:border-background p-0.5 text-xs text-white"
+                className="fist:ml-0 -ml-3 flex size-6 items-center justify-center rounded-full border-2 border-white p-0.5 text-xs text-white dark:border-background"
                 style={{
                   backgroundColor: generateHexaColor(),
                 }}
@@ -38,7 +38,7 @@ const MembersList = ({ members }: MembersListProps) => {
               className="flex w-full items-center gap-1 rounded-md p-2 py-1 text-sm font-normal text-stone-700 hover:bg-accent dark:text-white"
             >
               <span
-                className="fist:ml-0 flex size-6 items-center justify-center rounded-full border-2 border-white dark:border-background p-0.5 text-xs text-white"
+                className="fist:ml-0 flex size-6 items-center justify-center rounded-full border-2 border-white p-0.5 text-xs text-white dark:border-background"
                 style={{
                   backgroundColor: generateHexaColor(),
                 }}

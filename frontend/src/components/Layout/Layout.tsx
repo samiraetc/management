@@ -29,7 +29,6 @@ type LayoutProps = {
 };
 
 const Layout = ({ children }: LayoutProps) => {
-  const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [shrink, setShrink] = useState(false);
   const { data: session, status } = useSession();
@@ -57,7 +56,6 @@ const Layout = ({ children }: LayoutProps) => {
   }, [workspaceUrl]);
 
   const setWorkspaceInRedux = async () => {
-    setLoading(true);
     try {
       const response = await getWorkspaces();
       const defaultWorkspace = response[0] ?? null;
@@ -80,7 +78,6 @@ const Layout = ({ children }: LayoutProps) => {
     } catch (error) {
       console.error(error);
     }
-    setLoading(false);
   };
 
   return i18next.isInitialized && workspace ? (
@@ -163,7 +160,7 @@ const Layout = ({ children }: LayoutProps) => {
         </ResizablePanel>
         <ResizableHandle className="border-none" />
         <ResizablePanel className="flex h-lvh min-w-0">
-          <main className="relative flex-1 overflow-auto rounded-md sm:border border-border bg-background sm:my-2 sm:mr-2">
+          <main className="relative flex-1 overflow-auto rounded-md border-border bg-background sm:my-2 sm:mr-2 sm:border">
             {children}
           </main>
         </ResizablePanel>

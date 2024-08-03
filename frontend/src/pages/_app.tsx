@@ -5,6 +5,7 @@ import { SessionProvider } from 'next-auth/react';
 import { Provider } from 'react-redux';
 import { store } from '@/redux/store';
 import { Toaster } from '@/components/ui/toaster';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 export default function App({
   Component,
@@ -24,8 +25,10 @@ export default function App({
         disableTransitionOnChange
       >
         <Provider store={store}>
-          <Component {...pageProps} />
-          <Toaster />
+          <TooltipProvider>
+            <Component {...pageProps} />
+            <Toaster />
+          </TooltipProvider>
         </Provider>
       </ThemeProvider>
     </SessionProvider>

@@ -32,7 +32,9 @@ export function Toaster() {
                 )}
               </div>
               {description && (
-                <ToastDescription className={cn(icon && 'pl-7')}>{description}</ToastDescription>
+                <ToastDescription className={cn(icon && 'pl-7')}>
+                  {description}
+                </ToastDescription>
               )}
             </div>
             {action}

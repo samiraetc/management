@@ -12,7 +12,7 @@ const teamsSlice = createSlice({
   name: 'teams',
   initialState,
   reducers: {
-    setTeams(state, action: PayloadAction<any>) {
+    setTeams(state, action: PayloadAction<Team[]>) {
       state.teams = action.payload;
     },
   },

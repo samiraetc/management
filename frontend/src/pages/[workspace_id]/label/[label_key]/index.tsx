@@ -37,6 +37,8 @@ const LabelIndex = () => {
     id: '',
     name: labelKey,
     color: '',
+    can_edit: false,
+    created_at: '',
   });
   const workspace = useSelector(
     (state: RootState) => state.workspace.workspace,
@@ -59,7 +61,13 @@ const LabelIndex = () => {
       if (matchingLabel) {
         setSelectedLabel(matchingLabel);
       } else {
-        setSelectedLabel({ id: '', name: labelKey, color: '' });
+        setSelectedLabel({
+          id: '',
+          name: labelKey,
+          color: '',
+          can_edit: false,
+          created_at: '',
+        });
       }
     });
   };

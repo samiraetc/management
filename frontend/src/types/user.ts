@@ -4,5 +4,5 @@ type User = {
   last_name: string;
   username: string;
   full_name: string;
-  email: string
+  email: string;
 };

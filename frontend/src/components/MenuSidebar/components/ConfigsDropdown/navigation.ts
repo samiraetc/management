@@ -37,10 +37,10 @@ export const dropdownNavigation = [
 export const settingsWorkspaceNavigation = [
   {
     name: 'General',
-    url: '/general'
+    url: '/general',
   },
   {
     name: 'Labels',
-    url: '/labels'
-  }
-]
+    url: '/labels',
+  },
+];

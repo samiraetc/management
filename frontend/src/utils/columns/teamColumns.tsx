@@ -7,8 +7,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
@@ -22,7 +20,7 @@ export const teamColumns: ColumnDef<TeamWithMembers>[] = [
         <div className="flex w-60 items-center gap-2 truncate pl-5">
           <span>{row.getValue('name')}</span>
           {row.original.joined_team && (
-            <div className="flex items-center gap-1 rounded-sm border border-border bg-accent p-0.5 px-1 font-medium text-xs text-primary/60 shadow">
+            <div className="flex items-center gap-1 rounded-sm border border-border bg-accent p-0.5 px-1 text-xs font-medium text-primary/60 shadow">
               <Check size={16} />
               Joined
             </div>
@@ -42,7 +40,7 @@ export const teamColumns: ColumnDef<TeamWithMembers>[] = [
     accessorKey: 'members',
     header: 'Members',
     cell: ({ row }) => {
-      const members: any[] = row.getValue('members');
+      const members: User[] = row.getValue('members');
 
       return <MembersList members={members} />;
     },
@@ -57,9 +55,7 @@ export const teamColumns: ColumnDef<TeamWithMembers>[] = [
   {
     id: 'actions',
     enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original.identifier;
-
+    cell: () => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

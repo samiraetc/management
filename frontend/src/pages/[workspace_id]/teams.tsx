@@ -10,7 +10,7 @@ import { useSession } from 'next-auth/react';
 const TeamsIndex = () => {
   const teams = useSelector((state: RootState) => state.teams.teams) ?? [];
   const { data: session } = useSession();
-  const [teamMembers, setTeamMembers] = useState<any>([]);
+  const [teamMembers, setTeamMembers] = useState<TeamWithMembers[]>([]);
 
   const handleGetMembers = async (teamId: string) => {
     return await getTeamMembers(teamId);

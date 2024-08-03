@@ -1,10 +1,8 @@
-import withSettings from '@/utils/hoc/withSettings'
-import React from 'react'
+import withSettings from '@/utils/hoc/withSettings';
+import React from 'react';
 
 const index = () => {
-  return (
-    <div>overview</div>
-  )
-}
+  return <div>overview</div>;
+};
 
-export default withSettings(index)
+export default withSettings(index);

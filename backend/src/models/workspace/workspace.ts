@@ -12,6 +12,8 @@ interface Workspace {
   labels: Label[];
   members?: User[];
   permission: string;
+  created_at: Date;
+  updated_at: Date;
 }
 
 const createWorkspace = async (data: Workspace): Promise<PrismaWorkspace> => {
@@ -22,11 +24,12 @@ const createWorkspace = async (data: Workspace): Promise<PrismaWorkspace> => {
         connect: { id: data.creator },
       },
       url_key: data.url_key,
+      created_at: data.created_at,
+      updated_at: data.updated_at,
       labels: {
         create: data.labels.map((label) => ({
-          name: label.name,
-          color: label.color,
-          can_edit: false,
+          ...label,
+          can_edit: true,
         })),
       },
       members: {

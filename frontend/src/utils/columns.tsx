@@ -84,7 +84,7 @@ export const columns: ColumnDef<Task>[] = [
       return (
         <>
           {values.length >= 1 && (
-            <div className="hidden w-88 sm:flex sm:justify-end">
+            <div className="w-88 hidden sm:flex sm:justify-end">
               <LabelList labels={values} />
             </div>
           )}

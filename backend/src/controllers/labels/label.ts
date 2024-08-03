@@ -46,6 +46,7 @@ const createLabelController = async (
     const body = {
       name: parsedBody.name,
       color: parsedBody.color,
+      created_at: new Date(),
     };
 
     const label = await createLabel(body);

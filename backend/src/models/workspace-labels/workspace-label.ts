@@ -69,6 +69,7 @@ const selectAllWorkspaceLabel = async (id: string) => {
       id: true,
       name: true,
       color: true,
+      created_at: true,
       can_edit: true,
     },
   });

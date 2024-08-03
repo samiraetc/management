@@ -14,7 +14,7 @@ const JoinPage = () => {
   const { data: session } = useSession();
   const [name, setName] = useState<string>('');
   const [url, setUrl] = useState<string>('');
-  const [error, setError] = useState<string>('');
+
   const [loading, setLoading] = useState<boolean>(false);
   const hasWorkspaces = session?.user.workspaces?.length === 0;
 
@@ -73,9 +73,9 @@ const JoinPage = () => {
                   value={name}
                   id="name"
                   onChange={(e) => setName(e.target.value)}
-                  className={
-                    error ? 'border-red-500 focus:border-neutral-200' : 'h-12'
-                  }
+                  // className={
+                  //   error ? 'border-red-500 focus:border-neutral-200' : 'h-12'
+                  // }
                 />
               </div>
 
@@ -85,9 +85,9 @@ const JoinPage = () => {
                   value={url}
                   id="url"
                   onChange={(e) => setUrl(e.target.value)}
-                  className={
-                    error ? 'border-red-500 focus:border-neutral-200' : 'h-12'
-                  }
+                  // className={
+                  //   error ? 'border-red-500 focus:border-neutral-200' : 'h-12'
+                  // }
                 />
               </div>
             </CardContent>

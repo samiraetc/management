@@ -12,7 +12,7 @@ const workspaceSlice = createSlice({
   name: 'workspace',
   initialState,
   reducers: {
-    setWorkspace(state, action: PayloadAction<any>) {
+    setWorkspace(state, action: PayloadAction<Workspace>) {
       state.workspace = action.payload;
     },
   },

@@ -2,11 +2,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { RootState } from '@/redux/store';
-import { createWorkspaceLabel, getLabels } from '@/services/Label/labelService';
+import {
+  createWorkspaceLabel,
+  deleteWorkspacelabel,
+  editWorkspacelabel,
+  getLabels,
+} from '@/services/Label/labelService';
 
 import withSettings from '@/utils/hoc/withSettings';
-import { Brush, Check, Palette, Search } from 'lucide-react';
-import { useRouter } from 'next/router';
+import { Brush, Check, Palette, Pencil, Search, Trash } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -19,6 +23,13 @@ import { cn } from '@/lib/utils';
 import { toast } from '@/components/ui/use-toast';
 import { PiWarningCircleFill } from 'react-icons/pi';
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { format } from 'date-fns';
+
 const colors = [
   { color: '#6e6e6e', name: 'gray' },
   { color: '#747F8D', name: 'slate' },
@@ -30,69 +41,207 @@ const colors = [
   { color: '#F04747', name: 'red' },
 ];
 
-const index = () => {
-  const router = useRouter();
-  const [labels, setLabels] = useState<Label[]>([]);
-  const [search, setSearch] = useState<string>();
-  const [selectedColor, setSelectedColor] = useState(colors[0].color);
+function alreadyExist() {
+  toast({
+    icon: <PiWarningCircleFill className="size-5" />,
+    title: 'Unable to save label',
+    description: (
+      <p className="text-gray-500 dark:text-white/70">
+        A label with this name already exists in the workspace labels.
+      </p>
+    ),
+  });
+}
+
+interface ILabelForm {
+  selectedColor: string;
+  label: string;
+  handleCancelNewLabel: () => void;
+  setSelectedColor: (selected: string) => void;
+  setLabel: (label: string) => void;
+  handleSave: () => void;
+}
+
+const LabelForm = ({
+  selectedColor,
+  handleCancelNewLabel,
+  setSelectedColor,
+  setLabel,
+  label,
+  handleSave,
+}: ILabelForm) => {
   const [palette, setPalette] = useState<boolean>(false);
-  const [color, setColor] = useState<string>('#747F8D');
-  const [label, setLabel] = useState<string>('');
-  const [newLabel, setNewLabel] = useState<boolean>(false);
-  const workspace = useSelector(
-    (state: RootState) => state.workspace.workspace,
-  );
-
-  const getWorkspaceLabels = async () => {
-    await getLabels(workspace?.id ?? '').then((res) => setLabels(res));
-  };
-
-  useEffect(() => {
-    getWorkspaceLabels();
-  }, []);
 
   const handleChange = (value: string) => {
     if (!value.startsWith('#')) {
       value = '#' + value.replace('#', '');
     }
     if (value.length <= 7) {
-      setColor(value);
       setSelectedColor(value);
     }
   };
 
+  return (
+    <div className="rounded-sm border bg-accent p-1.5 pl-3 dark:bg-white/5">
+      <div className="flex items-center gap-2">
+        <Popover>
+          <PopoverTrigger>
+            <div className="rounded-sm border bg-background p-[0.6875rem]">
+              <div
+                className="rounded-lg p-1"
+                style={{ backgroundColor: selectedColor }}
+              ></div>
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="w-full p-2 px-4">
+            <div className="">
+              <div className="relative flex h-full items-center gap-4">
+                {palette ? (
+                  <div className="flex w-[19rem] items-center gap-2">
+                    <div
+                      className={cn(
+                        'flex size-6 items-center justify-between rounded-full',
+                        selectedColor.length === 1 &&
+                          'border border-dashed border-gray-400',
+                      )}
+                      style={{
+                        backgroundColor:
+                          selectedColor.length === 1 ? '' : selectedColor,
+                      }}
+                    >
+                      {selectedColor && (
+                        <Check
+                          className="p-1 text-white"
+                          width={25}
+                          height={25}
+                        />
+                      )}
+                    </div>
+
+                    <div className="relative w-56">
+                      <p className="absolute left-1 top-0 text-gray-400">HEX</p>
+                      <Input
+                        className="h-6 border-none pl-10 outline-none focus:ring-0 focus-visible:ring-transparent"
+                        onChange={(e) => handleChange(e.target.value)}
+                        value={selectedColor}
+                        maxLength={7}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-4">
+                    {colors.map((color) => (
+                      <div
+                        key={color.name}
+                        className={`flex size-6 cursor-pointer items-center justify-between rounded-full`}
+                        style={{ backgroundColor: color.color }}
+                        onClick={() => setSelectedColor(color.color)}
+                      >
+                        {selectedColor === color.color && (
+                          <Check
+                            className="p-1 text-white"
+                            width={25}
+                            height={25}
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <Separator orientation="vertical" className="h-6" />
+
+                <div
+                  className={cn(
+                    'cursor-pointer rounded-full border p-1 text-gray-500',
+                  )}
+                  onClick={() => setPalette(!palette)}
+                >
+                  {palette ? <Palette size={18} /> : <Brush size={18} />}
+                </div>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        <Input
+          className="h-8"
+          placeholder="Label name"
+          onChange={(e) => setLabel(e.target.value)}
+          value={label}
+        />
+        <Separator orientation="vertical" className="h-8" />
+        <Button
+          className="h-8 dark:bg-accent dark:hover:bg-accent/60"
+          variant="outline"
+          onClick={() => handleCancelNewLabel()}
+        >
+          Cancel
+        </Button>
+        <Button className="h-8" onClick={() => handleSave()}>
+          Save
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const WorkspaceLabels = () => {
+  const [workspaceLabels, setWorkspaceLabels] = useState<Label[]>([]);
+  const [search, setSearch] = useState<string>();
+  const [selectedColor, setSelectedColor] = useState(colors[0].color);
+  const [labelName, setLabelName] = useState<string>('');
+  const [newLabel, setNewLabel] = useState<boolean>(false);
+  const [labelId, setLabelId] = useState<string>('');
+  const hasLabel = workspaceLabels.some((item) => item.name === labelName);
+
+  const workspace =
+    useSelector((state: RootState) => state.workspace.workspace) ?? null;
+
+  const getWorkspaceLabels = async () => {
+    await getLabels(workspace?.id ?? '').then((res) => setWorkspaceLabels(res));
+  };
+
   const handleCancelNewLabel = () => {
     setNewLabel(false);
-    setLabel('');
+    setLabelName('');
     setSelectedColor(colors[0].color);
-    setPalette(false);
-    setColor(colors[0].color);
+    setLabelId('');
   };
 
   const handleCreateNewLabel = async () => {
-    const hasLabel = labels.some((item) => item.name === label);
-
-    if (hasLabel) {
-      toast({
-        icon: <PiWarningCircleFill className="size-5" />,
-        title: 'Unable to save label',
-        description: (
-          <p className="text-gray-500 dark:text-white/70">
-            A label with this name already exists in the workspace labels.
-          </p>
-        ),
-      });
-    } else {
-      await createWorkspaceLabel(workspace?.id ?? '', {
-        name: label,
-        color: selectedColor,
-      })
-        .then((response: Label) =>
-          setLabels((prevItems) => [...prevItems, response]),
-        )
-        .finally(() => handleCancelNewLabel());
-    }
+    hasLabel
+      ? alreadyExist()
+      : await createWorkspaceLabel(workspace?.id ?? '', {
+          name: labelName,
+          color: selectedColor,
+        })
+          .then(() => getWorkspaceLabels())
+          .finally(() => handleCancelNewLabel());
   };
+
+  const handleEditLabel = async () => {
+    const currentLabel = workspaceLabels.find((item) => item.id === labelId);
+    const isNameSame = currentLabel?.name === labelName;
+
+    const updateData = isNameSame
+      ? { color: selectedColor }
+      : { name: labelName, color: selectedColor };
+
+    await editWorkspacelabel(workspace?.id ?? '', labelId, updateData)
+      .then(() => getWorkspaceLabels())
+      .finally(() => handleCancelNewLabel());
+  };
+
+  const handleDeleteWorkspaceLabel = async (id: string) => {
+    await deleteWorkspacelabel(workspace?.id ?? '', id).then(() =>
+      getWorkspaceLabels(),
+    );
+  };
+
+  useEffect(() => {
+    getWorkspaceLabels();
+  }, [workspace?.id]);
 
   return (
     <div className="lg:mt-18 m-4 mx-auto w-[21rem] sm:mt-12 sm:w-[35rem] lg:w-[40rem]">
@@ -104,7 +253,6 @@ const index = () => {
           </div>
           <Separator />
         </div>
-
         <div className="flex justify-between">
           <div className="relative w-56">
             <Search
@@ -127,114 +275,18 @@ const index = () => {
             New Label
           </Button>
         </div>
-
         {newLabel && (
-          <div className="rounded-sm border bg-accent p-1.5 pl-3 dark:bg-white/5">
-            <div className="flex items-center gap-2">
-              <Popover>
-                <PopoverTrigger>
-                  <div className="rounded-sm border bg-background p-[0.6875rem]">
-                    <div
-                      className="rounded-lg p-1"
-                      style={{ backgroundColor: selectedColor }}
-                    ></div>
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent className="w-full p-2 px-4">
-                  <div className="">
-                    <div className="relative flex h-full items-center gap-4">
-                      {palette ? (
-                        <div className="flex w-[19rem] items-center gap-2">
-                          <div
-                            className={cn(
-                              'flex size-6 items-center justify-between rounded-full',
-                              color.length === 1 &&
-                                'border border-dashed border-gray-400',
-                            )}
-                            style={{
-                              backgroundColor: color.length === 1 ? '' : color,
-                            }}
-                          >
-                            {selectedColor === color && (
-                              <Check
-                                className="p-1 text-white"
-                                width={25}
-                                height={25}
-                              />
-                            )}
-                          </div>
-
-                          <div className="relative w-56">
-                            <p className="absolute left-1 top-0 text-gray-400">
-                              HEX
-                            </p>
-                            <Input
-                              className="h-6 border-none pl-10 outline-none focus:ring-0 focus-visible:ring-transparent"
-                              onChange={(e) => handleChange(e.target.value)}
-                              value={color}
-                              maxLength={7}
-                            />
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="flex items-center space-x-4">
-                          {colors.map((color) => (
-                            <div
-                              key={color.name}
-                              className={`flex size-6 cursor-pointer items-center justify-between rounded-full`}
-                              style={{ backgroundColor: color.color }}
-                              onClick={() => setSelectedColor(color.color)}
-                            >
-                              {selectedColor === color.color && (
-                                <Check
-                                  className="p-1 text-white"
-                                  width={25}
-                                  height={25}
-                                />
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      <Separator orientation="vertical" className="h-6" />
-
-                      <div
-                        className={cn(
-                          'cursor-pointer rounded-full border p-1 text-gray-500',
-                        )}
-                        onClick={() => setPalette(!palette)}
-                      >
-                        {palette ? <Palette size={18} /> : <Brush size={18} />}
-                      </div>
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
-
-              <Input
-                className="h-8"
-                placeholder="Label name"
-                onChange={(e) => setLabel(e.target.value)}
-                value={label}
-              />
-              <Separator orientation="vertical" className="h-8" />
-              <Button
-                className="h-8 dark:bg-accent dark:hover:bg-accent/60"
-                variant="outline"
-                onClick={() => handleCancelNewLabel()}
-              >
-                Cancel
-              </Button>
-              <Button className="h-8" onClick={() => handleCreateNewLabel()}>
-                Save
-              </Button>
-            </div>
-          </div>
+          <LabelForm
+            label={labelName}
+            setLabel={setLabelName}
+            selectedColor={selectedColor}
+            setSelectedColor={setSelectedColor}
+            handleCancelNewLabel={handleCancelNewLabel}
+            handleSave={handleCreateNewLabel}
+          />
         )}
-
         <div className="space-y-1">
-          {labels
+          {workspaceLabels
             .filter((filter) =>
               search
                 ? filter.name.toLowerCase().includes(search.toLowerCase())
@@ -242,14 +294,64 @@ const index = () => {
             )
             .map((label) => {
               return (
-                <div className="rounded-sm border bg-white/5 p-1.5 pl-6">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="rounded-lg p-1"
-                      style={{ backgroundColor: label.color }}
-                    ></div>
-                    <p className="text-sm">{label.name}</p>
-                  </div>
+                <div key={label.id}>
+                  {labelId === label.id ? (
+                    <LabelForm
+                      label={labelName}
+                      setLabel={setLabelName}
+                      selectedColor={selectedColor}
+                      setSelectedColor={setSelectedColor}
+                      handleCancelNewLabel={handleCancelNewLabel}
+                      handleSave={handleEditLabel}
+                    />
+                  ) : (
+                    <div className="group flex flex-col rounded-sm border bg-white/5 p-1 pl-6 pr-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="rounded-lg p-1"
+                            style={{ backgroundColor: label.color }}
+                          ></div>
+                          <p className="text-sm">{label.name}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {label.created_at && (
+                            <Tooltip delayDuration={10}>
+                              <TooltipTrigger>
+                                <PiWarningCircleFill
+                                  width={14}
+                                  className="cursor-pointer text-gray-500 opacity-0 group-hover:opacity-100"
+                                />
+                              </TooltipTrigger>
+                              <TooltipContent className="p-1 text-xs">
+                                Created on{' '}
+                                {format(new Date(label.created_at), 'MMM d')}
+                              </TooltipContent>
+                            </Tooltip>
+                          )}
+                          {label.can_edit && (
+                            <Pencil
+                              width={14}
+                              className="cursor-pointer text-gray-500 opacity-0 group-hover:opacity-100"
+                              onClick={() => {
+                                setLabelName(label.name);
+                                setSelectedColor(label.color);
+                                setLabelId(label.id);
+                              }}
+                            />
+                          )}
+
+                          <Trash
+                            width={14}
+                            className="cursor-pointer text-gray-500 opacity-0 group-hover:opacity-100"
+                            onClick={() => {
+                              handleDeleteWorkspaceLabel(label.id);
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -259,4 +361,4 @@ const index = () => {
   );
 };
 
-export default withSettings(index);
+export default withSettings(WorkspaceLabels);

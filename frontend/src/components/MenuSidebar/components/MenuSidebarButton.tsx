@@ -11,13 +11,16 @@ const MenuSidebarButton: FC<IMenuSidebarButton> = ({
   name,
   url,
   onClick,
-  className
+  className,
 }) => {
   return (
-    <Link href={url ?? ''} >
+    <Link href={url ?? ''}>
       <Button
         variant="ghost"
-        className={cn("h-8 w-full justify-start gap-2 hover:bg-muted/80", className)}
+        className={cn(
+          'h-8 w-full justify-start gap-2 hover:bg-muted/80',
+          className,
+        )}
         onClick={onClick}
       >
         {icon}

@@ -26,6 +26,7 @@
     "tailwindcss/classnames-order": "warn",
     "tailwindcss/no-custom-classname": "off",
     "@typescript-eslint/no-explicit-any": "warn",
+    "react-hooks/exhaustive-deps": "off",
     "react/display-name": "off",
     "@typescript-eslint/no-unused-vars": [
       "warn",
@@ -36,14 +37,15 @@
   },
   "overrides": [
     {
-      "files": ["**/*.spec.ts", "**/*.spec.tsx"],
+      "files": ["**/*.spec.ts", "**/*.spec.tsx", "src/types/**/*.ts"],
       "parser": "@typescript-eslint/parser",
       "plugins": ["@typescript-eslint"],
       "extends": ["plugin:@typescript-eslint/recommended"],
       "rules": {
         "react/prop-types": "off",
         "import/no-extraneous-dependencies": "off",
-        "security/detect-object-injection": "off"
+        "security/detect-object-injection": "off",
+        "@typescript-eslint/no-unused-vars": "off"
       },
       "env": {
         "jest": true,

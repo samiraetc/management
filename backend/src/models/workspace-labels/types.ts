@@ -14,10 +14,16 @@ const WorkspaceLabelSchema = z.object({
   workspace_id: z.string(),
 });
 
-const createAndEditWorkspaceLabel = WorkspaceLabelSchema.omit({
+const createWorkspaceLabelsSchema = WorkspaceLabelSchema.omit({
   workspace_id: true,
   can_edit: true,
   id: true,
 });
 
-export { WorkspaceLabelSchema, createAndEditWorkspaceLabel };
+const EditWorkspaceLabelSchema = z.object({
+  name: z.string().optional(),
+  color: z.string().optional()
+
+})
+
+export { WorkspaceLabelSchema, createWorkspaceLabelsSchema, EditWorkspaceLabelSchema };
