@@ -29,7 +29,7 @@ export const dropdownNavigation = [
   },
   {
     type: 'button',
-    name: 'logout',
+    name: 'Logout',
     action: signOut,
     icon: LogOutIcon,
   },

@@ -15,7 +15,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '../ui/resizable';
-import { Accordion } from '../ui/accordion';
+import { Accordion, AccordionContent, AccordionTrigger } from '../ui/accordion';
 import { AccordionItem } from '@radix-ui/react-accordion';
 import MenuSidebarButton from '../MenuSidebar/components/MenuSidebarButton';
 import { useDispatch } from 'react-redux';
@@ -37,7 +37,7 @@ const Settings = ({ children }: ISettings) => {
   const dispatch = useDispatch();
   const [workspace, setWorkspace] = useState<Workspace>();
   const [workspaceUrl, setWorkspaceUrl] = useState('');
-
+  const [isOpen, setIsOpen] = React.useState(false);
   const [teams, setTeams] = useState<Team[]>();
 
   useEffect(() => {
@@ -184,16 +184,45 @@ const Settings = ({ children }: ISettings) => {
                           <div className="pl-7">
                             {teams?.map((team) => {
                               return (
-                                <MenuSidebarButton
-                                  key={team.id}
-                                  url={`/${workspace?.url_key}/team/${team.identifier}`}
-                                  name={team.name}
-                                  className="pl-1"
-                                />
+                                <Accordion
+                                  type="single"
+                                  defaultValue="teams"
+                                  collapsible
+                                >
+                                  <AccordionItem
+                                    value="teams"
+                                    className="border-none"
+                                  >
+                                    <AccordionTrigger className="m-0 p-0">
+                                      <MenuSidebarButton
+                                        key={team.id}
+                                        name={team.name}
+                                        className="pl-1"
+                                      />
+                                    </AccordionTrigger>
+                                    <AccordionContent className="border-none">
+                                      {settingsWorkspaceNavigation.map(
+                                        (item) => {
+                                          return (
+                                            <div
+                                              className="pl-4"
+                                              key={item.name}
+                                            >
+                                              <MenuSidebarButton
+                                                url={`/${workspace?.url_key}/settings/teams/${team.identifier}/${item.url}`}
+                                                name={item.name}
+                                                className="pl-1"
+                                              />
+                                            </div>
+                                          );
+                                        },
+                                      )}
+                                    </AccordionContent>
+                                  </AccordionItem>
+                                </Accordion>
                               );
                             })}
                           </div>
-
                           <div className="pl-7 text-gray-600">
                             <MenuSidebarButton
                               url={`/${workspace?.url_key}/settings/new-team`}
@@ -291,12 +320,30 @@ const Settings = ({ children }: ISettings) => {
                     <div className="pl-7">
                       {teams?.map((team) => {
                         return (
-                          <MenuSidebarButton
-                            key={team.id}
-                            url={`/${workspace?.url_key}/team/${team.identifier}`}
-                            name={team.name}
-                            className="pl-1"
-                          />
+                          <Accordion type="single" collapsible>
+                            <AccordionItem value={team.identifier} className="border-none">
+                              <AccordionTrigger className="m-0 p-0">
+                                <MenuSidebarButton
+                                  key={team.id}
+                                  name={team.name}
+                                  className="pl-1"
+                                />
+                              </AccordionTrigger>
+                              <AccordionContent className="border-none">
+                                {settingsWorkspaceNavigation.map((item) => {
+                                  return (
+                                    <div className="pl-4" key={item.name}>
+                                      <MenuSidebarButton
+                                        url={`/${workspace?.url_key}/settings/teams/${team.identifier}/${item.url}`}
+                                        name={item.name}
+                                        className="pl-1 text-gray-600 dark:text-white/70"
+                                      />
+                                    </div>
+                                  );
+                                })}
+                              </AccordionContent>
+                            </AccordionItem>
+                          </Accordion>
                         );
                       })}
                     </div>

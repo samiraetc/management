@@ -30,6 +30,8 @@ const JoinPage = () => {
       .finally(() => {
         setLoading(false);
       });
+
+      
   }, [name, url]);
 
   useEffect(() => {

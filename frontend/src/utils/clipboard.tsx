@@ -1,13 +1,13 @@
 import { toast } from '@/components/ui/use-toast';
 import { PiWarningCircleFill } from 'react-icons/pi';
 
-export const copyUrlToClipboard = () => {
+export const copyUrlToClipboard = (item?: string) => {
   navigator.clipboard
-    .writeText(window.location.href)
+    .writeText(item ? item : window.location.href)
     .then(() => {
       toast({
         icon: <PiWarningCircleFill className="size-5" />,
-        title: 'Current URL copied to clipboard',
+        title: `${item ? item : 'Current URL'} copied to clipboard`,
       });
     })
     .catch(() => {

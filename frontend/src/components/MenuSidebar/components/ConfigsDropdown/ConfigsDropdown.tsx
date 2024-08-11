@@ -3,8 +3,8 @@ import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { Button } from '@headlessui/react';
 import { dropdownNavigation } from './navigation';
-import { useSession } from 'next-auth/react';
-import { Check } from 'lucide-react';
+import { signOut, useSession } from 'next-auth/react';
+import { Check, LogOutIcon } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { logout } from '@/redux/actions/actions';
@@ -59,6 +59,7 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
   const handleLogout = () => {
     dispatch(logout());
     localStorage.removeItem('workspace');
+    signOut();
   };
 
   useEffect(() => {
@@ -67,6 +68,16 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
         e.preventDefault();
         handleGetWorkspace();
         setOpen((open) => !open);
+      }
+
+      if ((e.key === 'O' || e.key === 'o') && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        router.push(`/${workspaceStorage}/settings/general`);
+      }
+
+      if ((e.key === 'A' || e.key === 'a') && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        router.push(`/my-account`);
       }
     };
 
@@ -92,64 +103,49 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
             </div>
           </MenubarTrigger>
           <MenubarContent className="ml-4 w-64" sideOffset={10}>
-            {dropdownNavigation.map((item) => {
-              return (
-                <>
-                  {item.type === 'link' && (
-                    <>
-                      <MenubarItem key={item.name}>
-                        <Link
-                          href={
-                            item.workspaceUrl
-                              ? `/${workspaceStorage}/${item.url}`
-                              : item.url ?? ''
-                          }
-                          className="text-md w-full p-1 font-medium"
-                        >
-                          <p>{item.name}</p>
-                        </Link>
-                      </MenubarItem>
-                      {item.separator && <MenubarSeparator />}
-                    </>
-                  )}
-                  {item.type === 'button' && (
-                    <>
-                      <MenubarItem key={item.name}>
-                        <Button
-                          className="text-md flex w-full justify-between p-1"
-                          onClick={() => {
-                            item.name === 'logout' && handleLogout();
-                            item.action && item.action();
-                          }}
-                        >
-                          <p>{item.name}</p>
-                          {item.icon && <item.icon width={16} />}
-                        </Button>
-                      </MenubarItem>
-                      {item.separator && <MenubarSeparator />}
-                    </>
-                  )}
+            <>
+              <MenubarItem>
+                <Link
+                  href={'/my-account'}
+                  className="text-md flex w-full items-center justify-between p-1 font-medium"
+                >
+                  <p>My Account</p>
+                  <MenubarShortcut>⌘A</MenubarShortcut>
+                </Link>
+              </MenubarItem>
+              <MenubarSeparator />
 
-                  {item.type === 'list' && (
-                    <>
-                      <MenubarItem
-                        key={item.name}
-                        onClick={() => {
-                          handleGetWorkspace();
-                          setOpen(true);
-                        }}
-                      >
-                        <Button className="text-md flex w-full justify-between p-1">
-                          <p>{item.name}</p>
-                          {item.icon && <item.icon width={16} />}
-                          <MenubarShortcut>⌘K</MenubarShortcut>
-                        </Button>
-                      </MenubarItem>
-                    </>
-                  )}
-                </>
-              );
-            })}
+              <MenubarItem>
+                <Link
+                  href={`/${workspaceStorage}/settings/general`}
+                  className="text-md flex w-full items-center justify-between p-1 font-medium"
+                >
+                  <p>Workspace Settings</p>
+                  <MenubarShortcut>⌘O</MenubarShortcut>
+                </Link>
+              </MenubarItem>
+            </>
+            <MenubarItem
+              onClick={() => {
+                handleGetWorkspace();
+                setOpen(true);
+              }}
+            >
+              <Button className="text-md flex w-full justify-between p-1">
+                <p>Switch Workspace</p>
+
+                <MenubarShortcut>⌘K</MenubarShortcut>
+              </Button>
+            </MenubarItem>
+            <MenubarItem>
+              <Button
+                className="text-md flex w-full justify-between p-1"
+                onClick={() => handleLogout()}
+              >
+                <p>Logout</p>
+                <LogOutIcon width={16} />
+              </Button>
+            </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
@@ -187,23 +183,15 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
             </CommandGroup>
             <CommandSeparator />
             <CommandGroup heading="Account">
-              {dropdownNavigation?.map((item) => {
-                return (
-                  <>
-                    {item.children?.map((child) => (
-                      <CommandItem key={child.name}>
-                        <Link href={child.url ?? ''} className="text-md w-full">
-                          <p>{child.name}</p>
-                        </Link>
+              <CommandItem>
+                <Link href={'/join'} className="text-md w-full">
+                  <p>Create or join a workspace</p>
+                </Link>
 
-                        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-70">
-                          <CommandShortcut>J</CommandShortcut>
-                        </kbd>
-                      </CommandItem>
-                    ))}
-                  </>
-                );
-              })}
+                <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-70">
+                  <CommandShortcut>J</CommandShortcut>
+                </kbd>
+              </CommandItem>
             </CommandGroup>
           </CommandList>
         </CommandDialog>

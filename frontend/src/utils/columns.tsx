@@ -16,6 +16,9 @@ import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import StatusCell from '@/components/StatusCell/StatusCell';
 import Priority from '@/components/Priority/Priority';
 import Estimative from '@/components/Estimative/Estimative';
+import Router from 'next/router';
+
+const workspace = Router.query.workspace_id;
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -67,11 +70,15 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: 'title',
     cell: ({ row }) => {
       const labels = row.original.labels.length >= 1;
+
       return (
-        <div className={`${labels ? 'sm:w-[30rem]' : 'sm:w-[59rem]'} w-52`}>
-          <div className="w-full truncate text-base font-medium">
-            {row.getValue('title')}
-          </div>
+        <div
+          className={`${labels ? 'sm:w-[30rem]' : 'sm:w-[50rem]'}`}
+          onClick={() =>
+            Router.push(`/${workspace}/issue/${row.getValue('identifier')}`)
+          }
+        >
+          <div className="w-full truncate text-sm">{row.getValue('title')}</div>
         </div>
       );
     },
@@ -137,10 +144,10 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: 'created_at',
     cell: ({ row }) => {
       return (
-        <div className="hidden w-12 sm:flex">
+        <div className="hidden sm:flex">
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger className="text-stone-600">
+              <TooltipTrigger className="w-12 text-xs text-stone-600">
                 {format(new Date(row.getValue('created_at')), 'MMM d')}
               </TooltipTrigger>
               <TooltipContent sideOffset={6} className="text-stone-700">
@@ -159,7 +166,7 @@ export const columns: ColumnDef<Task>[] = [
         <div className="hidden text-end sm:flex">
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger className="w-12 text-stone-600">
+              <TooltipTrigger className="w-12 text-xs text-stone-600">
                 {format(new Date(row.getValue('updated_at')), 'MMM d')}
               </TooltipTrigger>
               <TooltipContent sideOffset={6} className="text-stone-700">

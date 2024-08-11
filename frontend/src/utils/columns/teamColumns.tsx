@@ -55,7 +55,7 @@ export const teamColumns: ColumnDef<TeamWithMembers>[] = [
   {
     id: 'actions',
     enableHiding: false,
-    cell: () => {
+    cell: ({row}) => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -67,7 +67,7 @@ export const teamColumns: ColumnDef<TeamWithMembers>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuItem
               className="flex items-center gap-4 text-sm"
-              onClick={() => navigator.clipboard.writeText(``)}
+              onClick={() => navigator.clipboard.writeText(`${window.location.href}/${row.getValue('identifier')}`)}
             >
               <Link size={16} />
               Copy link

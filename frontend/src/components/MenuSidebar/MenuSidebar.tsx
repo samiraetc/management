@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -29,7 +29,10 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
   const workspace = useSelector(
     (state: RootState) => state.workspace.workspace,
   );
-  const teams = useSelector((state: RootState) => state.teams.teams);
+  const teams = useSelector(
+    (state: RootState) => state.teams.teams,
+  );
+
 
   return (
     <div className="flex grow flex-col justify-between">
@@ -85,7 +88,7 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
                 <AccordionTrigger className="mt-4 items-start rounded-md p-2 text-gray-500 hover:bg-muted hover:no-underline dark:hover:bg-muted">
                   <div className="flex gap-2">
                     <p className="text-xs">
-                      {translation('menuSidebar:your_teams')}
+                      Your Teams
                     </p>
                   </div>
                 </AccordionTrigger>
@@ -94,7 +97,7 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
                     return (
                       <MenuSidebarButton
                         key={team.id}
-                        url={`/${workspace?.url_key}/team/${team.identifier}`}
+                        url={`/${workspace?.url_key}/teams/${team.identifier}`}
                         name={team.name}
                       />
                     );

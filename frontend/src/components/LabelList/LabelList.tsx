@@ -30,7 +30,7 @@ const LabelList = ({ labels }: ILabelList) => {
         <Badge
           variant="outline"
           key={index}
-          className="flex cursor-pointer items-center gap-2 py-1 text-sm font-normal text-stone-600 dark:text-white"
+          className="flex cursor-pointer items-center gap-2 py-1 text-xs font-normal text-stone-600 dark:text-white"
           onClick={() =>
             router.push(`/${workspace?.url_key}/label/${label.name}`)
           }
