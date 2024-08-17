@@ -3,6 +3,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@import './partials/animations.css';
+@import './partials/blocks.css';
+@import './partials/code.css';
+@import './partials/lists.css';
+@import './partials/placeholder.css';
+@import './partials/table.css';
+@import './partials/typography.css';
+
+
 * {
   font-family: 'Inter', sans-serif;
 }
@@ -81,7 +90,7 @@
 }
 
 .ProseMirror {
-  @apply p-8 caret-black outline-0 dark:caret-white;
+  @apply  caret-black outline-0 dark:caret-white;
 
   .selection {
     @apply inline;
@@ -113,10 +122,3 @@
   width: 1000vw;
 }
 
-@import './partials/animations.css';
-@import './partials/blocks.css';
-@import './partials/code.css';
-@import './partials/lists.css';
-@import './partials/placeholder.css';
-@import './partials/table.css';
-@import './partials/typography.css';

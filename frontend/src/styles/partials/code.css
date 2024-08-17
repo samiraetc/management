@@ -1,73 +1,59 @@
-.ProseMirror {
-  code {
-    @apply  text-gray-600 bg-gray-100 rounded-sm shadow-lg font-mono  text-sm border p-1;
+.ProseMirror code {
+  @apply rounded-sm !border !bg-gray-100 p-1 font-mono text-sm text-gray-600 shadow-lg dark:!bg-muted;
+}
 
-    &::selection {
-      @apply bg-white/30;
-    }
+.ProseMirror pre code {
+  @apply !border-none bg-inherit p-0 text-inherit shadow-none dark:bg-muted;
+}
+
+.ProseMirror pre {
+  @apply my-12 rounded !border !bg-gray-100 p-2 !text-gray-600 ring-0 dark:bg-muted dark:!text-gray-300 !important;
+
+  .hljs-comment,
+  .hljs-quote {
+    @apply text-neutral-400;
   }
 
-  pre {
-    @apply  bg-gray-100 ring-0 text-gray-600 rounded my-12 p-2 border  ;
+  .hljs-variable,
+  .hljs-template-variable,
+  .hljs-attribute,
+  .hljs-tag,
+  .hljs-name,
+  .hljs-regexp,
+  .hljs-link,
+  .hljs-name,
+  .hljs-selector-id,
+  .hljs-selector-class {
+    @apply text-red-300;
+  }
 
-    *::selection {
-      @apply bg-black/10;
-    }
+  .hljs-number,
+  .hljs-meta,
+  .hljs-built_in,
+  .hljs-builtin-name,
+  .hljs-literal,
+  .hljs-type,
+  .hljs-params {
+    @apply text-purple-500;
+  }
 
-    code {
-      @apply bg-inherit text-inherit p-0 shadow-none border-none;
-    }
+  .hljs-string,
+  .hljs-symbol,
+  .hljs-bullet {
+    @apply text-yellow-500;
+  }
 
-    .hljs-comment,
-    .hljs-quote {
-      @apply text-neutral-400;
-    }
+  .hljs-title,
+  .hljs-section {
+    @apply text-yellow-300;
+  }
 
-    .hljs-variable,
-    .hljs-template-variable,
-    .hljs-attribute,
-    .hljs-tag,
-    .hljs-name,
-    .hljs-regexp,
-    .hljs-link,
-    .hljs-name,
-    .hljs-selector-id,
-    .hljs-selector-class {
-      @apply text-red-300;
-    }
+  .hljs-keyword,
+  .hljs-selector-tag {
+    @apply text-yellow-300;
+  }
 
-    .hljs-number,
-    .hljs-meta,
-    .hljs-built_in,
-    .hljs-builtin-name,
-    .hljs-literal,
-    .hljs-type,
-    .hljs-params {
-      @apply text-orange-300;
-    }
-
-    .hljs-string,
-    .hljs-symbol,
-    .hljs-bullet {
-      @apply text-lime-300;
-    }
-
-    .hljs-title,
-    .hljs-section {
-      @apply text-yellow-300;
-    }
-
-    .hljs-keyword,
-    .hljs-selector-tag {
-      @apply text-teal-300;
-    }
-
-    .hljs-emphasis {
-      font-style: italic;
-    }
-
-    .hljs-strong {
-      font-weight: 700;
-    }
+  .hljs-emphasis {
+    font-style: italic;
   }
 }
