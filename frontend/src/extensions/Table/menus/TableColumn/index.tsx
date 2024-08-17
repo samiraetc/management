@@ -1,11 +1,9 @@
 import { BubbleMenu as BaseBubbleMenu } from '@tiptap/react';
 import React, { useCallback } from 'react';
-// import * as PopoverMenu from '@/components/ui/PopoverMenu'
-
 import { Toolbar } from '@/components/ui/toolbar';
 import { isColumnGripSelected } from './utils';
-import { Icon } from '@/components/ui/icon';
 import { MenuProps, ShouldShowProps } from '@/components/menus/types';
+import { ArrowLeftToLine, ArrowRightToLine, Trash } from 'lucide-react';
 
 export const TableColumnMenu = React.memo(
   ({ editor, appendTo }: MenuProps): JSX.Element => {
@@ -48,20 +46,19 @@ export const TableColumnMenu = React.memo(
         }}
         shouldShow={shouldShow}
       >
-        <Toolbar.Wrapper isVertical>
-          {/* <PopoverMenu.Item
-          iconComponent={<Icon name="ArrowLeftToLine" />}
-          close={false}
-          label="Add column before"
-          onClick={onAddColumnBefore}
-        />
-        <PopoverMenu.Item
-          iconComponent={<Icon name="ArrowRightToLine" />}
-          close={false}
-          label="Add column after"
-          onClick={onAddColumnAfter}
-        />
-        <PopoverMenu.Item icon="Trash" close={false} label="Delete column" onClick={onDeleteColumn} /> */}
+        <Toolbar.Wrapper className="flex">
+          <Toolbar.Button
+            onClick={onAddColumnBefore}
+            tooltip="Add column before"
+          >
+            <ArrowLeftToLine width={12} height={12} />
+          </Toolbar.Button>
+          <Toolbar.Button onClick={onAddColumnAfter} tooltip="Add column after">
+            <ArrowRightToLine width={12} height={12} />
+          </Toolbar.Button>
+          <Toolbar.Button onClick={onDeleteColumn} tooltip="Delete">
+            <Trash width={12} height={12} className="text-red-500" />
+          </Toolbar.Button>
         </Toolbar.Wrapper>
       </BaseBubbleMenu>
     );

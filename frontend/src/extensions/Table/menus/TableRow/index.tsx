@@ -1,11 +1,9 @@
 import { BubbleMenu as BaseBubbleMenu } from '@tiptap/react';
 import React, { useCallback } from 'react';
-// import * as PopoverMenu from '@/components/ui/PopoverMenu'
-
 import { Toolbar } from '@/components/ui/toolbar';
 import { isRowGripSelected } from './utils';
-import { Icon } from '@/components/ui/icon';
 import { MenuProps, ShouldShowProps } from '@/components/menus/types';
+import { ArrowDownToLine, ArrowUpToLine, Trash } from 'lucide-react';
 
 export const TableRowMenu = React.memo(
   ({ editor, appendTo }: MenuProps): JSX.Element => {
@@ -48,8 +46,19 @@ export const TableRowMenu = React.memo(
           },
         }}
         shouldShow={shouldShow}
+        className="z-50"
       >
-        <Toolbar.Wrapper isVertical>teste</Toolbar.Wrapper>
+        <Toolbar.Wrapper isVertical className="flex">
+          <Toolbar.Button onClick={onAddRowBefore} tooltip="Add row before">
+            <ArrowUpToLine width={12} height={12} />
+          </Toolbar.Button>
+          <Toolbar.Button onClick={onAddRowAfter} tooltip="Add row before">
+            <ArrowDownToLine width={12} height={12} />
+          </Toolbar.Button>
+          <Toolbar.Button onClick={onDeleteRow} tooltip="Delete">
+            <Trash width={12} height={12} className="text-red-500" />
+          </Toolbar.Button>
+        </Toolbar.Wrapper>
       </BaseBubbleMenu>
     );
   },

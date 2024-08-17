@@ -66,6 +66,7 @@ export const LinkMenu = ({ editor, appendTo }: MenuProps): JSX.Element => {
         <LinkPreviewPanel
           url={link}
           onClear={onUnsetLink}
+          openInNewTab={target === '_blank'}
           onEdit={handleEdit}
         />
       )}

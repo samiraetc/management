@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
+import { Input } from '@/components/ui/input';
 import { Surface } from '@/components/ui/surface';
 import { Switch } from '@/components/ui/switch';
 import { useState, useCallback, useMemo } from 'react';
@@ -63,15 +64,15 @@ export const LinkEditorPanel = ({
       <form onSubmit={state.handleSubmit} className="flex items-center gap-2">
         <label className="flex cursor-text items-center gap-2 rounded-lg bg-neutral-100 p-2 dark:bg-neutral-900">
           <Icon name="Link" className="flex-none text-black dark:text-white" />
-          <input
+          <Input
             type="url"
-            className="min-w-48 flex-1 bg-transparent text-sm text-black outline-none dark:text-white"
+            className="focus-visible:ring-offset-none h-4 border-none bg-neutral-100 focus:border-none focus:ring-0 focus-visible:ring-0"
             placeholder="Enter URL"
             value={state.url}
             onChange={state.onChange}
           />
         </label>
-        <Button size="sm" type="submit" disabled={!state.isValidUrl}>
+        <Button className="h-8" type="submit" disabled={!state.isValidUrl}>
           Set Link
         </Button>
       </form>
@@ -81,8 +82,6 @@ export const LinkEditorPanel = ({
           <Switch
             checked={state.openInNewTab}
             onCheckedChange={state.setOpenInNewTab}
-            disabled
-            aria-readonly
           />
         </label>
       </div>
