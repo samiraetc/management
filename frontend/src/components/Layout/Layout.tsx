@@ -68,8 +68,6 @@ const Layout = ({ children }: LayoutProps) => {
         });
 
         setWorkspace(foundWorkspace);
-
-        fetchTeams(foundWorkspace.id);
       } else if (defaultWorkspace) {
         localStorage.setItem('workspace', defaultWorkspace.url_key);
         dispatch({
@@ -78,20 +76,15 @@ const Layout = ({ children }: LayoutProps) => {
         });
 
         setWorkspace(defaultWorkspace);
-        fetchTeams(defaultWorkspace.id);
       }
     } catch (error) {
       console.error(error);
     }
   };
-  const fetchTeams = async (id: string) => {
-    await getTeams(id).then((response) => {
-      dispatch({
-        type: 'teams/setTeams',
-        payload: response,
-      });
-    });
-  };
+
+
+
+
 
   return i18next.isInitialized && workspace ? (
     <div>
@@ -138,14 +131,14 @@ const Layout = ({ children }: LayoutProps) => {
                   </div>
                 </TransitionChild>
 
-                <MenuSidebar workspace={workspace} />
+                <MenuSidebar setSidebarOpen={setSidebarOpen} />
               </DialogPanel>
             </TransitionChild>
           </div>
         </Dialog>
       </Transition>
 
-      <div className="sticky top-0 z-40 flex items-center border-b px-6 py-2 shadow-sm sm:px-6 lg:hidden">
+      <div className="sticky top-0 z-40 bg-background flex items-center border-b px-6 py-2 shadow-sm sm:px-6 lg:hidden">
         <Button
           type="button"
           className="-m-2.5 p-2.5 lg:hidden"
@@ -165,11 +158,7 @@ const Layout = ({ children }: LayoutProps) => {
             'hidden lg:inset-y-0 lg:z-50 lg:flex lg:h-screen lg:flex-col'
           }
         >
-          <MenuSidebar
-            shrink={shrink}
-            setShrink={setShrink}
-            workspace={workspace}
-          />
+          <MenuSidebar shrink={shrink} setShrink={setShrink} setSidebarOpen={setSidebarOpen} />
         </ResizablePanel>
         <ResizableHandle className="border-none" />
         <ResizablePanel className="flex h-lvh min-w-0">
