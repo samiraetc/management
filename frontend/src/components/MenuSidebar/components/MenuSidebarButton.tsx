@@ -1,16 +1,26 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import React, { FC } from "react";
-import { IMenuSidebarButton } from "./types";
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import React, { FC } from 'react';
+import { IMenuSidebarButton } from './types';
+import { cn } from '@/lib/utils';
 
-const MenuSidebarButton: FC<IMenuSidebarButton> = ({ icon, name, url, onClick }) => {
+const MenuSidebarButton: FC<IMenuSidebarButton> = ({
+  icon,
+  name,
+  url,
+  onClick,
+  className,
+}) => {
   return (
     <Link href={url ?? ''}>
       <Button
         variant="ghost"
-        className="gap-2 w-full justify-start hover:bg-muted h-8"
+        className={cn(
+          'h-8 w-full justify-start gap-2 hover:bg-muted/80',
+          className,
+        )}
         onClick={onClick}
       >
         {icon}

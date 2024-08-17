@@ -1,4 +1,7 @@
+import { toast } from '@/components/ui/use-toast';
 import axios from 'axios';
+import { signOut } from 'next-auth/react';
+import Router from 'next/router';
 
 export const DEFAULT_HEADERS = {
   Accept: 'application/json',
@@ -11,14 +14,30 @@ const api = axios.create({
 });
 
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    if (error.response.status === 404 || error.response.status === 401) {
-      console.log(
-        `Error: ${error.response.status} - ${error.response.statusText}`,
-      );
+  (response) => response,
+  async (error) => {
+    const { response } = error;
+    if (response) {
+      switch (response.status) {
+        case 401:
+          signOut;
+          break;
+        case 403:
+          toast({
+            title: `Sorry, you don't have permission to access this page.`,
+            variant: 'destructive',
+          });
+          Router.push('/');
+          break;
+        case 404:
+          toast({
+            title: 'Route not found',
+            variant: 'destructive',
+          });
+          break;
+        default:
+          return Promise.reject(response.data);
+      }
     }
     return Promise.reject(error);
   },

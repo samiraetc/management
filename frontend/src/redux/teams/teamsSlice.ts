@@ -1,8 +1,7 @@
-import { IUseTeamsData } from '@/hook/useTeams/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface TeamsState {
-  teams: IUseTeamsData | null;
+  teams: Team[] | null;
 }
 
 const initialState: TeamsState = {
@@ -13,7 +12,7 @@ const teamsSlice = createSlice({
   name: 'teams',
   initialState,
   reducers: {
-    setTeams(state, action: PayloadAction<any>) {
+    setTeams(state, action: PayloadAction<Team[]>) {
       state.teams = action.payload;
     },
   },

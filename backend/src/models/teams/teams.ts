@@ -16,7 +16,6 @@ const createTeam = async (data: CreateTeam): Promise<Team> => {
       workspace_id: data.workspace_id,
       labels: {
         create: data.labels.map((label) => ({
-          id: label.id,
           name: label.name,
           color: label.color,
           can_edit: false,

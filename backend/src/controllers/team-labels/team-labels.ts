@@ -57,6 +57,7 @@ const createTeamLabel = async (
       team_id,
       name: parsedBody.name,
       color: parsedBody.color,
+      created_at: new Date(),
       can_edit: true,
     };
 
@@ -94,6 +95,7 @@ const patchTeamLabel = async (request: FastifyRequest, reply: FastifyReply) => {
       team_id,
       name: parsedBody.name,
       color: parsedBody.color,
+      created_at: label.created_at,
       can_edit: label.can_edit,
     };
 

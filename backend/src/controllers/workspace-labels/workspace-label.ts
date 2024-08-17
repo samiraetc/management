@@ -1,4 +1,7 @@
-import { createAndEditWorkspaceLabel } from '@/models/workspace-labels/types';
+import {
+  createWorkspaceLabelsSchema,
+  EditWorkspaceLabelSchema,
+} from '@/models/workspace-labels/types';
 import {
   addWorkspaceLabel,
   deleteWorkspaceLabel,
@@ -24,8 +27,7 @@ const selectAllWorkspaceLabels = async (
       return;
     }
 
-    const labels = await selectAllWorkspaceLabel(workspace_id);
-    reply.code(201).send({ data: labels });
+    reply.code(200).send({ data: await selectAllWorkspaceLabel(workspace_id) });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to create label', details: error });
   }
@@ -37,7 +39,7 @@ const createWorkspaceLabel = async (
 ) => {
   try {
     const { id: workspace_id } = request.params as { id: string };
-    const parsedBody = createAndEditWorkspaceLabel.parse(request.body);
+    const parsedBody = createWorkspaceLabelsSchema.parse(request.body);
 
     const workspace = await selectWorkspaces(workspace_id);
 
@@ -60,6 +62,7 @@ const createWorkspaceLabel = async (
       workspace_id,
       name: parsedBody.name,
       color: parsedBody.color,
+      created_at: new Date(),
       can_edit: true,
     };
 
@@ -94,17 +97,18 @@ const patchWorkspaceLabel = async (
       return;
     }
 
-    const parsedBody = createAndEditWorkspaceLabel.parse(request.body);
+    const parsedBody = EditWorkspaceLabelSchema.parse(request.body);
 
     const body = {
       workspace_id,
-      name: parsedBody.name,
-      color: parsedBody.color,
+      name: parsedBody.name ?? label.name,
+      color: parsedBody.color ?? label.color,
+      created_at: label.created_at,
       can_edit: label.can_edit,
     };
 
     const editedLabel = await editWorkspaceLabel(body, label_id);
-    reply.code(201).send({ data: editedLabel });
+    reply.code(200).send({ data: editedLabel });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to edit label', details: error });
   }
@@ -133,7 +137,7 @@ const removeWorkspaceLabel = async (
     }
 
     const deleteLabel = await deleteWorkspaceLabel(label_id);
-    reply.code(201).send({ data: deleteLabel });
+    reply.code(200).send({ data: deleteLabel });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to delete label', details: error });
   }

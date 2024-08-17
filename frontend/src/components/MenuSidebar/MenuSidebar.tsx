@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -14,45 +14,47 @@ import {
   UsersRound,
 } from 'lucide-react';
 import { ModeToggle } from '../ModeToggle/ModeToggle';
-import { translation } from '@/i18n/i18n';
-import { useWorkspaceTeams } from '@/hook/useTeams/useWorkspaceTeams';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import ConfigsDropdown from './components/ConfigsDropdown/ConfigsDropdown';
-import { IUseWorkspaceData } from '@/hook/useWorkspace/types';
+import { getTeams } from '@/services/Teams/teamsService';
+import CreateTask from '../CreateTask/CreateTask';
 
 interface IMenuSidebar {
   shrink?: boolean;
   setShrink?: (value: boolean) => void;
-  workspace: IUseWorkspaceData;
+  setSidebarOpen: (open: boolean) => void;
 }
 
-const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
+const MenuSidebar: React.FC<IMenuSidebar> = ({
+  shrink,
+  setShrink,
+  setSidebarOpen,
+}) => {
+  const [createTask, setCreateTask] = useState<boolean>(false);
   const dispatch = useDispatch();
   const workspace = useSelector(
     (state: RootState) => state.workspace.workspace,
   );
-  const { data: teams, loading } = useWorkspaceTeams(workspace?.id ?? '');
 
-  useEffect(() => {
-    if (!loading && teams) {
+  const teams = useSelector((state: RootState) => state.teams.teams);
+
+  const getWorkspaceTeams = async (id: string) => {
+    await getTeams(id).then((response) => {
       dispatch({
         type: 'teams/setTeams',
-        payload: teams[0],
+        payload: response,
       });
-    }
-  }, [teams, loading, workspace]);
-
-  const handleRedirectToTeamPage = (team: any) => {
-    dispatch({
-      type: 'teams/setTeams',
-      payload: team,
     });
   };
 
+  useEffect(() => {
+    getWorkspaceTeams(workspace?.id ?? '');
+  }, [workspace?.url_key]);
+
   return (
-    <div className="flex grow flex-col gap-y-7 overflow-y-auto border-r px-4">
-      <div className="flex items-center justify-between">
+    <div className="flex grow flex-col justify-between">
+      <div className="flex items-center justify-between px-4">
         {!shrink ? (
           <>
             <div className="p-4 text-4xl font-bold">i.</div>
@@ -69,29 +71,37 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
         )}
       </div>
 
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col px-2">
         {!shrink && (
           <>
             <Accordion type="single" collapsible className="transition-all">
               <AccordionItem value="home" className="border-none">
-                <div className="text-md mb-5 flex w-full items-center justify-between gap-7 pl-4 font-semibold">
-                  {workspace?.name}
+                <div className="text-md mb-5 flex w-full items-center justify-between gap-7 pl-2 font-semibold">
+                  <p className="truncate">{workspace?.name}</p>
                   <div className="rounded-lg border p-1.5">
-                    <SquarePen width={20} height={20} />
+                    <SquarePen
+                      width={20}
+                      height={20}
+                      onClick={() => {
+                        setCreateTask(true);
+                      }}
+                      className="cursor-pointer"
+                    />
                   </div>
                 </div>
               </AccordionItem>
 
               <AccordionItem value="home" className="border-none">
                 <MenuSidebarButton
-                  url={`/${workspace?.url_key}`}
+                  url={`/${workspace?.url_key}/my-issues`}
                   icon={<ListTodo className="text-gray-500" width={18} />}
-                  name={translation('menuSidebar:my_issues')}
+                  name={'My Issues'}
                 />
               </AccordionItem>
 
               <AccordionItem value="home" className="border-none">
                 <MenuSidebarButton
+                  url={`/${workspace?.url_key}/teams`}
                   icon={<UsersRound className="text-gray-500" width={18} />}
                   name="Teams"
                 />
@@ -100,41 +110,37 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
 
             <Accordion type="single" collapsible defaultValue="teams">
               <AccordionItem value="teams" className="border-none">
-                <AccordionTrigger className="mt-4 items-start rounded-md px-4 py-2 text-gray-500 hover:bg-muted hover:no-underline dark:hover:bg-muted">
+                <AccordionTrigger className="mt-4 items-start rounded-md p-2 text-gray-500 hover:bg-muted hover:no-underline dark:hover:bg-muted">
                   <div className="flex gap-2">
-                    <p className="text-xs">
-                      {translation('menuSidebar:your_teams')}
-                    </p>
+                    <p className="text-xs">Your Teams</p>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="border-none">
-                  {!loading &&
-                    teams?.map((team: any) => {
-                      return (
-                        <MenuSidebarButton
-                          key={team.id}
-                          url={`/${workspace?.url_key}/team/${team.identifier}`}
-                          name={team.name}
-                          onClick={() => handleRedirectToTeamPage(team)}
-                        />
-                      );
-                    })}
+                  {teams?.map((team) => {
+                    return (
+                      <MenuSidebarButton
+                        key={team.id}
+                        url={`/${workspace?.url_key}/teams/${team.identifier}`}
+                        name={team.name}
+                      />
+                    );
+                  })}
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
           </>
         )}
+      </div>
 
-        <div role="list" className="flex flex-1 flex-col gap-y-7">
-          <div
-            className={"-mx-7 p-3 pl-2 mt-auto flex items-center justify-between border-t"}
-          >
-            <ConfigsDropdown shrink={shrink} />
+      <div className="flex flex-1 flex-col">
+        <div className="mb-2 mt-auto flex justify-between pt-[5.3px]">
+          <ConfigsDropdown shrink={shrink} />
 
-            {!shrink && <ModeToggle />}
-          </div>
+          {!shrink && <ModeToggle />}
         </div>
       </div>
+
+      {createTask && <CreateTask open={createTask} setOpen={setCreateTask} />}
     </div>
   );
 };

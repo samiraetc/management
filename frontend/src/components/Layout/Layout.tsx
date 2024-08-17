@@ -3,11 +3,10 @@
 import { ReactNode, useEffect, useState } from 'react';
 import i18next from '@/i18n/i18n';
 import { Button } from '../ui/button';
-import { Menu, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { useDispatch } from 'react-redux';
 import MenuSidebar from '../MenuSidebar/MenuSidebar';
 import {
   Dialog,
@@ -16,83 +15,78 @@ import {
   TransitionChild,
 } from '@headlessui/react';
 import api from '@/pages/api/api';
-import { IUseWorkspaceData } from '@/hook/useWorkspace/types';
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from '../ui/resizable';
+import { LuPanelLeft } from 'react-icons/lu';
+import { getWorkspaces } from '@/services/Workspace/workspace.services';
+import { getTeams } from '@/services/Teams/teamsService';
 
 type LayoutProps = {
   children: ReactNode;
 };
 
 const Layout = ({ children }: LayoutProps) => {
-  const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [shrink, setShrink] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
   const dispatch = useDispatch();
-  const workspace = useSelector(
-    (state: RootState) => state.workspace.workspace,
-  );
+  const [workspace, setWorkspace] = useState<Workspace>();
   const [workspaceUrl, setWorkspaceUrl] = useState('');
 
   useEffect(() => {
-    if (
-      (session === null || session === undefined) &&
-      status == 'unauthenticated'
-    ) {
+    if (status === 'unauthenticated') {
       router.push('/login');
-    }
-
-    if (session && status === 'authenticated') {
-      setWorkspaceInRedux();
-      setLoading(false);
-    }
-  }, [session, status, workspaceUrl]);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
+    } else if (status === 'authenticated') {
+      api.defaults.headers.common['Authorization'] =
+        `Bearer ${session?.user?.token}`;
       setWorkspaceUrl(localStorage.getItem('workspace') ?? '');
     }
-  }, []);
+  }, [session, status]);
+
+  useEffect(() => {
+    if (workspaceUrl) {
+      setWorkspaceInRedux();
+    }
+  }, [workspaceUrl]);
 
   const setWorkspaceInRedux = async () => {
-    const works = await api
-      .get(`/workspaces`, {
-        headers: {
-          Authorization: `Bearer ${session?.user.token}`,
-        },
-        params: { user_id: session?.user.id },
-      })
-      .then((res) => res.data)
-      .catch((err) => {
-        console.error(err);
-        return [];
-      });
+    try {
+      const response = await getWorkspaces();
+      const defaultWorkspace = response[0] ?? null;
+      const foundWorkspace = response?.find(
+        (item: Workspace) => item.url_key === workspaceUrl,
+      );
 
-    const defaultWorkspace = works.data?.[0] ?? [];
-    const foundWorkspace = works.data?.find(
-      (item: IUseWorkspaceData) => item.url_key === workspaceUrl,
-    );
+      if (foundWorkspace) {
+        dispatch({
+          type: 'workspace/setWorkspace',
+          payload: foundWorkspace,
+        });
 
-    if (workspaceUrl && foundWorkspace) {
-      dispatch({
-        type: 'workspace/setWorkspace',
-        payload: foundWorkspace,
-      });
-    } else {
-      localStorage.setItem('workspace', defaultWorkspace.url_key);
-      dispatch({
-        type: 'workspace/setWorkspace',
-        payload: defaultWorkspace,
-      });
+        setWorkspace(foundWorkspace);
+      } else if (defaultWorkspace) {
+        localStorage.setItem('workspace', defaultWorkspace.url_key);
+        dispatch({
+          type: 'workspace/setWorkspace',
+          payload: defaultWorkspace,
+        });
+
+        setWorkspace(defaultWorkspace);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  return i18next.isInitialized && !loading && session && workspace ? (
+
+
+
+
+  return i18next.isInitialized && workspace ? (
     <div>
       <Transition show={sidebarOpen}>
         <Dialog className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
@@ -137,14 +131,14 @@ const Layout = ({ children }: LayoutProps) => {
                   </div>
                 </TransitionChild>
 
-                <MenuSidebar workspace={workspace} />
+                <MenuSidebar setSidebarOpen={setSidebarOpen} />
               </DialogPanel>
             </TransitionChild>
           </div>
         </Dialog>
       </Transition>
 
-      <div className="sticky top-0 z-40 flex items-center gap-x-6 p-4 shadow-sm sm:px-6 lg:hidden">
+      <div className="sticky top-0 z-40 bg-background flex items-center border-b px-6 py-2 shadow-sm sm:px-6 lg:hidden">
         <Button
           type="button"
           className="-m-2.5 p-2.5 lg:hidden"
@@ -152,7 +146,7 @@ const Layout = ({ children }: LayoutProps) => {
           variant="ghost"
         >
           <span className="sr-only">Open sidebar</span>
-          <Menu className="size-6" aria-hidden="true" />
+          <LuPanelLeft className="size-5" aria-hidden="true" />
         </Button>
       </div>
 
@@ -164,22 +158,18 @@ const Layout = ({ children }: LayoutProps) => {
             'hidden lg:inset-y-0 lg:z-50 lg:flex lg:h-screen lg:flex-col'
           }
         >
-          <MenuSidebar
-            shrink={shrink}
-            setShrink={setShrink}
-            workspace={workspace}
-          />
+          <MenuSidebar shrink={shrink} setShrink={setShrink} setSidebarOpen={setSidebarOpen} />
         </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel>
-          <main className={'py-6 transition-all duration-150'}>
-            <div className="px-4 sm:px-6">{children}</div>
+        <ResizableHandle className="border-none" />
+        <ResizablePanel className="flex h-lvh min-w-0">
+          <main className="relative flex-1 overflow-auto rounded-md border-border bg-background sm:my-2 sm:mr-2 sm:border">
+            {children}
           </main>
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
   ) : (
-    <div className="px-4 sm:px-6">{children}</div>
+    <></>
   );
 };
 

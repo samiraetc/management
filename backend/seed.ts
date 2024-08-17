@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import { selectAllWorkspaceLabel } from './src/models/workspace/workspace-label';
+import { selectAllWorkspaceLabel } from './src/models/workspace-labels/workspace-label';
 import {
   createLabel,
   createPriorities,
@@ -55,6 +55,8 @@ async function main() {
       connect: { id: adminUser.id },
     },
     url_key: 'meu-novo-workspace',
+    updated_at: new Date(),
+    created_at: new Date(),
     members: {
       create: {
         user: { connect: { id: adminUser.id } },
@@ -63,9 +65,7 @@ async function main() {
     },
     labels: {
       create: existingLabels.map((label) => ({
-        id: label.id,
-        name: label.name,
-        color: label.color,
+        ...label,
         can_edit: false,
       })),
     },

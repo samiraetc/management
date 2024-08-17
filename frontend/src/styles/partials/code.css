@@ -1,0 +1,59 @@
+.ProseMirror code {
+  @apply rounded-sm !border !bg-gray-100 p-1 font-mono text-sm text-gray-600 shadow-lg dark:!bg-muted;
+}
+
+.ProseMirror pre code {
+  @apply !border-none bg-inherit p-0 text-inherit shadow-none dark:bg-muted;
+}
+
+.ProseMirror pre {
+  @apply my-12 rounded !border !bg-gray-100 p-2 !text-gray-600 ring-0 dark:bg-muted dark:!text-gray-300 !important;
+
+  .hljs-comment,
+  .hljs-quote {
+    @apply text-neutral-400;
+  }
+
+  .hljs-variable,
+  .hljs-template-variable,
+  .hljs-attribute,
+  .hljs-tag,
+  .hljs-name,
+  .hljs-regexp,
+  .hljs-link,
+  .hljs-name,
+  .hljs-selector-id,
+  .hljs-selector-class {
+    @apply text-red-300;
+  }
+
+  .hljs-number,
+  .hljs-meta,
+  .hljs-built_in,
+  .hljs-builtin-name,
+  .hljs-literal,
+  .hljs-type,
+  .hljs-params {
+    @apply text-purple-500;
+  }
+
+  .hljs-string,
+  .hljs-symbol,
+  .hljs-bullet {
+    @apply text-yellow-500;
+  }
+
+  .hljs-title,
+  .hljs-section {
+    @apply text-yellow-300;
+  }
+
+  .hljs-keyword,
+  .hljs-selector-tag {
+    @apply text-yellow-300;
+  }
+
+  .hljs-emphasis {
+    font-style: italic;
+  }
+}

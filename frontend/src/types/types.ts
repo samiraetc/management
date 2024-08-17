@@ -1,3 +1,3 @@
-export interface IServerResponse<T = void> {
+type IServerResponse<T = void> = {
   data: T;
-}
+};

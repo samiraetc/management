@@ -30,6 +30,7 @@ model Label {
   id                String              @id @default(uuid())
   name              String              @unique
   color             String
+  created_at        DateTime            @default(now())
 }
 
 model Workspace {
@@ -69,6 +70,7 @@ model WorkspaceLabels {
   workspace_id      String
   name              String
   color             String
+  created_at        DateTime            @default(now())
   workspace         Workspace           @relation(fields: [workspace_id], references: [id])
   can_edit          Boolean
 
@@ -121,6 +123,7 @@ model TeamLabels {
   team_id           String
   team              Team                @relation(fields: [team_id], references: [id])
   can_edit          Boolean
+  created_at        DateTime            @default(now())
   label_of          TaskLabels[]
 
   @@unique([team_id, name])

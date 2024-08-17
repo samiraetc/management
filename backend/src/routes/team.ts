@@ -1,4 +1,8 @@
-import { getAllTeamsByWorkspace, getTeamById } from '@/controllers/team/team';
+import {
+  createTeamController,
+  getAllTeamsByWorkspace,
+  getTeamById,
+} from '@/controllers/team/team';
 import { FastifyInstance } from 'fastify';
 
 const teamRoutes = async (server: FastifyInstance) => {
@@ -24,6 +28,39 @@ const teamRoutes = async (server: FastifyInstance) => {
       },
     },
     getAllTeamsByWorkspace,
+  );
+
+  server.post(
+    '/workspaces/:id/teams',
+    {
+      preValidation: [server.authenticate],
+      schema: {
+        tags: ['Workspace Teams'],
+        security: [{ bearerAuth: [] }],
+        params: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+          },
+          required: ['id'],
+        },
+        body: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            identifier: { type: 'string' },
+          },
+          examples: [
+            {
+              name: 'workspace',
+              identifier: 'WOR',
+            },
+          ],
+          required: ['name', 'identifier'],
+        },
+      },
+    },
+    createTeamController,
   );
 };
 

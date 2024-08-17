@@ -10,8 +10,8 @@ const Login = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
-  useWorkspaceUrl();
 
+  useWorkspaceUrl();
   const handleSignIn = async () => {
     const result = await signIn('credentials', {
       email,

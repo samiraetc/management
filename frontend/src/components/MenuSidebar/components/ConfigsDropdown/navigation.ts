@@ -1,4 +1,4 @@
-import { Divide, LogOutIcon } from 'lucide-react';
+import { LogOutIcon } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
 export const dropdownNavigation = [
@@ -9,9 +9,10 @@ export const dropdownNavigation = [
     separator: true,
   },
   {
-    type: 'button',
+    type: 'link',
     name: 'Workspace Settings',
-    url: 'workspace/item',
+    url: 'settings/general',
+    workspaceUrl: true,
   },
   {
     type: 'list',
@@ -28,9 +29,19 @@ export const dropdownNavigation = [
   },
   {
     type: 'button',
-    name: 'logout',
+    name: 'Logout',
     action: signOut,
     icon: LogOutIcon,
   },
 ];
 
+export const settingsWorkspaceNavigation = [
+  {
+    name: 'General',
+    url: 'general',
+  },
+  {
+    name: 'Labels',
+    url: 'labels',
+  },
+];

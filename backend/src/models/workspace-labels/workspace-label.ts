@@ -18,9 +18,7 @@ const addWorkspaceLabel = async (
   });
 
   await addWorkspaceLabelInAllTeams({
-    id: newLabel.id,
-    color: newLabel.color,
-    name: newLabel.name,
+    ...newLabel,
     workspace_id: data.workspace_id,
   });
 
@@ -31,37 +29,34 @@ const editWorkspaceLabel = async (
   data: EditWorkspaceLabels,
   id: string,
 ): Promise<WorkspaceLabels> => {
-  const Label = prisma.workspaceLabels.update({
+  return await prisma.workspaceLabels.update({
     where: { id: id, can_edit: true },
     data: {
       name: data.name,
       color: data.color,
     },
   });
-  return Label;
 };
 
 const selectWorkspaceLabel = async (
   id: string,
   workspace_id: string,
 ): Promise<WorkspaceLabels | null> => {
-  const label = prisma.workspaceLabels.findUnique({
+  return await prisma.workspaceLabels.findUnique({
     where: { id, workspace_id },
   });
-  return label;
 };
 
 const deleteWorkspaceLabel = async (
   id: string,
 ): Promise<WorkspaceLabels | null> => {
-  const label = prisma.workspaceLabels.delete({
+  return await prisma.workspaceLabels.delete({
     where: { id },
   });
-  return label;
 };
 
 const selectAllWorkspaceLabel = async (id: string) => {
-  const customLabels = await prisma.workspaceLabels.findMany({
+  return await prisma.workspaceLabels.findMany({
     where: {
       workspace_id: id,
     },
@@ -69,18 +64,17 @@ const selectAllWorkspaceLabel = async (id: string) => {
       id: true,
       name: true,
       color: true,
+      created_at: true,
       can_edit: true,
     },
   });
-
-  return customLabels;
 };
 
 const selectWorkspaceLabelByName = async (
   name: string,
   workspace_id: string,
 ) => {
-  const customLabels = await prisma.workspaceLabels.findFirst({
+  return await prisma.workspaceLabels.findFirst({
     where: {
       name,
       workspace_id: workspace_id,
@@ -92,8 +86,6 @@ const selectWorkspaceLabelByName = async (
       can_edit: true,
     },
   });
-
-  return customLabels;
 };
 
 export {

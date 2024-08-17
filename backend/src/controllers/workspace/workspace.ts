@@ -28,6 +28,8 @@ const createWorkspaceController = async (
       name: parsedBody.name,
       url_key: parsedBody.url_key,
       creator: user.id,
+      updated_at: new Date(),
+      created_at: new Date(),
       labels: await selectAllLabels(),
       permission: MemberPermission.ADMIN,
     };

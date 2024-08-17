@@ -12,6 +12,7 @@ const createTeamController = async (
   reply: FastifyReply,
 ) => {
   try {
+    const { id } = request.params as { id: string };
     const user = await findUserByToken(request, reply);
 
     if (!user) {
@@ -24,13 +25,13 @@ const createTeamController = async (
       name: parsedBody.name,
       identifier: parsedBody.identifier,
       creator_id: user.id,
-      labels: await selectAllWorkspaceLabel(parsedBody.workspace_id),
+      labels: await selectAllWorkspaceLabel(id),
       permission: MemberPermission.ADMIN,
-      workspace_id: parsedBody.workspace_id,
+      workspace_id: id,
     };
 
     const team = await createTeam(body);
-    const creator = await selectUser(team.creator_id);
+    const creator = await selectUser(user.id);
 
     reply.code(201).send({
       data: {

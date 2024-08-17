@@ -1,5 +1,3 @@
-import { selectTeam } from '@/models/teams/teams';
-import { TaskAssigneds } from '@prisma/client';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import {
   addTaskAssigneds,
@@ -8,31 +6,36 @@ import {
   selectTaskAssigned,
 } from '@/models/task-assigneds/task-assigneds';
 import { createTaskAssignedSchema } from '@/models/task-assigneds/types';
+import { selectWorkspaces } from '@/models/workspace/workspace';
+import { selectAllTeams } from '@/models/teams/teams';
+import { selectAllTeamTasks } from '@/models/team-tasks/team-tasks';
 
 const selectAllTaskAssigned = async (
   request: FastifyRequest,
   reply: FastifyReply,
 ) => {
   try {
-    const { id } = request.params as { id: string };
-    const team = await selectTeam(id);
+    const { id, user_id } = request.params as { id: string; user_id: string };
 
-    if (!team) {
-      reply.code(404).send({ message: 'Team not found' });
+    const workspaces = await selectWorkspaces(id);
+
+    if (!workspaces) {
+      reply.code(404).send({ message: 'Workspace not found' });
       return;
     }
 
-    const taskAssigneds = await selectAllTaskAssigneds(id);
+    const teams = await selectAllTeams(id);
 
-    const assigneds = await Promise.all(
-      taskAssigneds.map(async (item: TaskAssigneds) => {
-        return await selectTaskAssigned({
-          user_id: item.user_id,
-          task_id: id,
-        });
-      }),
+    const teamTasks: any = teams.map(
+      async (team) => await selectAllTeamTasks(team.id),
     );
-    reply.code(201).send({ data: assigneds });
+
+    const assignedTasks = teamTasks.map(
+      async (task: { task_id: string }) =>
+        await selectAllTaskAssigneds(task?.task_id, user_id),
+    );
+
+    reply.code(201).send({ data: assignedTasks });
   } catch (error) {
     reply
       .code(400)

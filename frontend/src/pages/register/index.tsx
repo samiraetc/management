@@ -2,15 +2,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
 import React, { useCallback, useEffect, useState } from 'react';
-import { passwordRequeriment, validatePassword } from './utils';
+
 import { Check, ChevronLeft } from 'lucide-react';
 import { ModeToggle } from '@/components/ModeToggle/ModeToggle';
 import { useRouter } from 'next/router';
 import { Button } from '@/components/ui/button';
-import { UserServices } from '@/services/User/user.services';
 import { useToast } from '@/components/ui/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import useWorkspaceUrl from '@/hook/useWorkspaceStorage/useWorkspaceStorage';
+import { createUser } from '@/services/User/userService';
+import { passwordRequeriment, validatePassword } from '@/utils/password';
 
 const Register = () => {
   const router = useRouter();
@@ -25,8 +26,8 @@ const Register = () => {
   const [showRequeriment, setShowRequeriment] = useState(false);
   const { toast } = useToast();
   const [errors, setErrors] = useState<any>({});
-  useWorkspaceUrl();
 
+  useWorkspaceUrl();
   useEffect(() => {
     const [user] = email.split('@');
     setUsername(user);
@@ -37,10 +38,6 @@ const Register = () => {
   }, [password, confirmPassword]);
 
   const handleClickCreateAccount = useCallback(() => {
-    const successCallback = () => {
-      router.push(`/login`);
-    };
-
     const errorCallback = (error: any) => {
       if (error.response && error.response.data && error.response.data.errors) {
         setErrors(error.response.data.errors);
@@ -66,14 +63,14 @@ const Register = () => {
       }
     };
 
-    UserServices.create({
+    createUser({
       first_name: firstName,
       last_name: lastName,
       username,
       email,
       password,
     })
-      .then(successCallback)
+      .then(() => router.push(`/login`))
       .catch(errorCallback);
   }, [firstName, lastName, username, email, password]);
 
