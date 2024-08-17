@@ -28,7 +28,9 @@ const createWorkspace = async (data: Workspace): Promise<PrismaWorkspace> => {
       updated_at: data.updated_at,
       labels: {
         create: data.labels.map((label) => ({
-          ...label,
+          name: label.name,
+          color: label.color,
+          created_at: label.created_at,
           can_edit: true,
         })),
       },
