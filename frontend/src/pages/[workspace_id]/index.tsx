@@ -9,7 +9,7 @@ const WorkspaceArea = () => {
 
   return (
     <div className="flex h-full items-center justify-center overflow-hidden">
-      <div className="text-6xl font-bold">{workspace?.name}</div>
+      <div className="text-6xl font-bold"></div>
     </div>
   );
 };
