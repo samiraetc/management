@@ -54,31 +54,13 @@ export const ColumnsMenu = ({ editor, appendTo }: MenuProps) => {
       }}
     >
       <Toolbar.Wrapper>
-        <Toolbar.Button
-          tooltip="Sidebar left"
-          active={editor.isActive('columns', {
-            layout: ColumnLayout.SidebarLeft,
-          })}
-          onClick={onColumnLeft}
-        >
+        <Toolbar.Button tooltip="Sidebar left" onClick={onColumnLeft}>
           <Icon name="PanelLeft" />
         </Toolbar.Button>
-        <Toolbar.Button
-          tooltip="Two columns"
-          active={editor.isActive('columns', {
-            layout: ColumnLayout.TwoColumn,
-          })}
-          onClick={onColumnTwo}
-        >
+        <Toolbar.Button tooltip="Two columns" onClick={onColumnTwo}>
           <Icon name="Columns2" />
         </Toolbar.Button>
-        <Toolbar.Button
-          tooltip="Sidebar right"
-          active={editor.isActive('columns', {
-            layout: ColumnLayout.SidebarRight,
-          })}
-          onClick={onColumnRight}
-        >
+        <Toolbar.Button tooltip="Sidebar right" onClick={onColumnRight}>
           <Icon name="PanelRight" />
         </Toolbar.Button>
       </Toolbar.Wrapper>

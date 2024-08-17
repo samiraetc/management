@@ -50,9 +50,7 @@ export const ListTypePicker = ({ options }: ListTypePickerProps) => {
   return (
     <Dropdown.Root>
       <Dropdown.Trigger asChild>
-        <Toolbar.Button
-          active={activeItem?.id !== 'bulletList' && !!activeItem?.type}
-        >
+        <Toolbar.Button>
           <Icon
             name={(activeItem?.type === 'option' && activeItem.icon) || 'List'}
           />

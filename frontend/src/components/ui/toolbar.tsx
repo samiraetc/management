@@ -84,11 +84,9 @@ const ToolbarDivider = forwardRef<HTMLDivElement, ToolbarDividerProps>(
 ToolbarDivider.displayName = 'Toolbar.Divider';
 
 export type ToolbarButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  active?: boolean;
-  activeClassname?: string;
   tooltip?: string;
   tooltipShortcut?: string[];
-  buttonSize?: ButtonProps['size'];
+  size?: ButtonProps['size'];
   variant?: ButtonProps['variant'];
 };
 
@@ -96,12 +94,11 @@ const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   (
     {
       children,
-      buttonSize = 'icon',
+      size = 'icon',
       variant = 'ghost',
       className,
       tooltip,
       tooltipShortcut,
-      activeClassname,
       ...rest
     },
     ref,
@@ -112,7 +109,7 @@ const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
       <Button
         className={buttonClass}
         variant={variant}
-        size={buttonSize}
+        size={size}
         ref={ref}
         {...rest}
       >

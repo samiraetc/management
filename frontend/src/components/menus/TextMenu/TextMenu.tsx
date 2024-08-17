@@ -36,15 +36,14 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
       shouldShow={states.shouldShow}
       updateDelay={100}
     >
-      <Toolbar.Wrapper className='z-50'>
-        <MemoContentTypePicker options={blockOptions}  />
+      <Toolbar.Wrapper className="z-50">
+        <MemoContentTypePicker options={blockOptions} />
 
         <Toolbar.Divider />
         <MemoButton
           tooltip="Bold"
           tooltipShortcut={['Mod', 'B']}
           onClick={commands.onBold}
-          active={states.isBold}
         >
           <Icon name="Bold" />
         </MemoButton>
@@ -52,7 +51,6 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
           tooltip="Italic"
           tooltipShortcut={['Mod', 'I']}
           onClick={commands.onItalic}
-          active={states.isItalic}
         >
           <Icon name="Italic" />
         </MemoButton>
@@ -60,7 +58,6 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
           tooltip="Underline"
           tooltipShortcut={['Mod', 'U']}
           onClick={commands.onUnderline}
-          active={states.isUnderline}
         >
           <Icon name="Underline" />
         </MemoButton>
@@ -68,7 +65,6 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
           tooltip="Strikehrough"
           tooltipShortcut={['Mod', 'Shift', 'S']}
           onClick={commands.onStrike}
-          active={states.isStrike}
         >
           <Icon name="Strikethrough" />
         </MemoButton>
@@ -76,7 +72,6 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
           tooltip="Code"
           tooltipShortcut={['Mod', 'E']}
           onClick={commands.onCode}
-          active={states.isCode}
         >
           <Icon name="Code" />
         </MemoButton>
@@ -87,7 +82,7 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
 
         <Popover.Root>
           <Popover.Trigger asChild>
-            <MemoButton active={!!states.currentColor} tooltip="Text color">
+            <MemoButton tooltip="Text color">
               <Icon name="Palette" />
             </MemoButton>
           </Popover.Trigger>

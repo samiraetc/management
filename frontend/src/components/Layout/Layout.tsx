@@ -22,7 +22,6 @@ import {
 } from '../ui/resizable';
 import { LuPanelLeft } from 'react-icons/lu';
 import { getWorkspaces } from '@/services/Workspace/workspace.services';
-import { getTeams } from '@/services/Teams/teamsService';
 
 type LayoutProps = {
   children: ReactNode;
@@ -82,10 +81,6 @@ const Layout = ({ children }: LayoutProps) => {
     }
   };
 
-
-
-
-
   return i18next.isInitialized && workspace ? (
     <div>
       <Transition show={sidebarOpen}>
@@ -131,14 +126,14 @@ const Layout = ({ children }: LayoutProps) => {
                   </div>
                 </TransitionChild>
 
-                <MenuSidebar setSidebarOpen={setSidebarOpen} />
+                <MenuSidebar />
               </DialogPanel>
             </TransitionChild>
           </div>
         </Dialog>
       </Transition>
 
-      <div className="sticky top-0 z-40 bg-background flex items-center border-b px-6 py-2 shadow-sm sm:px-6 lg:hidden">
+      <div className="sticky top-0 z-40 flex items-center border-b bg-background px-6 py-2 shadow-sm sm:px-6 lg:hidden">
         <Button
           type="button"
           className="-m-2.5 p-2.5 lg:hidden"
@@ -158,7 +153,7 @@ const Layout = ({ children }: LayoutProps) => {
             'hidden lg:inset-y-0 lg:z-50 lg:flex lg:h-screen lg:flex-col'
           }
         >
-          <MenuSidebar shrink={shrink} setShrink={setShrink} setSidebarOpen={setSidebarOpen} />
+          <MenuSidebar shrink={shrink} setShrink={setShrink} />
         </ResizablePanel>
         <ResizableHandle className="border-none" />
         <ResizablePanel className="flex h-lvh min-w-0">

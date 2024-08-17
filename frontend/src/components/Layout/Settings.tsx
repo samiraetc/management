@@ -37,7 +37,6 @@ const Settings = ({ children }: ISettings) => {
   const dispatch = useDispatch();
   const [workspace, setWorkspace] = useState<Workspace>();
   const [workspaceUrl, setWorkspaceUrl] = useState('');
-  const [isOpen, setIsOpen] = React.useState(false);
   const [teams, setTeams] = useState<Team[]>();
 
   useEffect(() => {

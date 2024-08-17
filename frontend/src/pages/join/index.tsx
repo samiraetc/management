@@ -15,21 +15,15 @@ const JoinPage = () => {
   const [name, setName] = useState<string>('');
   const [url, setUrl] = useState<string>('');
 
-  const [loading, setLoading] = useState<boolean>(false);
   const hasWorkspaces = session?.user.workspaces?.length === 0;
 
   const handleClickCreateWorkspace = useCallback(async () => {
-    setLoading(true);
-
     await createWorkspaces({ name, url_key: url }, session?.user?.token ?? '')
       .then(() => {
         localStorage.setItem('workspace', url);
         router.push(`/${url}`);
       })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch((err) => console.log(err));
   }, [name, url]);
 
   useEffect(() => {

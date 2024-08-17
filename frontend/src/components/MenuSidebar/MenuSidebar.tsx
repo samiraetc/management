@@ -23,14 +23,9 @@ import CreateTask from '../CreateTask/CreateTask';
 interface IMenuSidebar {
   shrink?: boolean;
   setShrink?: (value: boolean) => void;
-  setSidebarOpen: (open: boolean) => void;
 }
 
-const MenuSidebar: React.FC<IMenuSidebar> = ({
-  shrink,
-  setShrink,
-  setSidebarOpen,
-}) => {
+const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
   const [createTask, setCreateTask] = useState<boolean>(false);
   const dispatch = useDispatch();
   const workspace = useSelector(

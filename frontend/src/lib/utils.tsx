@@ -11,10 +11,9 @@ import {
 } from 'lucide-react';
 import { differenceInDays } from 'date-fns';
 import LowPriority from '@/assets/icon/Low';
-import MediumPriority from '@/assets/icon/Medium';
 import HighPriority from '@/assets/icon/High';
 import { HiCalendar } from 'react-icons/hi2';
-import { RiProgress4Line } from 'react-icons/ri';
+import MediumPriority from '@/assets/icon/Medium';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -49,19 +48,19 @@ export function getPriorityProps(priority: TaskPriority) {
       return {
         label,
         value: TaskPriority.Low,
-        icon: <LowPriority className='mb-1' />,
+        icon: <LowPriority className="mb-1" />,
       };
     case TaskPriority.Medium:
       return {
         label,
         value: TaskPriority.Medium,
-        icon: <MediumPriority className='mb-1' />,
+        icon: <MediumPriority className="mb-1" />,
       };
     case TaskPriority.High:
       return {
         label,
         value: TaskPriority.High,
-        icon: <HighPriority className='mb-1'/>,
+        icon: <HighPriority className="mb-1" />,
       };
 
     case TaskPriority.Urgent:
@@ -129,7 +128,13 @@ export const getStatusesProps = (status: string) => {
 
     case 'done':
       return {
-        icon: <CircleCheck width={16} height={16} className="text-fruit-salad-600" />,
+        icon: (
+          <CircleCheck
+            width={16}
+            height={16}
+            className="text-fruit-salad-600"
+          />
+        ),
         label: 'Done',
       };
     case 'canceled':
@@ -145,7 +150,7 @@ export const getStatusesProps = (status: string) => {
   }
 };
 
-export const getEstimativeProps = (estimative: number  | null) => {
+export const getEstimativeProps = (estimative: number | null) => {
   if (estimative === null) {
     return `No estimative`;
   } else if (estimative === 1) {

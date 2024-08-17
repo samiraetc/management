@@ -1,5 +1,5 @@
 import { cn, getStatusesProps } from '@/lib/utils';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Command,
   CommandDialog,
@@ -110,7 +110,7 @@ const Status = ({ status, label, className, task }: IStatus) => {
           onOpenChange={setOpenDialog}
           overlayClassName="bg-black/10"
           showClose={false}
-          className="top-[25%] w-11/12 -translate-x-1/2 translate-y-[-12%] rounded-md sm:w-full sm:-translate-x-1/2 sm:-translate-y-1/2"
+          className="top-1/4 w-11/12 -translate-x-1/2 translate-y-[-12%] rounded-md sm:w-full sm:-translate-x-1/2 sm:-translate-y-1/2"
         >
           <div className="mb-2 mt-3 px-3">
             <p className="max-w-full truncate rounded-sm border bg-muted p-1 text-xs text-muted-foreground">{`${task?.identifier} - ${task?.title}`}</p>

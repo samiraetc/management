@@ -153,7 +153,7 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
         <CommandDialog
           open={open}
           onOpenChange={setOpen}
-          className="top-[50%] w-80 -translate-x-1/2 translate-y-[-12%] rounded-md sm:w-full sm:-translate-x-1/2 sm:-translate-y-1/2"
+          className="top-1/2 w-80 -translate-x-1/2 translate-y-[-12%] rounded-md sm:w-full sm:-translate-x-1/2 sm:-translate-y-1/2"
         >
           <CommandInput placeholder="Switch workspace" autoFocus />
           <CommandList>

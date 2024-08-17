@@ -38,10 +38,7 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: 'priority',
     cell: ({ row }) => {
       return (
-        <Priority
-          priority={row.getValue('priority')}
-          task={row.original}
-        />
+        <Priority priority={row.getValue('priority')} task={row.original} />
       );
     },
   },
@@ -58,9 +55,7 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: 'status',
     cell: ({ row }) => {
-      return (
-        <Status status={row.getValue('status')} task={row.original} />
-      );
+      return <Status status={row.getValue('status')} task={row.original} />;
     },
   },
 
@@ -77,7 +72,9 @@ export const columns: ColumnDef<Task>[] = [
             Router.push(`/${workspace}/issue/${row.getValue('identifier')}`)
           }
         >
-          <div className="w-full truncate text-sm mb-1">{row.getValue('title')}</div>
+          <div className="mb-1 w-full truncate text-sm">
+            {row.getValue('title')}
+          </div>
         </div>
       );
     },
@@ -132,9 +129,7 @@ export const columns: ColumnDef<Task>[] = [
       const point = parseInt(row.getValue('estimative')) ?? 0;
       return (
         <div>
-          {point >= 1 && (
-            <Estimative estimative={point} task={row.original} />
-          )}
+          {point >= 1 && <Estimative estimative={point} task={row.original} />}
         </div>
       );
     },
