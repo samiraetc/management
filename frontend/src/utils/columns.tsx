@@ -22,7 +22,7 @@ export const columns: ColumnDef<Task>[] = [
   {
     id: 'select',
     cell: ({ row }) => (
-      <div className="ml-2 sm:ml-0 sm:flex sm:w-8 sm:justify-center">
+      <div className="sm:ml-0 sm:flex sm:justify-center">
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -67,7 +67,7 @@ export const columns: ColumnDef<Task>[] = [
 
       return (
         <div
-          className={`${labels ? 'sm:w-[30rem]' : 'sm:w-[50rem]'} cursor-pointer`}
+          className={`${labels ? 'sm:w-[30rem]' : 'sm:w-[50rem]'} w-64 cursor-pointer`}
           onClick={() =>
             Router.push(`/${workspace}/issue/${row.getValue('identifier')}`)
           }

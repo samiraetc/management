@@ -87,7 +87,7 @@ const LabelIndex = () => {
     <>
       {selectedLabel?.id ? (
         <>
-          <div className="sticky -top-0.5 z-50 w-full border-b bg-background">
+          <div className="sticky -top-0.5 z-50 w-full rounded-sm border-b bg-background">
             <p className="flex items-center justify-between border-b py-2 pl-6 font-medium sm:pl-6 sm:pr-4">
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center gap-1">
@@ -163,7 +163,7 @@ const LabelIndex = () => {
                 );
                 return tasksByStatusAndLabel.length === 0 ? null : (
                   <section key={status.id}>
-                    <div className="flex items-center justify-between bg-secondary py-2 pl-1.5 pr-2 sm:pl-10 sm:pr-2">
+                    <div className="flex items-center justify-between bg-secondary py-2 pl-1.5 pr-5 sm:pl-6 sm:pr-2">
                       <div className="flex items-center gap-4">
                         {getStatusesProps(status.key)?.icon}
                         <span className="text-md font-medium">

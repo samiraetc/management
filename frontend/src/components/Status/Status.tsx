@@ -82,6 +82,7 @@ const Status = ({ status, label, className, task }: IStatus) => {
         <DropdownMenuTrigger
           onClick={() => (isMobile ? setOpenDialog(true) : setOpen(true))}
           className={cn(
+            'outline-none',
             label &&
               'flex h-8 w-48 items-center gap-2 p-1 text-xs font-medium text-foreground hover:rounded-md hover:bg-muted/70',
             className,
