@@ -13,12 +13,10 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import StatusCell from '@/components/StatusCell/StatusCell';
+import Status from '@/components/Status/Status';
 import Priority from '@/components/Priority/Priority';
 import Estimative from '@/components/Estimative/Estimative';
 import Router from 'next/router';
-
-const workspace = Router.query.workspace_id;
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -42,7 +40,7 @@ export const columns: ColumnDef<Task>[] = [
       return (
         <Priority
           priority={row.getValue('priority')}
-          taskId={row.original.id}
+          task={row.original}
         />
       );
     },
@@ -61,7 +59,7 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: 'status',
     cell: ({ row }) => {
       return (
-        <StatusCell status={row.getValue('status')} taskId={row.original.id} />
+        <Status status={row.getValue('status')} task={row.original} />
       );
     },
   },
@@ -70,15 +68,16 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: 'title',
     cell: ({ row }) => {
       const labels = row.original.labels.length >= 1;
+      const workspace = Router.query.workspace_id;
 
       return (
         <div
-          className={`${labels ? 'sm:w-[30rem]' : 'sm:w-[50rem]'}`}
+          className={`${labels ? 'sm:w-[30rem]' : 'sm:w-[50rem]'} cursor-pointer`}
           onClick={() =>
             Router.push(`/${workspace}/issue/${row.getValue('identifier')}`)
           }
         >
-          <div className="w-full truncate text-sm">{row.getValue('title')}</div>
+          <div className="w-full truncate text-sm mb-1">{row.getValue('title')}</div>
         </div>
       );
     },
@@ -134,7 +133,7 @@ export const columns: ColumnDef<Task>[] = [
       return (
         <div>
           {point >= 1 && (
-            <Estimative estimative={point} taskId={row.original.id} />
+            <Estimative estimative={point} task={row.original} />
           )}
         </div>
       );

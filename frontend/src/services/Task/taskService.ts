@@ -6,3 +6,11 @@ export async function getTaskAssignedByUserId(
 ) {
   return await api.get(`/workspace/${workspaceId}/task_assigned/${userId}`);
 }
+
+export async function changeIssueTitle(
+  workspaceId: string,
+  taskId: string,
+  payload: string,
+) {
+  return await api.patch(`/workspace/${workspaceId}/task/${taskId}`, payload);
+}
