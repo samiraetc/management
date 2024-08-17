@@ -1,81 +1,111 @@
-import React, { useCallback, useEffect, useRef } from 'react';
-import { useEditor, EditorContent } from '@tiptap/react';
-import ExtensionKit from '@/components/RichText/extensions/extension-kit';
+import React, { useState } from 'react';
 import withLayout from '@/utils/hoc/withLayout';
-import { ContentItemMenu, LinkMenu, TextMenu } from '@/components/menus';
-
-import ColumnsMenu from '@/components/RichText/extensions/MultiColumn/menus/ColumnsMenu';
-import TableRowMenu from '@/components/RichText/extensions/Table/menus/TableRow';
-import TableColumnMenu from '@/components/RichText/extensions/Table/menus/TableColumn';
-import { Copy, Link } from 'lucide-react';
+import { CircleUserRound, CircleX, Copy, GitBranch, Link } from 'lucide-react';
 import { copyUrlToClipboard } from '@/utils/clipboard';
 import { Separator } from '@/components/ui/separator';
 import { useRouter } from 'next/router';
-
-const TiptapEditor = () => {
-  const menuContainerRef = useRef(null);
-
-  const editor = useEditor(
-    {
-      autofocus: true,
-      extensions: [...ExtensionKit()],
-      editorProps: {
-        attributes: {
-          autocomplete: 'off',
-          autocorrect: 'off',
-          autocapitalize: 'off',
-          class: 'min-h-full',
-        },
-      },
-    },
-    [],
-  );
-
-  if (!editor) {
-    return null;
-  }
-
-  // const content = editor.getJSON() // ou editor.getHTML() se preferir enviar como HTML
-
-  return (
-    <div className="flex h-full" ref={menuContainerRef}>
-      <div className="relative flex h-full w-full flex-1 flex-col overflow-hidden text-base">
-        <EditorContent editor={editor} className="flex-1 overflow-y-auto" />
-
-        <LinkMenu editor={editor} appendTo={menuContainerRef} />
-        <TextMenu editor={editor} />
-        <ColumnsMenu editor={editor} appendTo={menuContainerRef} />
-        <TableRowMenu editor={editor} appendTo={menuContainerRef} />
-        <TableColumnMenu editor={editor} appendTo={menuContainerRef} />
-      </div>
-    </div>
-  );
-};
+import { TaskPriority } from '@/lib/utils';
+import Status from '@/components/Status/Status';
+import Priority from '@/components/Priority/Priority';
+import Estimative from '@/components/Estimative/Estimative';
+import LabelDropdown from '@/components/LabelDropdown/LabelDropdown';
+import { Input } from '@/components/ui/input';
+import { toast } from '@/components/ui/use-toast';
+import { issue } from '@/mock/issue';
+import RichText from '@/components/RichText/RichText';
+import CreateTaskProperties from '@/components/CreateTask/CreateTaskProperties';
 
 const IssuePage = () => {
-  const route = useRouter()
-  const issueId = (route.query.issue_identifier as string) ?? ''
+  const route = useRouter();
+  const issueId = (route.query.issue_identifier as string) ?? '';
+  const [title, setTitle] = useState<string>(issue.title);
+
+  const handleChangeIssueTitle = () => {
+    if (title) {
+      return;
+    } else {
+      toast({
+        icon: <CircleX className="size-5" />,
+        title: 'Updated failed',
+        variant: 'destructive',
+        description: <p>The field must contain at least 1 character.</p>,
+      });
+      setTitle(issue.title);
+    }
+  };
+
+  const handleChangeDescription = (value: string) => {
+    console.log(value);
+  };
+
   return (
     <div className="flex h-full gap-1">
-      <div className="w-3/4">
-        <TiptapEditor />
+      <div className="w-full">
+        <div className="sticky top-0 z-50 w-full border-b bg-background sm:hidden">
+          <div className="flex gap-2 p-2">
+            <CreateTaskProperties />
+          </div>
+        </div>
+
+        <Input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Issue title"
+          className="mt-5 border-none pl-8 text-4xl font-semibold outline-none ring-0 focus-visible:ring-0"
+          onBlur={() => handleChangeIssueTitle()}
+        />
+        <RichText
+          content={issue.description}
+          onChange={handleChangeDescription}
+          className="p-8"
+        />
       </div>
 
       <Separator orientation="vertical" />
-      <div className="w-72 px-5 py-3">
+      <div className="hidden w-80 space-y-3 px-5 py-3 sm:block">
         <div className="flex items-center justify-between">
-          <p className="text-sm"> Properties</p>
-          <div className='flex gap-4'>
-          <Link
-            onClick={() => copyUrlToClipboard()}
-            size={16}
-            className="cursor-pointer"
-          />
-           <Copy
-            onClick={() => copyUrlToClipboard(issueId)}
-            size={16}
-            className="cursor-pointer"
-          />
+          <p className="pl-0.5 text-xs font-medium text-muted-foreground">
+            Properties
+          </p>
+          <div className="flex gap-4">
+            <Link
+              onClick={() => copyUrlToClipboard()}
+              size={14}
+              className="cursor-pointer"
+            />
+            <Copy
+              onClick={() => copyUrlToClipboard(issueId)}
+              size={14}
+              className="cursor-pointer"
+            />
+            <GitBranch
+              onClick={() => copyUrlToClipboard(issueId)}
+              size={14}
+              className="cursor-pointer"
+            />
+          </div>
+        </div>
+
+        <Status status={issue.status} task={issue} label />
+
+        <Priority
+          priority={issue.priority as TaskPriority}
+          task={issue}
+          label
+        />
+
+        <Estimative estimative={issue.estimative} task={issue} label />
+
+        <div className="flex w-48 items-center gap-2 p-1 text-xs hover:rounded-md hover:bg-muted">
+          <CircleUserRound width={15} />
+          <p className="font-medium text-foreground">Assigned</p>
+        </div>
+
+        <div>
+          <p className="text-xs font-medium text-muted-foreground">Labels</p>
+
+          <div className="mt-3 flex flex-wrap gap-1">
+            <LabelDropdown labels={issue.labels} />
           </div>
         </div>
       </div>
