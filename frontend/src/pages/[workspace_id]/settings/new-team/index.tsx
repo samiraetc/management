@@ -25,7 +25,7 @@ const NewTeamPage = () => {
     await createTeam(workspace?.id ?? '', {
       name: teamName,
       identifier,
-    }).then(() => router.push(`/${workspace?.url_key}/team/${identifier}`));
+    }).then(() => router.push(`/${workspace?.url_key}/teams`));
   };
 
   return (
