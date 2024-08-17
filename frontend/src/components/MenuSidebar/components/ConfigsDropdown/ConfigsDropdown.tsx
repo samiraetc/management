@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { Button } from '@headlessui/react';
-import { dropdownNavigation } from './navigation';
 import { signOut, useSession } from 'next-auth/react';
 import { Check, LogOutIcon } from 'lucide-react';
 import { useDispatch } from 'react-redux';
@@ -154,7 +153,7 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
         <CommandDialog
           open={open}
           onOpenChange={setOpen}
-          className="w-80 -translate-x-1/2 translate-y-[-12%] rounded-md sm:w-full sm:-translate-x-1/2 sm:-translate-y-1/2"
+          className="top-[50%] w-80 -translate-x-1/2 translate-y-[-12%] rounded-md sm:w-full sm:-translate-x-1/2 sm:-translate-y-1/2"
         >
           <CommandInput placeholder="Switch workspace" autoFocus />
           <CommandList>
