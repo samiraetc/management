@@ -14,25 +14,43 @@ import {
   UsersRound,
 } from 'lucide-react';
 import { ModeToggle } from '../ModeToggle/ModeToggle';
-import { translation } from '@/i18n/i18n';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import ConfigsDropdown from './components/ConfigsDropdown/ConfigsDropdown';
+import { getTeams } from '@/services/Teams/teamsService';
+import CreateTask from '../CreateTask/CreateTask';
 
 interface IMenuSidebar {
   shrink?: boolean;
   setShrink?: (value: boolean) => void;
-  workspace: Workspace;
+  setSidebarOpen: (open: boolean) => void;
 }
 
-const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
+const MenuSidebar: React.FC<IMenuSidebar> = ({
+  shrink,
+  setShrink,
+  setSidebarOpen,
+}) => {
+  const [createTask, setCreateTask] = useState<boolean>(false);
+  const dispatch = useDispatch();
   const workspace = useSelector(
     (state: RootState) => state.workspace.workspace,
   );
-  const teams = useSelector(
-    (state: RootState) => state.teams.teams,
-  );
 
+  const teams = useSelector((state: RootState) => state.teams.teams);
+
+  const getWorkspaceTeams = async (id: string) => {
+    await getTeams(id).then((response) => {
+      dispatch({
+        type: 'teams/setTeams',
+        payload: response,
+      });
+    });
+  };
+
+  useEffect(() => {
+    getWorkspaceTeams(workspace?.id ?? '');
+  }, [workspace?.url_key]);
 
   return (
     <div className="flex grow flex-col justify-between">
@@ -61,7 +79,14 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
                 <div className="text-md mb-5 flex w-full items-center justify-between gap-7 pl-2 font-semibold">
                   <p className="truncate">{workspace?.name}</p>
                   <div className="rounded-lg border p-1.5">
-                    <SquarePen width={20} height={20} />
+                    <SquarePen
+                      width={20}
+                      height={20}
+                      onClick={() => {
+                        setCreateTask(true);
+                      }}
+                      className="cursor-pointer"
+                    />
                   </div>
                 </div>
               </AccordionItem>
@@ -70,7 +95,7 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
                 <MenuSidebarButton
                   url={`/${workspace?.url_key}/my-issues`}
                   icon={<ListTodo className="text-gray-500" width={18} />}
-                  name={translation('menuSidebar:my_issues')}
+                  name={'My Issues'}
                 />
               </AccordionItem>
 
@@ -87,9 +112,7 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
               <AccordionItem value="teams" className="border-none">
                 <AccordionTrigger className="mt-4 items-start rounded-md p-2 text-gray-500 hover:bg-muted hover:no-underline dark:hover:bg-muted">
                   <div className="flex gap-2">
-                    <p className="text-xs">
-                      Your Teams
-                    </p>
+                    <p className="text-xs">Your Teams</p>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="border-none">
@@ -116,6 +139,8 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
           {!shrink && <ModeToggle />}
         </div>
       </div>
+
+      {createTask && <CreateTask open={createTask} setOpen={setCreateTask} />}
     </div>
   );
 };
