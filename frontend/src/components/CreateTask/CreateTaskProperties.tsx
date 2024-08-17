@@ -16,7 +16,7 @@ const CreateTaskProperties = () => {
       />
 
       <Priority
-        priority={'none' as TaskPriority}
+        priority={'no_priority' as TaskPriority}
         task={issue}
         className="h-7 w-full rounded-md border px-3 font-normal"
         label

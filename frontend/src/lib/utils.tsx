@@ -20,7 +20,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export enum TaskPriority {
-  None = 'none',
+  None = 'no_priority',
   Low = 'low',
   Medium = 'medium',
   High = 'high',
