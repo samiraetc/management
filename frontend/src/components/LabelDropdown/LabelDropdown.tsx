@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
@@ -15,7 +15,9 @@ import {
 } from '@/components/ui/command';
 import { Plus, Tags } from 'lucide-react';
 import { Checkbox } from '../ui/checkbox';
-import { labelsMock } from '@/mock/labels';
+import { getLabels } from '@/services/Label/labelService';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 interface Label {
   name: string;
@@ -29,6 +31,10 @@ interface LabelDropdownProps {
 const LabelDropdown = ({ labels }: LabelDropdownProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const [selectedLabels, setSelectedLabels] = useState<Label[]>(labels);
+  const [labelList, setLabelList] = useState<Label[]>([]);
+  const workspace = useSelector(
+    (state: RootState) => state.workspace.workspace,
+  );
 
   const handleLabelToggle = (label: Label) => {
     const isSelected = selectedLabels.some(
@@ -41,6 +47,16 @@ const LabelDropdown = ({ labels }: LabelDropdownProps) => {
       setSelectedLabels([...selectedLabels, label]);
     }
   };
+
+  const handleGetWorkspaceLabels = async () => {
+    await getLabels(workspace?.id ?? '').then((response) => {
+      setLabelList(response);
+    });
+  };
+
+  useEffect(() => {
+    handleGetWorkspaceLabels();
+  }, []);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -91,7 +107,7 @@ const LabelDropdown = ({ labels }: LabelDropdownProps) => {
             <CommandEmpty>No results found.</CommandEmpty>
 
             <CommandGroup>
-              {labelsMock.map((label, index) => (
+              {labelList.map((label, index) => (
                 <CommandItem
                   className="flex cursor-pointer items-center justify-between px-4 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-700"
                   key={index}
