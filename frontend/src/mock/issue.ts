@@ -3,11 +3,11 @@ export const issue = {
   title: 'Welcome 👋🏼',
   labels: [
     {
-      name: 'coffe',
-      color: '#644536',
-      id: '',
-      can_edit: false,
-      created_at: '2024-07-31T21:35:08.371Z',
+      id: 'b79a4855-e19b-46a2-ad69-8d83b87cc4fd',
+      name: 'bug',
+      color: '#eb5757',
+      created_at: '2024-08-03T01:47:31.755Z',
+      can_edit: true,
     },
   ],
   description: `<p>Welcome to my new project</p><pre><code class="language-javascript">{

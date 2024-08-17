@@ -73,11 +73,6 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
         e.preventDefault();
         router.push(`/${workspaceStorage}/settings/general`);
       }
-
-      if ((e.key === 'A' || e.key === 'a') && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        router.push(`/my-account`);
-      }
     };
 
     document.addEventListener('keydown', down);
