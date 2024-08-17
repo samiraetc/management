@@ -182,9 +182,10 @@ const Settings = ({ children }: ISettings) => {
                           </div>
 
                           <div className="pl-7">
-                            {teams?.map((team) => {
+                            {teams?.map((team, index) => {
                               return (
                                 <Accordion
+                                  key={index}
                                   type="single"
                                   defaultValue="teams"
                                   collapsible
@@ -318,10 +319,13 @@ const Settings = ({ children }: ISettings) => {
                     </div>
 
                     <div className="pl-7">
-                      {teams?.map((team) => {
+                      {teams?.map((team, index) => {
                         return (
-                          <Accordion type="single" collapsible>
-                            <AccordionItem value={team.identifier} className="border-none">
+                          <Accordion type="single" collapsible key={index}>
+                            <AccordionItem
+                              value={team.identifier}
+                              className="border-none"
+                            >
                               <AccordionTrigger className="m-0 p-0">
                                 <MenuSidebarButton
                                   key={team.id}

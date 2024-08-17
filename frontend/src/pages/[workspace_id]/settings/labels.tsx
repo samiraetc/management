@@ -94,7 +94,7 @@ const LabelForm = ({
             </div>
           </PopoverTrigger>
           <PopoverContent className="w-full p-2 px-4">
-            <div className="">
+            <div>
               <div className="relative flex h-full items-center gap-4">
                 {palette ? (
                   <div className="flex w-[19rem] items-center gap-2">

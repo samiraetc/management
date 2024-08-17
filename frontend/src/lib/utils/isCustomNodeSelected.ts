@@ -4,8 +4,8 @@ import {
   HorizontalRule,
   Link,
   CodeBlock,
-} from '@/components/RichText/extensions';
-import { TableOfContentsNode } from '@/components/RichText/extensions/TableOfContentsNode';
+} from '@/extensions';
+import { TableOfContentsNode } from '@/extensions/TableOfContentsNode';
 
 export const isTableGripSelected = (node: HTMLElement) => {
   let container = node;

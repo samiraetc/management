@@ -6,11 +6,12 @@ import {
   CircleCheck,
   CircleDashed,
   CircleX,
+  Contrast,
   Minus,
 } from 'lucide-react';
 import { differenceInDays } from 'date-fns';
 import LowPriority from '@/assets/icon/Low';
-import MediumPriority from '@/assets/icon/medium';
+import MediumPriority from '@/assets/icon/Medium';
 import HighPriority from '@/assets/icon/High';
 import { HiCalendar } from 'react-icons/hi2';
 import { RiProgress4Line } from 'react-icons/ri';
@@ -32,7 +33,7 @@ const priorityOptions: Record<TaskPriority, string> = {
   [TaskPriority.High]: 'High',
   [TaskPriority.Medium]: 'Medium',
   [TaskPriority.Low]: 'Low',
-  [TaskPriority.None]: 'No priority',
+  [TaskPriority.None]: 'Set Priority',
 };
 
 export function getPriorityProps(priority: TaskPriority) {
@@ -42,32 +43,32 @@ export function getPriorityProps(priority: TaskPriority) {
       return {
         label,
         value: TaskPriority.None,
-        icon: <Minus width={18} className="text-gray-500" />,
+        icon: <Minus width={16} height={16} className="text-gray-500" />,
       };
     case TaskPriority.Low:
       return {
         label,
         value: TaskPriority.Low,
-        icon: <LowPriority />,
+        icon: <LowPriority className='mb-1' />,
       };
     case TaskPriority.Medium:
       return {
         label,
         value: TaskPriority.Medium,
-        icon: <MediumPriority />,
+        icon: <MediumPriority className='mb-1' />,
       };
     case TaskPriority.High:
       return {
         label,
         value: TaskPriority.High,
-        icon: <HighPriority />,
+        icon: <HighPriority className='mb-1'/>,
       };
 
     case TaskPriority.Urgent:
       return {
         label,
         value: TaskPriority.Urgent,
-        icon: <CircleAlert width={18} className="text-gray-500" />,
+        icon: <CircleAlert width={16} height={16} className="text-gray-500" />,
       };
   }
 }
@@ -112,28 +113,28 @@ export const getStatusesProps = (status: string) => {
   switch (status) {
     case 'backlog':
       return {
-        icon: <CircleDashed width={16} className="text-gray-400" />,
+        icon: <CircleDashed width={16} height={16} className="text-gray-400" />,
         label: 'Backlog',
       };
     case 'to_do':
       return {
-        icon: <Circle width={16} className="text-gray-400" />,
+        icon: <Circle width={16} height={16} className="text-gray-400" />,
         label: 'To Do',
       };
     case 'doing':
       return {
-        icon: <RiProgress4Line size={18} className="text-orange-500" />,
+        icon: <Contrast width={16} height={16} className="text-orange-500" />,
         label: 'Doing',
       };
 
     case 'done':
       return {
-        icon: <CircleCheck width={16} className="text-fruit-salad-600" />,
+        icon: <CircleCheck width={16} height={16} className="text-fruit-salad-600" />,
         label: 'Done',
       };
     case 'canceled':
       return {
-        icon: <CircleX width={16} className="text-red-500" />,
+        icon: <CircleX width={16} height={16} className="text-red-500" />,
         label: 'Canceled',
       };
     default:
@@ -144,8 +145,8 @@ export const getStatusesProps = (status: string) => {
   }
 };
 
-export const getEstimativeProps = (estimative: number) => {
-  if (estimative === 0) {
+export const getEstimativeProps = (estimative: number  | null) => {
+  if (estimative === null) {
     return `No estimative`;
   } else if (estimative === 1) {
     return `1 Point`;

@@ -1,29 +1,28 @@
-import { Editor } from '@tiptap/react'
-import { useCallback } from 'react'
-import { ShouldShowProps } from '../../types'
-import isCustomNodeSelected from '@/lib/utils/isCustomNodeSelected'
-import isTextSelected from '@/lib/utils/isTextSelected'
-
+import { Editor } from '@tiptap/react';
+import { useCallback } from 'react';
+import { ShouldShowProps } from '../../types';
+import isCustomNodeSelected from '@/lib/utils/isCustomNodeSelected';
+import isTextSelected from '@/lib/utils/isTextSelected';
 
 export const useTextmenuStates = (editor: Editor) => {
   const shouldShow = useCallback(
     ({ view, from }: ShouldShowProps) => {
       if (!view) {
-        return false
+        return false;
       }
 
-      const domAtPos = view.domAtPos(from || 0).node as HTMLElement
-      const nodeDOM = view.nodeDOM(from || 0) as HTMLElement
-      const node = nodeDOM || domAtPos
+      const domAtPos = view.domAtPos(from || 0).node as HTMLElement;
+      const nodeDOM = view.nodeDOM(from || 0) as HTMLElement;
+      const node = nodeDOM || domAtPos;
 
       if (isCustomNodeSelected(editor, node)) {
-        return false
+        return false;
       }
 
-      return isTextSelected({ editor })
+      return isTextSelected({ editor });
     },
     [editor],
-  )
+  );
 
   return {
     isBold: editor.isActive('bold'),
@@ -45,5 +44,5 @@ export const useTextmenuStates = (editor: Editor) => {
     isOrderestList: editor.isActive('orderedList'),
     isTaskList: editor.isActive('taskList'),
     shouldShow,
-  }
-}
+  };
+};

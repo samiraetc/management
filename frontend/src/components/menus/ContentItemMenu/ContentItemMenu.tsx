@@ -1,5 +1,3 @@
-
-
 import DragHandle from '@tiptap-pro/extension-drag-handle-react';
 import { Editor } from '@tiptap/react';
 
@@ -43,7 +41,7 @@ export const ContentItemMenu = ({ editor }: ContentItemMenuProps) => {
         zIndex: 99,
       }}
     >
-      <div className="flex items-center gap-0.5 ">
+      <div className="flex items-center gap-0.5">
         <Toolbar.Button onClick={actions.handleAdd}>
           <Icon name="Plus" />
         </Toolbar.Button>

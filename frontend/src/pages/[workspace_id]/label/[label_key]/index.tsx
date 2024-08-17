@@ -148,7 +148,7 @@ const LabelIndex = () => {
               </DropdownMenu>
 
               <Link
-                onClick={copyUrlToClipboard}
+                onClick={() => copyUrlToClipboard()}
                 size={16}
                 className="cursor-pointer"
               />

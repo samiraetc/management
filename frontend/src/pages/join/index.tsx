@@ -3,11 +3,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import { createWorkspaces } from '@/services/Workspace/workspace.services';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const JoinPage = () => {
   const router = useRouter();
@@ -21,7 +21,7 @@ const JoinPage = () => {
   const handleClickCreateWorkspace = useCallback(async () => {
     setLoading(true);
 
-    await createWorkspaces({ name, url_key: url })
+    await createWorkspaces({ name, url_key: url }, session?.user?.token ?? '')
       .then(() => {
         localStorage.setItem('workspace', url);
         router.push(`/${url}`);
@@ -30,15 +30,11 @@ const JoinPage = () => {
       .finally(() => {
         setLoading(false);
       });
-
-      
   }, [name, url]);
 
   useEffect(() => {
     setUrl(name.trim().toLowerCase().replace(/\s+/g, '-'));
   }, [name]);
-
-  if (loading) return <div>loading...</div>;
 
   return (
     <div className="flex min-h-screen flex-col gap-1">
@@ -75,9 +71,6 @@ const JoinPage = () => {
                   value={name}
                   id="name"
                   onChange={(e) => setName(e.target.value)}
-                  // className={
-                  //   error ? 'border-red-500 focus:border-neutral-200' : 'h-12'
-                  // }
                 />
               </div>
 
@@ -87,9 +80,6 @@ const JoinPage = () => {
                   value={url}
                   id="url"
                   onChange={(e) => setUrl(e.target.value)}
-                  // className={
-                  //   error ? 'border-red-500 focus:border-neutral-200' : 'h-12'
-                  // }
                 />
               </div>
             </CardContent>

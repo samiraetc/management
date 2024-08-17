@@ -1,6 +1,6 @@
-import { Editor } from '@tiptap/react'
-import { useMemo } from 'react'
-import { ContentPickerOptions } from '../components/ListTypePicker'
+import { Editor } from '@tiptap/react';
+import { useMemo } from 'react';
+import { ContentPickerOptions } from '../components/ListTypePicker';
 
 export const useTextmenuListTypes = (editor: Editor) => {
   const options = useMemo<ContentPickerOptions>(() => {
@@ -32,10 +32,9 @@ export const useTextmenuListTypes = (editor: Editor) => {
         label: 'Todo list',
         type: 'option',
       },
-
-    ]
+    ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editor, editor.state])
+  }, [editor, editor.state]);
 
-  return options
-}
+  return options;
+};

@@ -126,7 +126,7 @@ const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
           <TooltipTrigger className="w-8 text-xs hover:p-0">
             {content}
           </TooltipTrigger>
-          <TooltipContent sideOffset={6} className='flex gap-1 items-center'>
+          <TooltipContent sideOffset={6} className="flex items-center gap-1">
             {tooltip && (
               <span className="text-xs font-medium text-neutral-500">
                 {tooltip}

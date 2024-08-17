@@ -35,11 +35,9 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
       pluginKey="textMenu"
       shouldShow={states.shouldShow}
       updateDelay={100}
-
     >
-      <Toolbar.Wrapper>
-        <MemoContentTypePicker options={blockOptions} />
-
+      <Toolbar.Wrapper className='z-50'>
+        <MemoContentTypePicker options={blockOptions}  />
 
         <Toolbar.Divider />
         <MemoButton

@@ -3,7 +3,7 @@ export const tasks: Tasks = [
     id: 'W4W34REW',
     priority: 'high',
     identifier: 'ASB-10',
-    title: 'Dicta ducimus voluptatibus nesciunt',
+    title: 'Welcome 👋🏼',
     labels: [
       {
         id: '1',
@@ -21,6 +21,66 @@ export const tasks: Tasks = [
     assigned_to: {
       full_name: 'Samira Costa',
       username: 'samiramanuelac',
+    },
+  },
+  {
+    id: 'b04e0823-f8b5-4e26-8f8f-7841b798dbeb',
+    priority: 'urgent',
+    identifier: 'OFF-6',
+    title:
+      'Accusantium possimus aut molestiae placeat dolore. Accusantium possimus aut molestiae placeat dolore. ',
+    labels: [
+      {
+        name: 'dicta',
+        color: '#727c74',
+        id: '',
+        can_edit: false,
+        created_at: '2024-07-31T21:35:08.371Z',
+      },
+      {
+        name: 'doloremque',
+        color: '#804d20',
+        id: '',
+        can_edit: false,
+        created_at: '2024-07-31T21:35:08.371Z',
+      },
+      {
+        name: 'dicta',
+        color: '#727c74',
+        id: '',
+        can_edit: false,
+        created_at: '2024-07-31T21:35:08.371Z',
+      },
+      {
+        name: 'doloremque',
+        color: '#804d20',
+        id: '',
+        can_edit: false,
+        created_at: '2024-07-31T21:35:08.371Z',
+      },
+      {
+        name: 'dicta',
+        color: '#727c74',
+        id: '',
+        can_edit: false,
+        created_at: '2024-07-31T21:35:08.371Z',
+      },
+      {
+        name: 'doloremque',
+        color: '#804d20',
+        id: '',
+        can_edit: false,
+        created_at: '2024-07-31T21:35:08.371Z',
+      },
+    ],
+    due_date: '2024-08-06T01:40:59.848Z',
+    estimative: 2,
+    status: 'backlog',
+    created_at: '2023-09-24T09:24:37.953Z',
+    updated_at: '2024-07-07T07:17:11.271Z',
+    assigned_to: {
+      full_name: 'Samira Costa',
+      username: 'samiracosta',
     },
   },
   {
@@ -1110,66 +1170,7 @@ export const tasks: Tasks = [
       username: 'samiracosta',
     },
   },
-  {
-    id: 'b04e0823-f8b5-4e26-8f8f-7841b798dbeb',
-    priority: 'urgent',
-    identifier: 'OFF-6',
-    title:
-      'Accusantium possimus aut molestiae placeat dolore. Accusantium possimus aut molestiae placeat dolore. ',
-    labels: [
-      {
-        name: 'dicta',
-        color: '#727c74',
-        id: '',
-        can_edit: false,
-        created_at: '2024-07-31T21:35:08.371Z',
-      },
-      {
-        name: 'doloremque',
-        color: '#804d20',
-        id: '',
-        can_edit: false,
-        created_at: '2024-07-31T21:35:08.371Z',
-      },
-      {
-        name: 'dicta',
-        color: '#727c74',
-        id: '',
-        can_edit: false,
-        created_at: '2024-07-31T21:35:08.371Z',
-      },
-      {
-        name: 'doloremque',
-        color: '#804d20',
-        id: '',
-        can_edit: false,
-        created_at: '2024-07-31T21:35:08.371Z',
-      },
-      {
-        name: 'dicta',
-        color: '#727c74',
-        id: '',
-        can_edit: false,
-        created_at: '2024-07-31T21:35:08.371Z',
-      },
-      {
-        name: 'doloremque',
-        color: '#804d20',
-        id: '',
-        can_edit: false,
-        created_at: '2024-07-31T21:35:08.371Z',
-      },
-    ],
-    due_date: '2024-08-06T01:40:59.848Z',
-    estimative: 2,
-    status: 'backlog',
-    created_at: '2023-09-24T09:24:37.953Z',
-    updated_at: '2024-07-07T07:17:11.271Z',
-    assigned_to: {
-      full_name: 'Samira Costa',
-      username: 'samiracosta',
-    },
-  },
+
   {
     id: '9d7ef20a-2662-4cf8-8c01-4159737cb9b8',
     priority: 'none',

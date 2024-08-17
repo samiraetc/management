@@ -12,7 +12,7 @@ const Command = React.forwardRef<
   <CommandPrimitive
     ref={ref}
     className={cn(
-      'flex h-full w-full flex-col overflow-hidden rounded-md bg-white text-neutral-950 dark:bg-neutral-950 dark:text-neutral-50',
+      'flex size-full flex-col overflow-hidden rounded-md bg-white text-neutral-950 dark:bg-neutral-950 dark:text-neutral-50',
       className,
     )}
     {...props}
@@ -21,17 +21,25 @@ const Command = React.forwardRef<
 Command.displayName = CommandPrimitive.displayName;
 
 interface CommandDialogProps extends DialogProps {
-  className: string;
+  className?: string;
+  overlayClassName?: string;
+  showClose?: boolean;
 }
 
 const CommandDialog = ({
   children,
   className,
+  overlayClassName,
+  showClose = true,
   ...props
 }: CommandDialogProps) => {
   return (
     <Dialog {...props}>
-      <DialogContent className={cn('overflow-hidden p-0 shadow-lg', className)}>
+      <DialogContent
+        showClose={showClose}
+        overlayClassName={overlayClassName}
+        className={cn('overflow-hidden p-0 shadow-lg', className)}
+      >
         <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-neutral-500 dark:[&_[cmdk-group-heading]]:text-neutral-400 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:size-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:size-5">
           {children}
         </Command>

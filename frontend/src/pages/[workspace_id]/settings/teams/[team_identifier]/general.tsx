@@ -80,7 +80,7 @@ const TeamGeneral = () => {
           <div className="text-lg font-normal">Delete Team</div>
           {workspaceTeam.length === 1 ? (
             <p className="text-sm text-black/50 dark:text-white/70">
-              This is your workspace's only team. It cannot be deleted
+              {`This is your workspace's only team. It cannot be deleted`}
             </p>
           ) : (
             <p className="text-sm text-black/50 dark:text-white/70">
