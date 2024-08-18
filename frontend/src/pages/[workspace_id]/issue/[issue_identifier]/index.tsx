@@ -50,7 +50,7 @@ const IssuePage = () => {
             </div>
           </div>
         )}
-        <div className=" h-full overflow-x-scroll">
+        <div className="h-full overflow-x-scroll">
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -59,12 +59,12 @@ const IssuePage = () => {
             onBlur={() => handleChangeIssueTitle()}
           />
 
-          <div className='mb-4'>
-          <RichText
-            content={issue.description}
-            onChange={handleChangeDescription}
-            className="p-8"
-          />
+          <div className="mb-4">
+            <RichText
+              content={issue.description}
+              onChange={handleChangeDescription}
+              className="p-8"
+            />
           </div>
         </div>
       </div>

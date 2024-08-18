@@ -156,8 +156,8 @@ const Layout = ({ children }: LayoutProps) => {
           <MenuSidebar shrink={shrink} setShrink={setShrink} />
         </ResizablePanel>
         <ResizableHandle className="border-none" />
-        <ResizablePanel className="flex h-lvh min-w-0 !overflow-visible ">
-          <main className="relative flex-1 overflow-y-visible overflow-x-visible  rounded-md border-border bg-background sm:my-2 sm:mr-2 sm:border">
+        <ResizablePanel className="flex h-lvh min-w-0 !overflow-visible">
+          <main className="relative flex-1 overflow-x-visible overflow-y-visible rounded-md border-border bg-background sm:my-2 sm:mr-2 sm:border">
             {children}
           </main>
         </ResizablePanel>
