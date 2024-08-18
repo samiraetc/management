@@ -18,12 +18,13 @@ const JoinPage = () => {
   const hasWorkspaces = session?.user.workspaces?.length === 0;
 
   const handleClickCreateWorkspace = useCallback(async () => {
-    await createWorkspaces({ name, url_key: url }, session?.user?.token ?? '')
-      .then(() => {
-        localStorage.setItem('workspace', url);
-        router.push(`/${url}`);
-      })
-      .catch((err) => console.log(err));
+    await createWorkspaces(
+      { name, url_key: url },
+      session?.user?.token ?? '',
+    ).then(() => {
+      localStorage.setItem('workspace', url);
+      router.push(`/${url}`);
+    });
   }, [name, url]);
 
   useEffect(() => {

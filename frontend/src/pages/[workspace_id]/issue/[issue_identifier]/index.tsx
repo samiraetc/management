@@ -37,7 +37,7 @@ const IssuePage = () => {
   };
 
   const handleChangeDescription = (value: string) => {
-    console.log(value);
+    console.log('todo');
   };
 
   return (
