@@ -12,7 +12,6 @@ import { EmojiListProps } from '../types';
 import { SuggestionKeyDownProps } from '@tiptap/suggestion';
 import { Button } from '@/components/ui/button';
 import { Panel } from '@/components/ui/panel';
-import Image from 'next/image';
 
 const EmojiList = forwardRef(
   (
@@ -109,7 +108,7 @@ const EmojiList = forwardRef(
             data-emoji-name={item.name}
           >
             {item.fallbackImage ? (
-              <Image src={item.fallbackImage} className="size-5" alt="emoji" />
+              <img src={item.fallbackImage} className="size-5" alt="emoji" />
             ) : (
               item.emoji
             )}{' '}

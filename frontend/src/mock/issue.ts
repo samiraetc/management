@@ -1,6 +1,6 @@
 export const issue = {
   id: '4152cfcc-9be4-4a32-b403-1ecb5aaae3e0',
-  title: 'Welcome 👋🏼',
+  title: 'Welcome 👋 ',
   labels: [
     {
       id: 'b79a4855-e19b-46a2-ad69-8d83b87cc4fd',
