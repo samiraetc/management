@@ -1,4 +1,4 @@
-// rootReducer.js
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 import { combineReducers, PayloadAction } from '@reduxjs/toolkit';
 import workspaceReducer from './workspace/workspaceSlice';
 import teamReducer from './teams/teamsSlice';

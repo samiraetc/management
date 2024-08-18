@@ -1,9 +1,6 @@
-import { Icon } from '@/components/ui/icon';
 import { Separator } from '@/components/ui/separator';
 import { Surface } from '@/components/ui/surface';
 import { Toolbar } from '@/components/ui/toolbar';
-import { TooltipContent } from '@/components/ui/tooltip';
-import { Tooltip, TooltipTrigger } from '@radix-ui/react-tooltip';
 import { Pen, Trash } from 'lucide-react';
 
 export type LinkPreviewPanelProps = {

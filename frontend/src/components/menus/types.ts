@@ -1,3 +1,4 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { Editor as CoreEditor } from '@tiptap/core';
 import { Editor } from '@tiptap/react';
