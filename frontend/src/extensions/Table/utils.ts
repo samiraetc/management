@@ -1,3 +1,4 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 import { findParentNode } from '@tiptap/core';
 import { Selection, Transaction } from '@tiptap/pm/state';
 import { CellSelection, TableMap } from '@tiptap/pm/tables';

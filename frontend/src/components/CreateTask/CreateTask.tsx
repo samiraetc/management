@@ -137,7 +137,7 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
               expandDialog ? 'max-h-96 min-h-96' : 'max-h-56 min-h-24',
             )}
           >
-            <RichText onChange={() => console.log('teste')} />
+            <RichText onChange={() => console.log('todo')} />
           </div>
 
           <div className="flex gap-1">

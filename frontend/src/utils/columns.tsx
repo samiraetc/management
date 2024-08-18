@@ -126,10 +126,15 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: 'estimative',
     cell: ({ row }) => {
-      const point = parseInt(row.getValue('estimative')) ?? 0;
+      const estimative = parseInt(row.getValue('estimative'));
       return (
         <div>
-          {point >= 1 && <Estimative estimative={point} task={row.original} />}
+          {estimative >= 1 && (
+            <Estimative
+              estimative={row.getValue('estimative')}
+              task={row.original}
+            />
+          )}
         </div>
       );
     },

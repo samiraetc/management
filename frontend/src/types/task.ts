@@ -11,7 +11,7 @@ type Task = {
   title: string;
   labels: Label[];
   due_date: string | null;
-  estimative: number;
+  estimative: string | null;
   created_at: string;
   updated_at: string;
   assigned_to: TaskAssigned;

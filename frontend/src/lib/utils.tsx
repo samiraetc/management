@@ -32,7 +32,7 @@ const priorityOptions: Record<TaskPriority, string> = {
   [TaskPriority.High]: 'High',
   [TaskPriority.Medium]: 'Medium',
   [TaskPriority.Low]: 'Low',
-  [TaskPriority.None]: 'Set Priority',
+  [TaskPriority.None]: 'No Priority',
 };
 
 export function getPriorityProps(priority: TaskPriority) {
@@ -150,12 +150,12 @@ export const getStatusesProps = (status: string) => {
   }
 };
 
-export const getEstimativeProps = (estimative: number | null) => {
+export const getEstimativeProps = (estimative: string | null) => {
   if (estimative === null) {
     return `No estimative`;
-  } else if (estimative === 1) {
+  } else if (parseInt(estimative) === 1) {
     return `1 Point`;
-  } else if (estimative >= 2) {
+  } else if (parseInt(estimative) >= 2) {
     return `${estimative} Points`;
   }
 };

@@ -50,7 +50,6 @@ const PriorityList = ({
       {priorities?.map((priori, index) => {
         const key = priori.name as TaskPriority;
 
-        console.log(priorities);
         const { icon, label } = getPriorityProps(key);
         return (
           <CommandItem

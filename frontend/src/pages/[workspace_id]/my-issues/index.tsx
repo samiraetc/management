@@ -16,7 +16,7 @@ const MyIssues = () => {
 
   return (
     <div className="h-full overflow-hidden">
-      <div className="sticky -top-0.5 z-50 w-full border-b bg-background rounded-sm">
+      <div className="sticky -top-0.5 z-50 w-full rounded-sm border-b bg-background">
         <p className="border-b py-2 pl-6 font-medium sm:pl-6 sm:pr-4">
           My issues
         </p>

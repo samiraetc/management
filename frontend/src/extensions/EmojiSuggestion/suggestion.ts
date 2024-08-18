@@ -1,3 +1,4 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 import { ReactRenderer } from '@tiptap/react';
 import { Editor } from '@tiptap/core';
 import { SuggestionKeyDownProps, SuggestionProps } from '@tiptap/suggestion';
