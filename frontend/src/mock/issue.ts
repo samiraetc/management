@@ -26,7 +26,7 @@ export const issue = {
   status: 'to_do'
 }</code></pre>`,
   identifier: 'TSK-1',
-  estimative: 16,
+  estimative: '16',
   priority: 'high',
   status: 'to_do',
   due_date: '2024-07-31T21:35:08.371Z',
