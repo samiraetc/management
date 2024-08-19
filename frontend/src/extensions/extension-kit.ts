@@ -35,12 +35,14 @@ import {
   Column,
   TaskItem,
   TaskList,
+  History
 } from '.';
 import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight';
 import { TableOfContentsNode } from './TableOfContentsNode';
 import { lowlight } from 'lowlight';
 
 export const ExtensionKit = () => [
+  History,
   Document,
   Columns,
   TaskList,
