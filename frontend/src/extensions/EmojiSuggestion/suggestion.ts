@@ -31,7 +31,10 @@ export const emojiSuggestion = {
     return {
       onStart: (props: SuggestionProps<any>) => {
         component = new ReactRenderer(EmojiList, {
-          props,
+          props: {
+            ...props,
+            open: true,
+          },
           editor: props.editor,
         });
 

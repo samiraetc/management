@@ -11,7 +11,11 @@ import React, {
 import { EmojiListProps } from '../types';
 import { SuggestionKeyDownProps } from '@tiptap/suggestion';
 import { Button } from '@/components/ui/button';
-import { Panel } from '@/components/ui/panel';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const EmojiList = forwardRef(
   (
@@ -19,6 +23,7 @@ const EmojiList = forwardRef(
     ref: ForwardedRef<{ onKeyDown: (evt: SuggestionKeyDownProps) => boolean }>,
   ) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const [open, setOpen] = useState<boolean>(props.open);
 
     useEffect(() => setSelectedIndex(0), [props.items]);
 
@@ -97,25 +102,30 @@ const EmojiList = forwardRef(
     }
 
     return (
-      <Panel className="max-h-72 max-w-72 overflow-y-auto">
-        {props.items.map((item: EmojiItem, index: number) => (
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            size="sm"
-            key={item.name}
-            onClick={createClickHandler(index)}
-            data-emoji-name={item.name}
-          >
-            {item.fallbackImage ? (
-              <img src={item.fallbackImage} className="size-5" alt="emoji" />
-            ) : (
-              item.emoji
-            )}{' '}
-            <span className="truncate">:{item.name}:</span>
-          </Button>
-        ))}
-      </Panel>
+      <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenuTrigger>
+          <div />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="z-50 -mt-5 ml-60 max-h-[min(80vh,24rem)] w-60 flex-wrap overflow-scroll rounded border border-gray-300 bg-white p-2 text-black shadow-lg">
+          {props.items.map((item: EmojiItem, index: number) => (
+            <Button
+              variant="ghost"
+              className="w-full justify-start"
+              size="sm"
+              key={item.name}
+              onClick={createClickHandler(index)}
+              data-emoji-name={item.name}
+            >
+              {item.fallbackImage ? (
+                <img src={item.fallbackImage} className="size-5" alt="emoji" />
+              ) : (
+                item.emoji
+              )}{' '}
+              <span className="truncate">:{item.name}:</span>
+            </Button>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
   },
 );
