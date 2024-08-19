@@ -1,9 +1,8 @@
+import { isTableSelected } from '../../utils';
+import { Table } from '../..';
 import { Editor } from '@tiptap/react';
 import { EditorState } from '@tiptap/pm/state';
 import { EditorView } from '@tiptap/pm/view';
-
-import { isTableSelected } from '../../utils';
-import { Table } from '../..';
 
 export const isRowGripSelected = ({
   editor,
@@ -34,12 +33,16 @@ export const isRowGripSelected = ({
     container = container.parentElement!;
   }
 
+  const isSingleRowTable =
+    container?.parentElement?.parentElement?.querySelectorAll('tr').length ===
+    1;
+
   const gripRow =
     container &&
     container.querySelector &&
     container.querySelector('a.grip-row.selected');
 
-  return !!gripRow;
+  return isSingleRowTable || !!gripRow;
 };
 
 export default isRowGripSelected;
