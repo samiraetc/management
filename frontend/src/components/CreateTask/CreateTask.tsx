@@ -52,7 +52,7 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
           'w-11/12 -translate-x-1/2 translate-y-[-70%] gap-1 rounded-md p-0 transition-all duration-700 ease-in-out sm:w-full sm:-translate-x-1/2 sm:-translate-y-1/2',
           expandDialog
             ? 'left-[53%] top-[45%] max-w-3xl'
-            : 'top-[30%] max-w-2xl',
+            : 'top-[34%] max-w-2xl sm:top-[30%]',
         )}
       >
         <div className="p-3">
@@ -134,18 +134,20 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
           <div
             className={cn(
               'overflow-y-scroll transition-all duration-700 ease-in-out',
-              expandDialog ? 'max-h-96 min-h-96' : 'max-h-56 min-h-24',
+              expandDialog
+                ? 'max-h-96 min-h-96'
+                : 'max-h-32 min-h-32 sm:max-h-56 sm:min-h-24',
             )}
           >
             <RichText onChange={() => console.log('todo')} />
           </div>
 
-          <div className="flex gap-1">
+          <div className="flex flex-wrap gap-1">
             <CreateTaskProperties />
           </div>
         </div>
         <Separator />
-        <DialogFooter className="px-2 pb-2 pt-1">
+        <DialogFooter className="items-end px-2 pb-2 pt-1">
           <Button className="h-7 text-xs">Create issue</Button>
         </DialogFooter>
       </DialogContent>

@@ -27,7 +27,7 @@ interface Label {
 
 interface LabelDropdownProps {
   labels: Label[];
-  showList: boolean;
+  showList?: boolean;
   task?: Task;
   className?: string;
   position?: {

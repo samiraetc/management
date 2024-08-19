@@ -46,7 +46,7 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: 'identifier',
     cell: ({ row }) => {
       return (
-        <div className="hidden w-14 items-center justify-center gap-2 text-stone-600 sm:flex">
+        <div className="mb-1 hidden w-14 items-center justify-center gap-2 text-stone-600 sm:flex">
           <DataTableCell value={row.getValue('identifier')} />
         </div>
       );
@@ -110,7 +110,7 @@ export const columns: ColumnDef<Task>[] = [
                 <div className="flex gap-2 p-1">
                   {icon}
                   <div className="flex flex-col gap-1 text-stone-700">
-                    <p className="text-base font-bold">
+                    <p className="text-sm font-bold">
                       Due on {format(date, 'MMM d')}
                     </p>
                     <p className="text-stone-600">{title}</p>
