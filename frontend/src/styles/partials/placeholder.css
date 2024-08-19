@@ -1,25 +1,20 @@
 .ProseMirror {
   /* Placeholder Styles */
   .is-empty::before {
-    @apply pointer-events-none float-left h-0 w-full text-black/40 dark:text-white/40 text-sm;
+    @apply pointer-events-none float-left h-0 w-full text-sm text-black/40 dark:text-white/40;
   }
 
   &.ProseMirror-focused {
     /* Slashmenu Placeholder */
     > p.has-focus.is-empty::before {
-      content: 'Type / to browse options';
+      content: 'Write someting, or press / for commands...';
     }
 
     > [data-type='columns']
       > [data-type='column']
       > p.is-empty.has-focus::before {
-      content: 'Type / to browse options';
+      content: 'Write someting...';
     }
-  }
-
-  /* Default Placeholder */
-  & > .is-editor-empty::before {
-    content: 'Add description...';
   }
 
   /* Blockquote Placeholder */

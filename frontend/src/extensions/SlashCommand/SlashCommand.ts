@@ -1,4 +1,3 @@
-/* eslint-disable  @typescript-eslint/no-explicit-any */
 import { Editor, Extension } from '@tiptap/core';
 import { ReactRenderer } from '@tiptap/react';
 import Suggestion, {
@@ -9,7 +8,7 @@ import { PluginKey } from '@tiptap/pm/state';
 import tippy from 'tippy.js';
 
 import { GROUPS } from './groups';
-import { MenuList } from './MenuList';
+import MenuList from './MenuList';
 
 const extensionName = 'slashCommand';
 
@@ -21,23 +20,7 @@ export const SlashCommand = Extension.create({
   priority: 200,
 
   onCreate() {
-    popup = tippy('body', {
-      interactive: true,
-      trigger: 'manual',
-      placement: 'bottom-start',
-      theme: 'slash-command',
-      maxWidth: '16rem',
-      offset: [16, 8],
-      popperOptions: {
-        strategy: 'fixed',
-        modifiers: [
-          {
-            name: 'flip',
-            enabled: false,
-          },
-        ],
-      },
-    });
+    popup = tippy('body');
   },
 
   addProseMirrorPlugins() {
@@ -53,7 +36,6 @@ export const SlashCommand = Extension.create({
           const isRootDepth = $from.depth === 1;
           const isParagraph = $from.parent.type.name === 'paragraph';
           const isStartOfNode = $from.parent.textContent?.charAt(0) === '/';
-          // TODO
           const isInColumn = this.editor.isActive('column');
 
           const afterContent = $from.parent.textContent?.substring(
@@ -139,10 +121,12 @@ export const SlashCommand = Extension.create({
           return {
             onStart: (props: SuggestionProps) => {
               component = new ReactRenderer(MenuList, {
-                props,
+                props: {
+                  ...props,
+                  open: true,
+                },
                 editor: props.editor,
               });
-
               const { view } = props.editor;
 
               const getReferenceClientRect = () => {

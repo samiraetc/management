@@ -35,7 +35,6 @@ import {
   Column,
   TaskItem,
   TaskList,
-  History,
 } from '.';
 import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight';
 import { TableOfContentsNode } from './TableOfContentsNode';
@@ -65,7 +64,7 @@ export const ExtensionKit = () => [
   }),
   CodeBlockLowlight.configure({
     lowlight,
-    defaultLanguage: 'javascript',
+    defaultLanguage: null,
   }),
   TextStyle,
   FontSize,
@@ -99,9 +98,8 @@ export const ExtensionKit = () => [
   TableRow,
   Typography,
   Placeholder.configure({
-    includeChildren: true,
-    showOnlyCurrent: false,
-    placeholder: () => '',
+    includeChildren: false,
+    showOnlyCurrent: true,
   }),
   SlashCommand,
   Focus,
@@ -110,7 +108,6 @@ export const ExtensionKit = () => [
     width: 2,
     class: 'ProseMirror-dropcursor border-black',
   }),
-  History,
 ];
 
 export default ExtensionKit;

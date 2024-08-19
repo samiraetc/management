@@ -41,10 +41,7 @@ const RichText = ({ content = '', onChange, className }: IRichText) => {
   return (
     <div className="flex h-full" ref={menuContainerRef}>
       <div
-        className={cn(
-          'relative flex size-full flex-1 flex-col text-base',
-          className,
-        )}
+        className={cn('flex size-full flex-1 flex-col text-base', className)}
       >
         <EditorContent editor={editor} />
         <LinkMenu editor={editor} appendTo={menuContainerRef} />

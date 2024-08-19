@@ -1,15 +1,20 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Command, MenuListProps } from './types';
-import { Surface } from '@/components/ui/surface';
 import { DropdownButton } from '@/components/ui/dropdown-button';
 import { Icon } from '@/components/ui/icon';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export const MenuList = React.forwardRef((props: MenuListProps, ref) => {
   const scrollContainer = useRef<HTMLDivElement>(null);
   const activeItem = useRef<HTMLButtonElement>(null);
   const [selectedGroupIndex, setSelectedGroupIndex] = useState(0);
   const [selectedCommandIndex, setSelectedCommandIndex] = useState(0);
+  const [open, setOpen] = useState(props.open);
 
   // Anytime the groups change, i.e. the user types to narrow it down, we want to
   // reset the current selection to the first menu item
@@ -119,36 +124,38 @@ export const MenuList = React.forwardRef((props: MenuListProps, ref) => {
   }
 
   return (
-    <Surface
-      ref={scrollContainer}
-      className="mb-8 max-h-[min(80vh,24rem)] flex-wrap overflow-auto p-2 text-black"
-    >
-      <div className="grid grid-cols-1 gap-0.5">
-        {props.items.map((group, groupIndex: number) => (
-          <React.Fragment key={`${group.title}-wrapper`}>
-            <div
-              className="col-[1/-1] mx-2 mt-4 select-none text-[0.65rem] font-semibold uppercase tracking-wider text-neutral-500 first:mt-0.5"
-              key={`${group.title}`}
-            >
-              {group.title}
-            </div>
-            {group.commands.map((command: Command, commandIndex: number) => (
-              <DropdownButton
-                key={`${command.label}`}
-                isActive={
-                  selectedGroupIndex === groupIndex &&
-                  selectedCommandIndex === commandIndex
-                }
-                onClick={createCommandClickHandler(groupIndex, commandIndex)}
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger>
+        <div />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="z-50 ml-60 mt-10 max-h-[min(80vh,24rem)] w-60 flex-wrap overflow-scroll rounded border border-gray-300 bg-white p-2 text-black shadow-lg">
+        <div className="grid grid-cols-1 gap-0.5">
+          {props.items.map((group, groupIndex: number) => (
+            <React.Fragment key={`${group.title}-wrapper`}>
+              <div
+                className="col-[1/-1] mx-2 mt-4 select-none text-[0.65rem] font-semibold uppercase tracking-wider text-neutral-500 first:mt-0.5"
+                key={`${group.title}`}
               >
-                <Icon name={command.iconName} className="mr-1" />
-                {command.label}
-              </DropdownButton>
-            ))}
-          </React.Fragment>
-        ))}
-      </div>
-    </Surface>
+                {group.title}
+              </div>
+              {group.commands.map((command: Command, commandIndex: number) => (
+                <DropdownButton
+                  key={`${command.label}`}
+                  isActive={
+                    selectedGroupIndex === groupIndex &&
+                    selectedCommandIndex === commandIndex
+                  }
+                  onClick={createCommandClickHandler(groupIndex, commandIndex)}
+                >
+                  <Icon name={command.iconName} className="mr-1" />
+                  {command.label}
+                </DropdownButton>
+              ))}
+            </React.Fragment>
+          ))}
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 });
 

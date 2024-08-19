@@ -133,7 +133,7 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
 
           <div
             className={cn(
-              'overflow-scroll transition-all duration-700 ease-in-out',
+              'overflow-y-scroll transition-all duration-700 ease-in-out',
               expandDialog ? 'max-h-96 min-h-96' : 'max-h-56 min-h-24',
             )}
           >
