@@ -7,4 +7,5 @@ export interface Command {
 export interface EmojiListProps {
   command: (command: Command) => void;
   items: EmojiItem[];
+  open: boolean
 }
