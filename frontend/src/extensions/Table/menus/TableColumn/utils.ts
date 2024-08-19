@@ -34,12 +34,15 @@ export const isColumnGripSelected = ({
     container = container.parentElement!;
   }
 
+  const isSingleColumnTable =
+    container?.parentElement?.querySelectorAll('td, th').length === 1;
+
   const gripColumn =
     container &&
     container.querySelector &&
     container.querySelector('a.grip-column.selected');
 
-  return !!gripColumn;
+  return isSingleColumnTable || !!gripColumn;
 };
 
 export default isColumnGripSelected;
