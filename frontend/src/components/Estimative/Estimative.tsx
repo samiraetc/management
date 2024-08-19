@@ -112,7 +112,7 @@ const Estimative = ({ estimative, label, className, task }: IEstimative) => {
         </DropdownMenuTrigger>
 
         {!isMobile && (
-          <DropdownMenuContent align="start" side="left" className="w-56">
+         <DropdownMenuContent className="w-56" align="center" side="bottom">
             <Command className="w-full text-gray-700">
               <EstimativeList
                 points={[null, ...(estimatives?.points ?? [])]}

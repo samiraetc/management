@@ -56,7 +56,7 @@ const StatusList = ({
             <div className="flex w-full items-center justify-between">
               <div className="flex items-center gap-4">
                 {icon}
-                <p className="text-sm">{label}</p>
+                <p className="text-sm ">{label}</p>
               </div>
               {value === stat.key && (
                 <Check width={20} height={20} className="mr-2" />
@@ -89,11 +89,11 @@ const Status = ({ status, label, className, task }: IStatus) => {
           )}
         >
           {getStatusesProps(value).icon}
-          {label && <p className="pl-0.5">{getStatusesProps(value).label}</p>}
+          {label && <p className="pl-0.5 text-stone-600">{getStatusesProps(value).label}</p>}
         </DropdownMenuTrigger>
 
         {!isMobile && (
-          <DropdownMenuContent align="start" side="left" className="w-56">
+         <DropdownMenuContent className="w-56" align="center" side="bottom">
             <Command className="w-full text-gray-700">
               <StatusList
                 value={value}

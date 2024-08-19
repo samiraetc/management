@@ -115,16 +115,16 @@ const Priority = ({ priority, label, className, task }: IPriority) => {
           className={cn(
             'outline-none',
             label &&
-              'flex h-8 w-48 items-center gap-2 p-1 text-xs font-medium text-foreground hover:rounded-md hover:bg-muted/70',
+              'flex h-8 w-48 items-center gap-2 p-1  text-xs font-medium text-foreground hover:rounded-md hover:bg-muted/70',
             className,
           )}
         >
           <span>{getPriorityProps(value)?.icon}</span>
-          {label && <p>{getPriorityProps(value)?.label}</p>}
+          {label && <p className='text-stone-600'>{getPriorityProps(value)?.label}</p>}
         </DropdownMenuTrigger>
 
         {!isMobile && (
-          <DropdownMenuContent align="start" side="left" className="w-56">
+        <DropdownMenuContent className="w-56" align="center" side="bottom">
             <Command className="w-full text-gray-700">
               <PriorityList
                 priorities={priorities}
