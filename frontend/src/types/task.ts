@@ -10,7 +10,7 @@ type Task = {
   status: Status;
   title: string;
   labels: Label[];
-  due_date: string | null;
+  due_date:  Date | string | null;
   estimative: string | null;
   created_at: string;
   updated_at: string;
