@@ -52,7 +52,7 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
           'w-11/12 -translate-x-1/2 translate-y-[-70%] gap-1 rounded-md p-0 transition-all duration-700 ease-in-out sm:w-full sm:-translate-x-1/2 sm:-translate-y-1/2',
           expandDialog
             ? 'left-[53%] top-[45%] max-w-3xl'
-            : 'top-[34%] max-w-2xl sm:top-[30%]',
+            : 'top-[38%] max-w-2xl sm:top-[30%]',
         )}
       >
         <div className="p-3">
