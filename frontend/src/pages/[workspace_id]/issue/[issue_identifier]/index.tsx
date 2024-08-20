@@ -68,7 +68,7 @@ const IssuePage = () => {
               onBlur={() => handleChangeIssueTitle()}
             />
 
-            <div className="mb-4">
+            <div className="mb-12 h-full overflow-scroll">
               <RichText
                 content={issue.description}
                 onChange={handleChangeDescription}

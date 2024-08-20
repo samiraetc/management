@@ -7,7 +7,7 @@
 }
 
 .ProseMirror pre {
-  @apply my-12 rounded !border !bg-gray-100 p-2 !text-gray-600 ring-0 dark:bg-muted dark:!text-gray-300 !important;
+  @apply my-6 rounded !border !bg-gray-100 p-2 !text-gray-600 ring-0 dark:bg-muted dark:!text-gray-300 !important;
 
   .hljs-comment,
   .hljs-quote {
