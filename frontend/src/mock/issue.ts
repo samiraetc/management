@@ -29,7 +29,7 @@ export const issue = {
   estimative: '16',
   priority: 'high',
   status: 'to_do',
-  due_date: '2024-07-31T21:35:08.371Z',
+  due_date: '2024-09-02',
   created_at: '2024-02-19T15:56:37.408Z',
   updated_at: '2024-07-07T09:54:24.614Z',
   assigned_to: {

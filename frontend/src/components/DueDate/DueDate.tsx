@@ -10,7 +10,7 @@ import { CalendarDays, CalendarX } from 'lucide-react';
 import { addDays, format, parse } from 'date-fns';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Calendar } from '../ui/calendar';
-import { getDueDateIcon } from '@/lib/utils';
+import { cn, getDueDateIcon } from '@/lib/utils';
 import { HiCalendar } from 'react-icons/hi2';
 import {
   Popover,
@@ -24,6 +24,7 @@ interface IDueDate {
   setOpen?: (open: boolean) => void;
   dueDate: Date | string | null;
   dialog?: boolean;
+  className?: string;
 }
 
 const DueDateList = ({
@@ -145,11 +146,29 @@ const DueDateList = ({
   );
 };
 
-const DueDate = ({ task, open, setOpen, dueDate, dialog }: IDueDate) => {
+const DueDate = ({
+  task,
+  open,
+  setOpen,
+  dueDate,
+  dialog,
+  className,
+}: IDueDate) => {
   const [value, setValue] = useState<Date | null>(new Date(dueDate ?? ''));
 
   return (
     <div>
+      {value && (
+        <div
+          className={cn('flex gap-2', className)}
+          onClick={() => setOpen && setOpen(true)}
+        >
+          {getDueDateIcon(value).icon}
+          <p className="text-xs text-stone-600">
+            {getDueDateIcon(value).label}
+          </p>
+        </div>
+      )}
       {dialog ? (
         <CommandDialog
           open={open}

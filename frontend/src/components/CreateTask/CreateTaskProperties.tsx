@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Status from '../Status/Status';
 import Priority from '../Priority/Priority';
 import { TaskPriority } from '@/lib/utils';
 import Estimative from '../Estimative/Estimative';
 import { issue } from '@/mock/issue';
 import LabelDropdown from '../LabelDropdown/LabelDropdown';
+import DueDate from '../DueDate/DueDate';
 
 const CreateTaskProperties = () => {
+  const [openDueDate, setOpenDueDate] = useState<boolean>(false)
   return (
     <>
       <Status
@@ -36,6 +38,14 @@ const CreateTaskProperties = () => {
           side: 'bottom',
         }}
         className="flex h-7 w-full items-center rounded-md border px-3 font-normal"
+      />
+      <DueDate
+        dialog
+        task={issue}
+        dueDate={issue.due_date}
+        className="flex h-7 w-full items-center rounded-md border px-3 font-normal"
+        open={openDueDate}
+        setOpen={setOpenDueDate}
       />
     </>
   );

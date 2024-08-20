@@ -14,6 +14,7 @@ import LowPriority from '@/assets/icon/Low';
 import HighPriority from '@/assets/icon/High';
 import { HiCalendar } from 'react-icons/hi2';
 import MediumPriority from '@/assets/icon/Medium';
+import { format, startOfDay, parseISO } from 'date-fns';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -73,37 +74,56 @@ export function getPriorityProps(priority: TaskPriority) {
 }
 
 export function getDueDateIcon(date: Date | null | undefined | string) {
-  const difference = differenceInDays(date ?? '', new Date());
+  const parsedDate = typeof date === 'string' ? parseISO(date) : date;
 
-  if (difference === 1 || difference === 0) {
+  if (!(parsedDate instanceof Date) || isNaN(parsedDate.getTime())) {
+    return {
+      icon: <></>,
+      title: '',
+      label: '',
+    };
+  }
+
+  const today = startOfDay(new Date());
+  const dueDate = startOfDay(parsedDate);
+
+  const difference = differenceInDays(dueDate, today);
+
+  if (difference === 0) {
     return {
       icon: <HiCalendar size={18} className="text-red-500" />,
       title: 'Today',
+      label: 'Today',
     };
-  } else if (difference === 2) {
+  } else if (difference === 1) {
     return {
       icon: <HiCalendar size={18} className="text-orange-500" />,
       title: 'Tomorrow',
+      label: 'Tomorrow',
     };
   } else if (difference >= 3 && difference <= 7) {
     return {
       icon: <HiCalendar size={18} className="text-orange-500" />,
       title: `${difference} days remaining`,
+      label: `${difference} days`,
     };
   } else if (difference >= 8) {
     return {
       icon: <HiCalendar size={18} className="text-gray-500" />,
       title: `${difference} days remaining`,
+      label: format(date ?? '', 'EEE dd'),
     };
   } else if (difference < 0) {
     return {
       icon: <HiCalendar size={18} className="text-red-500" />,
       title: `${Math.abs(difference)} days overdue`,
+      label: 'Overdue',
     };
   } else {
     return {
       icon: <></>,
       title: '',
+      label: '',
     };
   }
 }
