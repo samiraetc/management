@@ -72,10 +72,10 @@ export function getPriorityProps(priority: TaskPriority) {
   }
 }
 
-export function getDueDateIcon(date: Date) {
-  const difference = differenceInDays(date, new Date());
+export function getDueDateIcon(date: Date | null | undefined | string) {
+  const difference = differenceInDays(date ?? '', new Date());
 
-  if (difference === 1) {
+  if (difference === 1 || difference === 0) {
     return {
       icon: <HiCalendar size={18} className="text-red-500" />,
       title: 'Today',

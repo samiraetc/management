@@ -22,6 +22,7 @@ import RichText from '@/components/RichText/RichText';
 import CreateTaskProperties from '@/components/CreateTask/CreateTaskProperties';
 import useWindowSize from '@/hook/useWindowSize/useWindowSize';
 import IssueHeader from '@/components/IssueHeader/IssueHeader';
+import DueDate from '@/components/DueDate/DueDate';
 
 const IssuePage = () => {
   const route = useRouter();
@@ -129,6 +130,20 @@ const IssuePage = () => {
               <LabelDropdown labels={issue.labels} />
             </div>
           </div>
+          {issue.due_date && (
+            <>
+              <Separator />
+              <div>
+                <p className="text-xs font-medium text-muted-foreground">
+                  Due Date
+                </p>
+
+                <div className="mt-3 flex flex-wrap gap-1">
+                  <DueDate dueDate={issue.due_date} task={issue} />
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import {
   DropdownMenu,
@@ -11,7 +11,7 @@ import {
   DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-  // CalendarDays,
+  CalendarDays,
   ChevronRight,
   ClipboardPen,
   Copy,
@@ -23,6 +23,7 @@ import {
 import { copyUrlToClipboard, sanitizeBranchName } from '@/utils/clipboard';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import DueDate from '../DueDate/DueDate';
 
 interface IIssueHeader {
   issue: Task;
@@ -41,7 +42,7 @@ const DropdownMenuItemComponent = ({
     <div className="flex w-full items-center justify-between">
       <div className="flex items-center gap-1">
         <Icon width={14} />
-        <p className="text-xs">{text}</p>
+        <p>{text}</p>
       </div>
     </div>
   </DropdownMenuItem>
@@ -49,6 +50,7 @@ const DropdownMenuItemComponent = ({
 
 const IssueHeader = ({ issue }: IIssueHeader) => {
   const teams = useSelector((state: RootState) => state.teams.teams) ?? [];
+  const [openDueDate, setOpenDueDate] = useState<boolean>(false);
 
   const handleCopy = (text?: string) => () => copyUrlToClipboard(text);
 
@@ -69,17 +71,17 @@ const IssueHeader = ({ issue }: IIssueHeader) => {
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="start">
-              {/* <DropdownMenuItemComponent
+              <DropdownMenuItemComponent
                 icon={CalendarDays}
                 text={issue.due_date ? 'Change due date...' : 'Set due date...'}
-                onClick={() => {}}
-              /> */}
+                onClick={() => setOpenDueDate(true)}
+              />
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
                   <div className="flex w-full items-center justify-between">
                     <div className="flex items-center gap-1">
                       <Copy width={14} />
-                      <p className="text-xs">Copy</p>
+                      <p>Copy</p>
                     </div>
                   </div>
                 </DropdownMenuSubTrigger>
@@ -132,6 +134,16 @@ const IssueHeader = ({ issue }: IIssueHeader) => {
           </DropdownMenu>
         </div>
       </div>
+
+      {openDueDate && (
+        <DueDate
+          task={issue}
+          open={openDueDate}
+          setOpen={setOpenDueDate}
+          dueDate={issue.due_date}
+          dialog={true}
+        />
+      )}
     </div>
   );
 };
