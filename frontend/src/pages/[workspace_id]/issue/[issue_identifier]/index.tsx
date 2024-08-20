@@ -55,7 +55,7 @@ const IssuePage = () => {
           <IssueHeader issue={issue} />
           {isMobile && (
             <div className="sticky top-0 z-50 w-full border-b bg-background">
-              <div className="flex gap-2 p-2 flex-wrap">
+              <div className="flex flex-wrap gap-2 p-2">
                 <CreateTaskProperties />
               </div>
             </div>

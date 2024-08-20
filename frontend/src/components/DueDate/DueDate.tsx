@@ -17,6 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import useWindowSize from '@/hook/useWindowSize/useWindowSize';
 
 interface IDueDate {
   task: Task;
@@ -155,10 +156,11 @@ const DueDate = ({
   className,
 }: IDueDate) => {
   const [value, setValue] = useState<Date | null>(new Date(dueDate ?? ''));
+  const isMobile = useWindowSize();
 
   return (
     <div>
-      {value && (
+      {value && isMobile && (
         <div
           className={cn('flex gap-2', className)}
           onClick={() => setOpen && setOpen(true)}
