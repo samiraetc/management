@@ -1,5 +1,5 @@
 import { cn, getStatusesProps } from '@/lib/utils';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Command,
   CommandDialog,

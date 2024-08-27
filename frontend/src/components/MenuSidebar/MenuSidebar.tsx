@@ -27,7 +27,7 @@ interface IMenuSidebar {
 }
 
 const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
-  const router = useRouter()
+  const router = useRouter();
   const [createTask, setCreateTask] = useState<boolean>(false);
   const dispatch = useDispatch();
   const workspace = useSelector(
@@ -36,12 +36,11 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
 
   const teams = useSelector((state: RootState) => state.teams.teams);
 
-
   useEffect(() => {
-    if(teams?.length === 0 && workspace?.url_key ) {
-      router.push(`${workspace?.url_key}/settings/new-team`)
+    if (teams?.length === 0 && workspace?.url_key) {
+      router.push(`${workspace?.url_key}/settings/new-team`);
     }
-  }, [workspace?.url_key])
+  }, [workspace?.url_key]);
 
   const getWorkspaceTeams = async (id: string) => {
     await getTeams(id).then((response) => {

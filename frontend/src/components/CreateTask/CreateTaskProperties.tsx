@@ -13,7 +13,10 @@ interface ICreateTaskProperties {
   teamId?: string;
 }
 
-const CreateTaskProperties = ({ setProperties, teamId }: ICreateTaskProperties) => {
+const CreateTaskProperties = ({
+  setProperties,
+  teamId,
+}: ICreateTaskProperties) => {
   const [openDueDate, setOpenDueDate] = useState<boolean>(false);
   const [status, setStatus] = useState<string>('backlog');
   const [estimative, setEstimative] = useState<string | null>('');
@@ -21,12 +24,15 @@ const CreateTaskProperties = ({ setProperties, teamId }: ICreateTaskProperties) 
   const [labels, setLabels] = useState<Label[]>([]);
 
   useEffect(() => {
-    return setProperties && setProperties({
-      status,
-      estimative,
-      priority,
-      labels,
-    });
+    return (
+      setProperties &&
+      setProperties({
+        status,
+        estimative,
+        priority,
+        labels,
+      })
+    );
   }, [status, estimative, priority, labels]);
   return (
     <>
@@ -59,7 +65,13 @@ const CreateTaskProperties = ({ setProperties, teamId }: ICreateTaskProperties) 
         setProperties={setLabels}
         teamId={teamId}
       />
-
+      <DueDate
+        dialog
+        dueDate={issue.due_date}
+        className="flex h-7 w-full items-center rounded-md border px-3 font-normal"
+        open={openDueDate}
+        setOpen={setOpenDueDate}
+      />
     </>
   );
 };

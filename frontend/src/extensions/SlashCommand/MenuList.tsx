@@ -128,7 +128,7 @@ export const MenuList = React.forwardRef((props: MenuListProps, ref) => {
       <DropdownMenuTrigger>
         <div />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="z-50 ml-7 mt-10 max-h-full sm:ml-60 sm:mt-10 sm:max-h-[min(80vh,24rem)] w-60 flex-wrap overflow-scroll rounded border border-gray-300 bg-white p-2 text-black shadow-lg">
+      <DropdownMenuContent className="z-50 ml-7 mt-10 max-h-full w-60 flex-wrap overflow-scroll rounded border border-gray-300 bg-white p-2 text-black shadow-lg sm:ml-60 sm:mt-10 sm:max-h-[min(80vh,24rem)]">
         <div className="grid grid-cols-1 gap-0.5">
           {props.items.map((group, groupIndex: number) => (
             <React.Fragment key={`${group.title}-wrapper`}>

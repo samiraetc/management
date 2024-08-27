@@ -13,7 +13,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { CircleUserRound, Plus, Tags } from 'lucide-react';
+import { CircleUserRound } from 'lucide-react';
 import { Checkbox } from '../ui/checkbox';
 import { cn } from '@/lib/utils';
 import { getTeamMembers } from '@/services/Teams/teamsService';

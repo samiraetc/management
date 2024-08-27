@@ -35,7 +35,7 @@ import {
   Column,
   TaskItem,
   TaskList,
-  History
+  History,
 } from '.';
 import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight';
 import { TableOfContentsNode } from './TableOfContentsNode';

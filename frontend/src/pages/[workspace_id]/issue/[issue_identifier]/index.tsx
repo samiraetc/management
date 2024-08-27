@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import withLayout from '@/utils/hoc/withLayout';
-import {
-  CircleUserRound,
-  CircleX,
-  Copy,
-  GitBranchPlus,
-  Link,
-} from 'lucide-react';
+import { CircleX, Copy, GitBranchPlus, Link } from 'lucide-react';
 import { copyUrlToClipboard, sanitizeBranchName } from '@/utils/clipboard';
 import { Separator } from '@/components/ui/separator';
 import { useRouter } from 'next/router';

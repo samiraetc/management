@@ -162,10 +162,10 @@ export const columns: ColumnDef<Task>[] = [
                       src="https://api.dicebear.com/8.x/lorelei/svg?backgroundColor=8fc69b&hair=variant18&earrings=variant01&mouth=happy16&eyes=variant23&scale=160"
                     />
                   </Avatar>
-                  <div className="flex items-center gap-1 text-base">
+                  {/* <div className="flex items-center gap-1 text-base">
                     <p className="text-base font-medium">{`${row.original.assigned_to?.full_name}`}</p>
                     <p className="text-stone-400">{` (${row.original.assigned_to?.username})`}</p>
-                  </div>
+                  </div> */}
                 </div>
               </TooltipContent>
             </Tooltip>

@@ -103,9 +103,11 @@ const Estimative = ({
 
   const handleSetValue = async (value: string | null) => {
     setValue(value);
-    setProperties ? setProperties(value) :  await updateTaskDetails(task?.id ?? '', {
-      estimative: value,
-    });;
+    setProperties
+      ? setProperties(value)
+      : await updateTaskDetails(task?.id ?? '', {
+          estimative: value,
+        });
   };
   return (
     <div>
@@ -122,7 +124,15 @@ const Estimative = ({
         >
           <IoPrism />
 
-          {label ? value ? <p>{getEstimativeProps(value ?? null)}</p> : 'Set Estimative' : value}
+          {label ? (
+            value ? (
+              <p>{getEstimativeProps(value ?? null)}</p>
+            ) : (
+              'Set Estimative'
+            )
+          ) : (
+            value
+          )}
         </DropdownMenuTrigger>
 
         {!isMobile && (

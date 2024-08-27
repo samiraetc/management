@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   CommandDialog,
   CommandEmpty,
@@ -7,7 +7,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { CalendarDays, CalendarX, X } from 'lucide-react';
-import { addDays, format, parse } from 'date-fns';
+import { addDays, format } from 'date-fns';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Calendar } from '../ui/calendar';
 import { cn, getDueDateIcon } from '@/lib/utils';
@@ -199,7 +199,7 @@ const DueDate = ({
         </CommandDialog>
       ) : (
         <Popover>
-          <div className="flex gap-2 items-center rounded-md py-2 pr-2 hover:bg-accent">
+          <div className="flex items-center gap-2 rounded-md py-2 pr-2 hover:bg-accent">
             <PopoverTrigger asChild>
               <div className="flex w-full items-center justify-between">
                 <div className="flex cursor-pointer items-center gap-2">

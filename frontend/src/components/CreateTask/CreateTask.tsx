@@ -61,7 +61,6 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
   const [properties, setProperties] = useState<Properties>();
   const [description, setDescription] = useState<string>('');
 
-
   const handleCloseDialog = () => {
     setTitle('');
     setOpenTeam(false);
@@ -69,7 +68,7 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
   };
 
   const handleCreateTask = async () => {
-    if(title) {
+    if (title) {
       const body = {
         title,
         description,
@@ -83,9 +82,12 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
           title: 'Issue created',
           variant: 'default',
           description: (
-            <div className='space-y-5'>
+            <div className="space-y-5">
               <p>{`${response.identifier} — ${response.title}`}</p>
-              <Link href={`${workspace?.url_key}/issue/${response.identifier}`} className='text-blue-500'>
+              <Link
+                href={`${workspace?.url_key}/issue/${response.identifier}`}
+                className="text-blue-500"
+              >
                 View issue
               </Link>
             </div>

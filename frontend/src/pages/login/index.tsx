@@ -13,7 +13,6 @@ const Login = () => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
-
   useWorkspaceUrl();
 
   const handleSignIn = async () => {
@@ -21,7 +20,6 @@ const Login = () => {
       email,
       password,
     });
-
 
     if (result?.error) {
       setError('Email ou senha inválido');

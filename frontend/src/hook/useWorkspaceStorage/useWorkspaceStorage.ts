@@ -18,7 +18,7 @@ const useWorkspaceUrl = () => {
       const targetWorkspace =
         workspaceUrl ||
         (session?.user.workspaces && session?.user.workspaces[0]?.url_key);
-        localStorage.setItem('workspace', targetWorkspace ? targetWorkspace : '')
+      localStorage.setItem('workspace', targetWorkspace ? targetWorkspace : '');
       router.push(targetWorkspace ? `/${targetWorkspace}` : '/join');
     }
   }, [status, session, router, workspaceUrl]);

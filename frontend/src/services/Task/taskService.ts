@@ -52,7 +52,9 @@ export async function getAllTasksByUserFilters(
 
 export async function postAssignedTask(
   teamId: string,
-  payload: any,
+  payload: {
+    user_ids: string[];
+  },
 ): Promise<Task> {
   const tasks = await api.post(`task/${teamId}/assigned`, payload);
 

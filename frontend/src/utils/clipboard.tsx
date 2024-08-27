@@ -8,7 +8,7 @@ export const copyUrlToClipboard = (item?: string, description?: string) => {
       toast({
         icon: <PiWarningCircleFill className="size-5" />,
         title: `"${item ? item : 'Current URL'}" copied to clipboard`,
-        description: <p className='text-xs text-stone-600'>{description}</p>
+        description: <p className="text-xs text-stone-600">{description}</p>,
       });
     })
     .catch(() => {
