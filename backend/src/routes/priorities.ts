@@ -4,7 +4,6 @@ import {
 } from '@/controllers/priority/priority';
 import { FastifyInstance } from '../types';
 
-
 const priorityRoutes = async (app: FastifyInstance) => {
   app.get(
     '/priorities',

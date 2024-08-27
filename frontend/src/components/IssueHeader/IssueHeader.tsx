@@ -26,7 +26,7 @@ import { RootState } from '@/redux/store';
 import DueDate from '../DueDate/DueDate';
 
 interface IIssueHeader {
-  issue: Task;
+  task?: Task;
 }
 
 const DropdownMenuItemComponent = ({
@@ -48,7 +48,7 @@ const DropdownMenuItemComponent = ({
   </DropdownMenuItem>
 );
 
-const IssueHeader = ({ issue }: IIssueHeader) => {
+const IssueHeader = ({ task }: IIssueHeader) => {
   const teams = useSelector((state: RootState) => state.teams.teams) ?? [];
   const [openDueDate, setOpenDueDate] = useState<boolean>(false);
 
@@ -60,7 +60,7 @@ const IssueHeader = ({ issue }: IIssueHeader) => {
         <div className="flex items-center gap-1">
           <span className="text-xs">{teams[0]?.name}</span>
           <ChevronRight size={12} strokeWidth={1.25} className="font-light" />
-          <span className="text-xs">{issue.identifier}</span>
+          <span className="text-xs">{task?.identifier}</span>
 
           <DropdownMenu>
             <DropdownMenuTrigger className="outline-none">
@@ -73,7 +73,7 @@ const IssueHeader = ({ issue }: IIssueHeader) => {
             <DropdownMenuContent className="w-56" align="start">
               <DropdownMenuItemComponent
                 icon={CalendarDays}
-                text={issue.due_date ? 'Change due date...' : 'Set due date...'}
+                text={task?.due_date ? 'Change due date...' : 'Set due date...'}
                 onClick={() => setOpenDueDate(true)}
               />
               <DropdownMenuSub>
@@ -90,18 +90,18 @@ const IssueHeader = ({ issue }: IIssueHeader) => {
                     <DropdownMenuItemComponent
                       icon={Copy}
                       text="Copy ID"
-                      onClick={handleCopy(issue.identifier)}
+                      onClick={handleCopy(task?.identifier)}
                     />
                     <DropdownMenuItemComponent
                       icon={ClipboardPen}
                       text="Copy title"
-                      onClick={handleCopy(issue.title)}
+                      onClick={handleCopy(task?.title)}
                     />
                     <DropdownMenuItemComponent
                       icon={ClipboardPen}
                       text="Copy title as link"
                       onClick={handleCopy(
-                        `[${issue.identifier}: ${issue.title}](${window.location.href})`,
+                        `[${task?.identifier}: ${task?.title}](${window.location.href})`,
                       )}
                     />
                     <DropdownMenuItemComponent
@@ -116,7 +116,7 @@ const IssueHeader = ({ issue }: IIssueHeader) => {
                       onClick={() =>
                         copyUrlToClipboard(
                           sanitizeBranchName(
-                            `${issue.identifier} ${issue.title}`,
+                            `${task?.identifier} ${task?.title}`,
                           ),
                           'Branch name copied to clipboard. Paste it into your favorite git client',
                         )
@@ -137,10 +137,10 @@ const IssueHeader = ({ issue }: IIssueHeader) => {
 
       {openDueDate && (
         <DueDate
-          task={issue}
+          task={task}
           open={openDueDate}
           setOpen={setOpenDueDate}
-          dueDate={issue.due_date}
+          dueDate={task?.due_date}
           dialog={true}
         />
       )}

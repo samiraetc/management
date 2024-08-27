@@ -1,4 +1,4 @@
-import { TaskLabels, PrismaClient } from '@prisma/client';
+import { TaskLabels, PrismaClient, Label } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -27,13 +27,17 @@ const selectTaskLabel = async (
     },
   });
 };
-
-const selectAllTaskLabels = async (id: string): Promise<TaskLabels[] | []> => {
-  return await prisma.taskLabels.findMany({
+const selectAllTaskLabels = async (id: string): Promise<Label[]> => {
+  const taskLabels = await prisma.taskLabels.findMany({
     where: {
       task_id: id,
     },
+    select: {
+      team: true,
+    },
   });
+
+  return taskLabels.map((taskLabel) => taskLabel.team);
 };
 
 const deleteTaskLabel = async (

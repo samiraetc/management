@@ -133,13 +133,15 @@ model Tasks {
   id                String              @id @default(uuid()) @unique
   title             String
   description       String?
-  priority          Int?
-  estimative        Int?
+  priority          String?
+  estimative        String?
   creator_id        String
-  task_number       Int
-  status_id         String?
+  identifier        String             @unique
+  status            String?
   team_id           String
-  url_key           String
+  due_date          DateTime?
+  created_at        DateTime            @default(now())
+  updated_at        DateTime?
   creator           User                @relation("task-creator", fields: [creator_id], references: [id])
   assigned          TaskAssigneds[]
   labels            TaskLabels[]

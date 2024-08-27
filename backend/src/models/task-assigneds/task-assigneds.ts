@@ -1,16 +1,17 @@
-import { TaskAssigneds, PrismaClient } from '@prisma/client';
+import { TaskAssigneds, PrismaClient, User } from '@prisma/client';
+import { AssignedUser } from './types';
 
 const prisma = new PrismaClient();
 
 const addTaskAssigneds = async (
-  data: TaskAssigneds[],
+  assigned: TaskAssigneds[],
 ): Promise<TaskAssigneds[]> => {
   return await prisma.$transaction(
-    data.map((item) =>
+    assigned.map((user) =>
       prisma.taskAssigneds.create({
         data: {
-          task_id: item.task_id,
-          user_id: item.user_id,
+          task_id: user.task_id,
+          user_id: user.user_id,
         },
       }),
     ),
@@ -18,16 +19,18 @@ const addTaskAssigneds = async (
 };
 
 const selectTaskAssigned = async (
-  data: TaskAssigneds,
+  user_id: string,
+  id: string,
 ): Promise<TaskAssigneds | null> => {
-  return await prisma.taskAssigneds.findUnique({
+  const items = await prisma.taskAssigneds.findUnique({
     where: {
       user_id_task_id: {
-        user_id: data.user_id,
-        task_id: data.task_id,
+        user_id,
+        task_id: id,
       },
     },
   });
+  return items;
 };
 
 const selectAllTaskAssigneds = async (
@@ -40,6 +43,30 @@ const selectAllTaskAssigneds = async (
       user_id: user_id,
     },
   });
+};
+
+const selectAllTaskAssignedByTask = async (
+  id: string,
+): Promise<AssignedUser[]> => {
+  const response = await prisma.taskAssigneds.findMany({
+    where: {
+      task_id: id,
+    },
+    select: {
+      user: {
+        select: {
+          id: true,
+          full_name: true,
+          email: true,
+          username: true,
+        },
+      },
+      user_id: false,
+      task_id: false,
+    },
+  });
+
+  return response.map((taskAssigned) => taskAssigned.user);
 };
 
 const deleteTaskAssigned = async (
@@ -60,4 +87,5 @@ export {
   deleteTaskAssigned,
   selectTaskAssigned,
   selectAllTaskAssigneds,
+  selectAllTaskAssignedByTask,
 };

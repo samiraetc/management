@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   CommandDialog,
   CommandEmpty,
@@ -6,7 +6,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { CalendarDays, CalendarX } from 'lucide-react';
+import { CalendarDays, CalendarX, X } from 'lucide-react';
 import { addDays, format, parse } from 'date-fns';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Calendar } from '../ui/calendar';
@@ -18,12 +18,13 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import useWindowSize from '@/hook/useWindowSize/useWindowSize';
+import { updateTaskDetails } from '@/services/Task/taskService';
 
 interface IDueDate {
-  task: Task;
+  task?: Task;
   open?: boolean;
   setOpen?: (open: boolean) => void;
-  dueDate: Date | string | null;
+  dueDate?: Date | string | null;
   dialog?: boolean;
   className?: string;
 }
@@ -158,6 +159,14 @@ const DueDate = ({
   const [value, setValue] = useState<Date | null>(new Date(dueDate ?? ''));
   const isMobile = useWindowSize();
 
+  const handleSetValue = async (date: Date | null) => {
+    if (task) {
+      await updateTaskDetails(task?.id ?? '', {
+        due_date: date,
+      });
+    }
+  };
+
   return (
     <div>
       {value && isMobile && (
@@ -166,9 +175,7 @@ const DueDate = ({
           onClick={() => setOpen && setOpen(true)}
         >
           {getDueDateIcon(value).icon}
-          <p className="text-xs text-stone-600">
-            {getDueDateIcon(value).label}
-          </p>
+          <p className="text-d text-stone-600">{getDueDateIcon(value).label}</p>
         </div>
       )}
       {dialog ? (
@@ -183,24 +190,43 @@ const DueDate = ({
           </div>
           <DueDateList
             value={value}
-            setValue={setValue}
+            setValue={(valueee) => {
+              setValue(valueee);
+              handleSetValue(valueee);
+            }}
             onClose={() => setOpen && setOpen(false)}
           />
         </CommandDialog>
       ) : (
         <Popover>
-          <PopoverTrigger asChild>
-            <div className="flex w-full items-center justify-between">
-              <div className="flex cursor-pointer items-center gap-2">
-                {value ? (
-                  getDueDateIcon(value).icon
-                ) : (
-                  <HiCalendar size={18} className="text-gray-500" />
-                )}
-                <p className="text-sm">{format(value ?? '', 'dd/MM/yyyy')}</p>
+          <div className="flex gap-2 items-center rounded-md py-2 pr-2 hover:bg-accent">
+            <PopoverTrigger asChild>
+              <div className="flex w-full items-center justify-between">
+                <div className="flex cursor-pointer items-center gap-2">
+                  {value ? (
+                    getDueDateIcon(value).icon
+                  ) : (
+                    <HiCalendar size={18} className="text-gray-500" />
+                  )}
+                  {value ? (
+                    <p className="text-sm">{format(value, 'dd/MM/yyyy')}</p>
+                  ) : (
+                    <p className="text-sm">Add due date</p>
+                  )}
+                </div>
               </div>
-            </div>
-          </PopoverTrigger>
+            </PopoverTrigger>
+            {value && (
+              <X
+                width={16}
+                onClick={() => {
+                  setValue(null);
+                  handleSetValue(null);
+                }}
+                className="cursor-pointer"
+              />
+            )}
+          </div>
           <PopoverContent
             align="start"
             side="left"
@@ -209,7 +235,10 @@ const DueDate = ({
             <Calendar
               mode="single"
               selected={value ?? undefined}
-              onSelect={(selectedDate) => setValue(selectedDate ?? null)}
+              onSelect={(selectedDate) => {
+                setValue(selectedDate ?? null);
+                handleSetValue(selectedDate ?? null);
+              }}
             />
           </PopoverContent>
         </Popover>

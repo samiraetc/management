@@ -18,12 +18,14 @@ import {
 import { Check } from 'lucide-react';
 import { getPriorities } from '@/services/Priorities/prioritiesService';
 import useWindowSize from '@/hook/useWindowSize/useWindowSize';
+import { updateTaskDetails } from '@/services/Task/taskService';
 
 interface IPriority {
   priority: TaskPriority;
-  task: Task;
+  task?: Task;
   label?: boolean;
   className?: string;
+  setProperties?: (value: TaskPriority) => void;
 }
 
 const PriorityList = ({
@@ -33,7 +35,7 @@ const PriorityList = ({
   onClose,
 }: {
   priorities: Priority[];
-  value: string;
+  value: TaskPriority;
   setValue: (val: TaskPriority) => void;
   onClose: () => void;
 }) => (
@@ -78,7 +80,13 @@ const PriorityList = ({
   </>
 );
 
-const Priority = ({ priority, label, className, task }: IPriority) => {
+const Priority = ({
+  priority,
+  label,
+  className,
+  task,
+  setProperties,
+}: IPriority) => {
   const [value, setValue] = useState<TaskPriority>(priority);
   const [open, setOpen] = useState<boolean>(false);
   const [priorities, setPriorities] = useState<Priority[]>([]);
@@ -94,6 +102,15 @@ const Priority = ({ priority, label, className, task }: IPriority) => {
   useEffect(() => {
     handleGetPriorities();
   }, []);
+
+  const handleSetValue = async (value: TaskPriority) => {
+    setValue(value);
+    setProperties
+      ? setProperties(value)
+      : await updateTaskDetails(task?.id ?? '', {
+          priority: value,
+        });
+  };
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -115,21 +132,23 @@ const Priority = ({ priority, label, className, task }: IPriority) => {
           className={cn(
             'outline-none',
             label &&
-              'flex h-8 w-48 items-center gap-2 p-1  text-xs font-medium text-foreground hover:rounded-md hover:bg-muted/70',
+              'flex h-8 w-48 items-center gap-2 p-1 text-xs font-medium text-foreground hover:rounded-md hover:bg-muted/70',
             className,
           )}
         >
-          <span>{getPriorityProps(value)?.icon}</span>
-          {label && <p className='text-stone-600'>{getPriorityProps(value)?.label}</p>}
+          <span>{getPriorityProps(value ?? '')?.icon}</span>
+          {label && (
+            <p className="text-stone-600">{getPriorityProps(value)?.label}</p>
+          )}
         </DropdownMenuTrigger>
 
         {!isMobile && (
-        <DropdownMenuContent className="w-56" align="center" side="bottom">
+          <DropdownMenuContent className="w-56" align="center" side="bottom">
             <Command className="w-full text-gray-700">
               <PriorityList
                 priorities={priorities}
                 value={value}
-                setValue={setValue}
+                setValue={handleSetValue}
                 onClose={() => setOpen(false)}
               />
             </Command>
@@ -151,7 +170,7 @@ const Priority = ({ priority, label, className, task }: IPriority) => {
           <PriorityList
             priorities={priorities}
             value={value}
-            setValue={setValue}
+            setValue={handleSetValue}
             onClose={() => setOpenDialog(false)}
           />
         </CommandDialog>

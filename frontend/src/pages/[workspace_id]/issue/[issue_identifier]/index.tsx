@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import withLayout from '@/utils/hoc/withLayout';
 import {
   CircleUserRound,
@@ -17,22 +17,44 @@ import Estimative from '@/components/Estimative/Estimative';
 import LabelDropdown from '@/components/LabelDropdown/LabelDropdown';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
-import { issue } from '@/mock/issue';
 import RichText from '@/components/RichText/RichText';
 import CreateTaskProperties from '@/components/CreateTask/CreateTaskProperties';
 import useWindowSize from '@/hook/useWindowSize/useWindowSize';
 import IssueHeader from '@/components/IssueHeader/IssueHeader';
 import DueDate from '@/components/DueDate/DueDate';
+import { getTaskDetails, updateTaskDetails } from '@/services/Task/taskService';
+import Assigned from '@/components/Assigned/Assigned';
 
 const IssuePage = () => {
   const route = useRouter();
   const issueId = (route.query.issue_identifier as string) ?? '';
-  const [title, setTitle] = useState<string>(issue.title);
+  const [title, setTitle] = useState<string>();
   const isMobile = useWindowSize();
+  const [task, setTask] = useState<Task>();
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const handleChangeIssueTitle = () => {
-    if (title) {
-      return;
+  const handleGetTaskDetails = async () => {
+    const taskId = localStorage.getItem('task') ?? '';
+    await getTaskDetails(taskId)
+      .then((response) => {
+        setTask(response);
+        setTitle(response.title);
+      })
+      .catch(() =>
+        toast({
+          icon: <CircleX className="size-5" />,
+          title: 'Something is wrong',
+          variant: 'destructive',
+        }),
+      )
+      .finally(() => setLoading(false));
+  };
+
+  const handleChangeIssueTitle = async () => {
+    if (title && task) {
+      await updateTaskDetails(task.id, {
+        title,
+      });
     } else {
       toast({
         icon: <CircleX className="size-5" />,
@@ -40,23 +62,31 @@ const IssuePage = () => {
         variant: 'destructive',
         description: <p>The field must contain at least 1 character.</p>,
       });
-      setTitle(issue.title);
+      setTitle(task?.title ?? '');
     }
   };
 
-  const handleChangeDescription = (value: string) => {
-    console.log('todo');
+  const handleChangeDescription = async (value: string) => {
+    await updateTaskDetails(task?.id ?? '', {
+      description: value,
+    });
   };
 
-  return (
+  useEffect(() => {
+    handleGetTaskDetails();
+  }, []);
+
+  return loading ? (
+    <>Loading..</>
+  ) : (
     <>
       <div className="flex h-full gap-1 overflow-hidden">
         <div className="w-full">
-          <IssueHeader issue={issue} />
+          <IssueHeader task={task} />
           {isMobile && (
             <div className="sticky top-0 z-50 w-full border-b bg-background">
               <div className="flex flex-wrap gap-2 p-2">
-                <CreateTaskProperties />
+                <CreateTaskProperties teamId={task?.team_id} />
               </div>
             </div>
           )}
@@ -71,7 +101,7 @@ const IssuePage = () => {
 
             <div className="mb-12 h-full overflow-scroll">
               <RichText
-                content={issue.description}
+                content={task?.description}
                 onChange={handleChangeDescription}
                 className="p-8"
               />
@@ -99,7 +129,7 @@ const IssuePage = () => {
               <GitBranchPlus
                 onClick={() =>
                   copyUrlToClipboard(
-                    sanitizeBranchName(`${issue.identifier} ${issue.title}`),
+                    sanitizeBranchName(`${task?.identifier} ${task?.title}`),
                   )
                 }
                 size={14}
@@ -108,29 +138,34 @@ const IssuePage = () => {
             </div>
           </div>
 
-          <Status status={issue.status} task={issue} label />
+          <Status status={task?.status ?? ''} task={task} label />
 
           <Priority
-            priority={issue.priority as TaskPriority}
-            task={issue}
+            priority={task?.priority as TaskPriority}
+            task={task}
             label
           />
 
-          <Estimative estimative={issue.estimative} task={issue} label />
+          <Estimative estimative={task?.estimative ?? ''} task={task} label />
 
-          <div className="flex w-48 items-center gap-2 p-1 text-xs hover:rounded-md hover:bg-muted">
-            <CircleUserRound width={15} />
-            <p className="font-medium text-foreground">Assigned</p>
-          </div>
+          <Assigned
+            assignedUser={task?.assigned_to ?? []}
+            teamId={task?.team_id}
+            task={task}
+          />
 
           <div>
             <p className="text-xs font-medium text-muted-foreground">Labels</p>
 
             <div className="mt-3 flex flex-wrap gap-1">
-              <LabelDropdown labels={issue.labels} />
+              <LabelDropdown
+                labels={task?.labels ?? []}
+                teamId={task?.team_id}
+                task={task}
+              />
             </div>
           </div>
-          {issue.due_date && (
+          {task?.due_date && (
             <>
               <Separator />
               <div>
@@ -139,7 +174,7 @@ const IssuePage = () => {
                 </p>
 
                 <div className="mt-3 flex flex-wrap gap-1">
-                  <DueDate dueDate={issue.due_date} task={issue} />
+                  <DueDate dueDate={task?.due_date} task={task} />
                 </div>
               </div>
             </>

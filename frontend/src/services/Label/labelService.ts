@@ -6,6 +6,8 @@ export async function getLabels(workspaceId: string): Promise<Label[]> {
   return data.data.data;
 }
 
+
+
 export async function createWorkspaceLabel(
   workspaceId: string,
   payload: CreateLabel,
@@ -33,6 +35,13 @@ export async function deleteWorkspacelabel(
   labelId: string,
 ): Promise<Label> {
   const data = await api.delete(`/workspaces/${workspaceId}/labels/${labelId}`);
+
+  return data.data.data;
+}
+
+
+export async function getTeamLabels(teamId: string): Promise<Label[]> {
+  const data = await api.get(`/teams/${teamId}/labels`);
 
   return data.data.data;
 }

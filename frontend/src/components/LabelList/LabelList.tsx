@@ -48,7 +48,7 @@ const LabelList = ({ labels }: ILabelList) => {
             <TooltipTrigger>
               <Badge
                 variant="outline"
-                className="flex items-center py-1 text-sm font-normal text-stone-600 dark:text-white"
+                className="flex items-center py-1 text-xs font-normal text-stone-600 dark:text-white"
               >
                 <div className="flex">
                   {labels
@@ -64,7 +64,7 @@ const LabelList = ({ labels }: ILabelList) => {
                 <span className="ml-2">+{hiddenCount} labels</span>
               </Badge>
             </TooltipTrigger>
-            <TooltipContent sideOffset={6}>
+            <TooltipContent sideOffset={6} className="w-44">
               {hiddenLabels.map((label, index) => (
                 <div
                   key={index}

@@ -19,12 +19,14 @@ import { Check } from 'lucide-react';
 import { IoPrism } from 'react-icons/io5';
 import { getEstimativeByName } from '@/services/Estimatives/estimativeService';
 import useWindowSize from '@/hook/useWindowSize/useWindowSize';
+import { updateTaskDetails } from '@/services/Task/taskService';
 
 interface IEstimative {
   estimative: string | null;
-  task: Task;
+  task?: Task;
   label?: boolean;
   className?: string;
+  setProperties?: (value: string | null) => void;
 }
 
 const EstimativeList = ({
@@ -76,7 +78,13 @@ const EstimativeList = ({
   </>
 );
 
-const Estimative = ({ estimative, label, className, task }: IEstimative) => {
+const Estimative = ({
+  estimative,
+  label,
+  className,
+  task,
+  setProperties,
+}: IEstimative) => {
   const [value, setValue] = useState<string | null>(estimative);
   const [open, setOpen] = useState<boolean>(false);
   const [estimatives, setEstimatives] = useState<Estimative>();
@@ -93,6 +101,12 @@ const Estimative = ({ estimative, label, className, task }: IEstimative) => {
     handleGetEstimatives();
   }, []);
 
+  const handleSetValue = async (value: string | null) => {
+    setValue(value);
+    setProperties ? setProperties(value) :  await updateTaskDetails(task?.id ?? '', {
+      estimative: value,
+    });;
+  };
   return (
     <div>
       <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -108,16 +122,16 @@ const Estimative = ({ estimative, label, className, task }: IEstimative) => {
         >
           <IoPrism />
 
-          {label ? <p>{getEstimativeProps(value ?? null)}</p> : value}
+          {label ? value ? <p>{getEstimativeProps(value ?? null)}</p> : 'Set Estimative' : value}
         </DropdownMenuTrigger>
 
         {!isMobile && (
-         <DropdownMenuContent className="w-56" align="center" side="bottom">
+          <DropdownMenuContent className="w-56" align="center" side="bottom">
             <Command className="w-full text-gray-700">
               <EstimativeList
                 points={[null, ...(estimatives?.points ?? [])]}
                 value={value}
-                setValue={setValue}
+                setValue={handleSetValue}
                 onClose={() => setOpen(false)}
               />
             </Command>
@@ -139,7 +153,7 @@ const Estimative = ({ estimative, label, className, task }: IEstimative) => {
           <EstimativeList
             points={[null, ...(estimatives?.points ?? [])]}
             value={value}
-            setValue={setValue}
+            setValue={handleSetValue}
             onClose={() => setOpenDialog(false)}
           />
         </CommandDialog>

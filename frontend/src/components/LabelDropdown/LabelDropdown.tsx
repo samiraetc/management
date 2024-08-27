@@ -15,15 +15,9 @@ import {
 } from '@/components/ui/command';
 import { Plus, Tags } from 'lucide-react';
 import { Checkbox } from '../ui/checkbox';
-import { getLabels } from '@/services/Label/labelService';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { getTeamLabels } from '@/services/Label/labelService';
 import { cn } from '@/lib/utils';
-
-interface Label {
-  name: string;
-  color: string;
-}
+import { updateTaskDetails } from '@/services/Task/taskService';
 
 interface LabelDropdownProps {
   labels: Label[];
@@ -34,6 +28,8 @@ interface LabelDropdownProps {
     align: 'start' | 'center' | 'end' | undefined;
     side: 'left' | 'top' | 'right' | 'bottom' | undefined;
   };
+  setProperties?: (value: Label[]) => void;
+  teamId?: string;
 }
 
 const LabelDropdown = ({
@@ -44,13 +40,13 @@ const LabelDropdown = ({
     align: 'start',
     side: 'left',
   },
+  setProperties,
+  teamId,
+  task,
 }: LabelDropdownProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const [selectedLabels, setSelectedLabels] = useState<Label[]>(labels);
   const [labelList, setLabelList] = useState<Label[]>([]);
-  const workspace = useSelector(
-    (state: RootState) => state.workspace.workspace,
-  );
 
   const handleLabelToggle = (label: Label) => {
     const isSelected = selectedLabels.some(
@@ -58,14 +54,15 @@ const LabelDropdown = ({
     );
 
     if (isSelected) {
-      setSelectedLabels(selectedLabels.filter((l) => l.name !== label.name));
+      const selected = selectedLabels.filter((l) => l.name !== label.name);
+      setSelectedLabels(selected);
     } else {
       setSelectedLabels([...selectedLabels, label]);
     }
   };
 
   const handleGetWorkspaceLabels = async () => {
-    await getLabels(workspace?.id ?? '').then((response) => {
+    await getTeamLabels(teamId ?? '').then((response) => {
       setLabelList(response);
     });
   };
@@ -73,6 +70,18 @@ const LabelDropdown = ({
   useEffect(() => {
     handleGetWorkspaceLabels();
   }, []);
+
+  const handleSetValue = async (value: Label[]) => {
+    setProperties
+      ? setProperties(value)
+      : await updateTaskDetails(task?.id ?? '', {
+          labels: value,
+        });
+  };
+
+  useEffect(() => {
+    handleSetValue(selectedLabels);
+  }, [selectedLabels]);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>

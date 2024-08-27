@@ -77,7 +77,7 @@ const removeTaskAssigned = async (
       user_id,
     };
 
-    const taskLabel = await selectTaskAssigned(body);
+    const taskLabel = await selectTaskAssigned(user_id, id);
 
     if (!taskLabel) {
       reply.code(404).send({ message: 'Label not found' });

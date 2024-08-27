@@ -36,8 +36,8 @@ const priorityOptions: Record<TaskPriority, string> = {
   [TaskPriority.None]: 'No Priority',
 };
 
-export function getPriorityProps(priority: TaskPriority) {
-  const label = priorityOptions[priority];
+export function getPriorityProps(priority: TaskPriority | string | null) {
+  const label = priorityOptions[priority as TaskPriority];
   switch (priority) {
     case TaskPriority.None:
       return {
@@ -69,6 +69,12 @@ export function getPriorityProps(priority: TaskPriority) {
         label,
         value: TaskPriority.Urgent,
         icon: <CircleAlert width={16} height={16} className="text-gray-500" />,
+      };
+    default:
+      return {
+        label: '',
+        value: '',
+        icon: <></>,
       };
   }
 }
