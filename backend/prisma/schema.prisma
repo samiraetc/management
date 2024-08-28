@@ -18,6 +18,7 @@ model User {
   username          String              @unique
   position          String?
   language          String?
+  image             String?
   workspaces        Workspace[]         @relation("workspace-creator")
   teams             Team[]              @relation("team-creator")
   tasks_creator     Tasks[]             @relation("task-creator")
@@ -136,7 +137,7 @@ model Tasks {
   priority          String?
   estimative        String?
   creator_id        String
-  identifier        String             @unique
+  identifier        String
   status            String?
   team_id           String
   due_date          DateTime?

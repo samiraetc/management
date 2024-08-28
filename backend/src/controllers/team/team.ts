@@ -1,6 +1,11 @@
 import { findUserByToken } from '@/middleware/auth';
-import { createTeam, selectAllTeams, selectTeam } from '@/models/teams/teams';
-import { teamSchema } from '@/models/teams/types';
+import {
+  createTeam,
+  selectAllTeams,
+  selectTeam,
+  updateTeam,
+} from '@/models/teams/teams';
+import { editTeamSchema, teamSchema } from '@/models/teams/types';
 import { selectUser } from '@/models/user/user';
 import { selectAllWorkspaceLabel } from '@/models/workspace-labels/workspace-label';
 import { selectWorkspaces } from '@/models/workspace/workspace';
@@ -44,13 +49,42 @@ const createTeamController = async (
   }
 };
 
+const editTeamController = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
+  try {
+    const { id } = request.params as { id: string };
+    const user = await findUserByToken(request, reply);
+
+    if (!user) {
+      reply.code(400).send({ message: 'User not found' });
+      return;
+    }
+    const parsedBody = editTeamSchema.parse(request.body);
+
+    const body = {
+      name: parsedBody.name,
+      identifier: parsedBody.identifier,
+    };
+
+    const team = await updateTeam(body, id);
+
+    reply.code(201).send({
+      data: team,
+    });
+  } catch (error) {
+    reply.code(400).send(error);
+  }
+};
+
 const getTeamById = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const { id } = request.params as { id: string };
     const team = await selectTeam(id);
 
     if (!team) {
-      reply.code(404).send({ message: 'Team not found' });
+      reply.code(400).send({ message: 'Team not found' });
       return;
     }
 
@@ -76,7 +110,7 @@ const getAllTeamsByWorkspace = async (
     const workspaces = await selectWorkspaces(id);
 
     if (!workspaces) {
-      reply.code(404).send({ message: 'Workspace not found' });
+      reply.code(400).send({ message: 'Workspace not found' });
       return;
     }
 
@@ -99,4 +133,9 @@ const getAllTeamsByWorkspace = async (
   }
 };
 
-export { createTeamController, getTeamById, getAllTeamsByWorkspace };
+export {
+  createTeamController,
+  getTeamById,
+  getAllTeamsByWorkspace,
+  editTeamController,
+};

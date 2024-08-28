@@ -1,5 +1,10 @@
-import { createUserSchema } from '@/models/user/type';
-import { createUser, selectAllUsers, selectUser } from '@/models/user/user';
+import { createUserSchema, editUserSchema } from '@/models/user/type';
+import {
+  createUser,
+  editUser,
+  selectAllUsers,
+  selectUser,
+} from '@/models/user/user';
 import bcrypt from 'bcrypt';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { ZodError } from 'zod';
@@ -21,6 +26,7 @@ const createUserController = async (
       username: parsedBody.username,
       position: parsedBody.position ?? null,
       language: parsedBody.language ?? null,
+      image: parsedBody.image ?? null,
     };
 
     const user = await createUser(body);
@@ -36,6 +42,36 @@ const createUserController = async (
     } else {
       reply.code(400).send(error);
     }
+  }
+};
+
+const updateUser = async (request: FastifyRequest, reply: FastifyReply) => {
+  try {
+    const { id } = request.params as { id: string };
+    const user = await selectUser(id);
+
+    if (!user) {
+      reply.code(404).send({ message: 'User not found' });
+      return;
+    }
+
+    const parsedBody = editUserSchema.parse(request.body);
+
+    const body = {
+      first_name: parsedBody.first_name,
+      last_name: parsedBody.last_name,
+      username: parsedBody.username,
+      position: parsedBody.position ?? '',
+      image: parsedBody.image ?? null,
+    };
+
+    const editedUser = await editUser(body, id);
+
+    reply.code(201).send({
+      data: editedUser,
+    });
+  } catch (error) {
+    reply.code(400).send({ error: 'Failed to edit label', details: error });
   }
 };
 
@@ -69,4 +105,4 @@ const getAllUsers = async (_: FastifyRequest, reply: FastifyReply) => {
   }
 };
 
-export { createUserController, selectUserController, getAllUsers };
+export { createUserController, selectUserController, getAllUsers, updateUser };

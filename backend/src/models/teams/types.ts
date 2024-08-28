@@ -9,6 +9,16 @@ export type CreateTeam = Omit<Team, 'created_at' | 'id' | 'estimates_type'> & {
   permission: string;
 };
 
+export type EditTeam = {
+  name?: string;
+  identifier?: string;
+};
+
+const editTeamSchema = z.object({
+  name: z.string().optional(),
+  identifier: z.string().max(5, { message: 'Only 5 letters' }).optional(),
+});
+
 const teamSchema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
   identifier: z
@@ -17,4 +27,4 @@ const teamSchema = z.object({
     .max(5, { message: 'Only 5 letters' }),
 });
 
-export { teamSchema };
+export { teamSchema,editTeamSchema };

@@ -9,15 +9,15 @@ const prisma = new PrismaClient();
 
 const addWorkspaceLabelInAllTeams = async (
   data: CreateTeamLabelByWorkspace,
+  id: string,
 ) => {
-  const teams = await prisma.workspaceTeams.findMany({
-    where: { workspace_id: data.workspace_id },
-    select: { team_id: true },
+  const teams = await prisma.team.findMany({
+    where: { workspace_id: id },
   });
 
   const teamLabelsData = teams.map((team) => ({
     id: data.id,
-    team_id: team.team_id,
+    team_id: team.id,
     name: data.name,
     color: data.color,
     can_edit: false,
@@ -25,6 +25,7 @@ const addWorkspaceLabelInAllTeams = async (
 
   await prisma.teamLabels.createMany({
     data: teamLabelsData,
+    skipDuplicates: true,
   });
 };
 

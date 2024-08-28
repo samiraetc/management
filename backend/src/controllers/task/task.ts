@@ -196,10 +196,12 @@ const selectAllTasksCreatedBy = async (
       const allTasks = await Promise.all(
         tasks.map(async (task) => {
           const labels = await selectAllTaskLabels(task.id);
+          const taskAssigned = await selectAllTaskAssignedByTask(task.id);
 
           return {
             ...task,
             labels,
+            assigned_to: taskAssigned,
           };
         }),
       );

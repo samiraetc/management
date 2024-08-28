@@ -59,6 +59,7 @@ const selectAllTaskAssignedByTask = async (
           full_name: true,
           email: true,
           username: true,
+          image: true,
         },
       },
       user_id: false,

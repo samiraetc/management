@@ -17,10 +17,18 @@ const addWorkspaceLabel = async (
     },
   });
 
-  await addWorkspaceLabelInAllTeams({
-    ...newLabel,
-    workspace_id: data.workspace_id,
-  });
+  console.log('workspace', data.workspace_id);
+
+  await addWorkspaceLabelInAllTeams(
+    {
+      id: newLabel.id,
+      workspace_id: data.workspace_id,
+      name: newLabel.name,
+      color: newLabel.color,
+      created_at: newLabel.created_at,
+    },
+    data.workspace_id,
+  );
 
   return newLabel;
 };

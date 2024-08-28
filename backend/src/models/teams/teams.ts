@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { PrismaClient, Team } from '@prisma/client';
-import { CreateTeam } from './types';
+import { CreateTeam, EditTeam } from './types';
 
 const prisma = new PrismaClient();
 
@@ -33,6 +33,18 @@ const createTeam = async (data: CreateTeam): Promise<Team> => {
   return team;
 };
 
+const updateTeam = async (data: EditTeam, id: string): Promise<Team> => {
+  const team = await prisma.team.update({
+    where: { id },
+    data: {
+      name: data.name,
+      identifier: data.identifier,
+    },
+  });
+
+  return team;
+};
+
 const selectTeam = async (id: string): Promise<Team | null> => {
   const team = await prisma.team.findUnique({
     where: { id: id },
@@ -49,4 +61,4 @@ const selectAllTeams = async (id: string): Promise<Team[] | []> => {
   return team;
 };
 
-export { createTeam, selectTeam, selectAllTeams };
+export { createTeam, selectTeam, selectAllTeams, updateTeam };

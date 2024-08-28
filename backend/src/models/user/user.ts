@@ -1,5 +1,5 @@
 import { PrismaClient, User } from '@prisma/client';
-import { CreateUser, UserWithoutPassword } from './type';
+import { CreateUser, EditUser, UserWithoutPassword } from './type';
 
 const prisma = new PrismaClient();
 
@@ -24,6 +24,32 @@ const createUser = async (data: CreateUser): Promise<UserWithoutPassword> => {
   return user;
 };
 
+const editUser = async (
+  data: EditUser,
+  id: string,
+): Promise<UserWithoutPassword> => {
+  const user = await prisma.user.update({
+    where: { id },
+    data: {
+      ...data,
+    },
+    select: {
+      id: true,
+      first_name: true,
+      last_name: true,
+      full_name: true,
+      email: true,
+      created_at: true,
+      username: true,
+      position: true,
+      language: true,
+      image: true,
+    },
+  });
+
+  return user;
+};
+
 const selectUser = async (id: string): Promise<UserWithoutPassword | null> => {
   const user = await prisma.user.findUnique({
     where: { id },
@@ -37,6 +63,7 @@ const selectUser = async (id: string): Promise<UserWithoutPassword | null> => {
       username: true,
       position: true,
       language: true,
+      image: true,
     },
   });
 
@@ -55,6 +82,7 @@ const selectAllUsers = async (): Promise<UserWithoutPassword[]> => {
       username: true,
       position: true,
       language: true,
+      image: false,
     },
   });
 
@@ -89,4 +117,5 @@ export {
   selectAllUsers,
   selectUsersByEmail,
   selectUsersByUsername,
+  editUser,
 };

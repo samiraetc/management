@@ -1,5 +1,6 @@
 import {
   createTeamController,
+  editTeamController,
   getAllTeamsByWorkspace,
   getTeamById,
 } from '@/controllers/team/team';
@@ -16,6 +17,17 @@ const teamRoutes = async (server: FastifyInstance) => {
       },
     },
     getTeamById,
+  );
+  server.patch(
+    '/teams/:id',
+    {
+      preValidation: [server.authenticate],
+      schema: {
+        tags: ['Teams'],
+        security: [{ bearerAuth: [] }],
+      },
+    },
+    editTeamController,
   );
 
   server.get(
