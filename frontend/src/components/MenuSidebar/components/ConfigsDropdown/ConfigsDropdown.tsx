@@ -5,7 +5,7 @@ import { Button } from '@headlessui/react';
 import { signOut, useSession } from 'next-auth/react';
 import { Check, CircleUserRound, LogOutIcon } from 'lucide-react';
 import { useDispatch } from 'react-redux';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { logout } from '@/redux/actions/actions';
 import {
   CommandDialog,

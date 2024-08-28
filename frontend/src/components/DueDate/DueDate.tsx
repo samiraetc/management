@@ -11,7 +11,6 @@ import { addDays, format } from 'date-fns';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Calendar } from '../ui/calendar';
 import { cn, getDueDateIcon } from '@/lib/utils';
-import { HiCalendar } from 'react-icons/hi2';
 import {
   Popover,
   PopoverContent,
@@ -27,6 +26,7 @@ interface IDueDate {
   dueDate?: Date | string | null;
   dialog?: boolean;
   className?: string;
+  onUpdateDueDate?: (update: Date | string | null) => void
 }
 
 const DueDateList = ({
@@ -155,15 +155,22 @@ const DueDate = ({
   dueDate,
   dialog,
   className,
+  onUpdateDueDate
 }: IDueDate) => {
-  const [value, setValue] = useState<Date | null>(new Date(dueDate ?? ''));
+  const [value, setValue] = useState<Date | null>(dueDate ? new Date(dueDate) : null);
   const isMobile = useWindowSize();
 
   const handleSetValue = async (date: Date | null) => {
+    if (onUpdateDueDate) {
+      onUpdateDueDate(date?.toISOString() ?? '');
+    }
     if (task) {
+
       await updateTaskDetails(task?.id ?? '', {
         due_date: date,
       });
+
+
     }
   };
 
@@ -199,19 +206,19 @@ const DueDate = ({
         </CommandDialog>
       ) : (
         <Popover>
-          <div className="flex items-center gap-2 rounded-md py-2 pr-2 hover:bg-accent">
+          <div className="flex items-center gap-2 rounded-md h-8 w-48 p-1 hover:bg-accent text-xs">
             <PopoverTrigger asChild>
               <div className="flex w-full items-center justify-between">
                 <div className="flex cursor-pointer items-center gap-2">
                   {value ? (
                     getDueDateIcon(value).icon
                   ) : (
-                    <HiCalendar size={18} className="text-gray-500" />
+                    <CalendarDays size={18} className="text-gray-500" />
                   )}
                   {value ? (
-                    <p className="text-sm">{format(value, 'dd/MM/yyyy')}</p>
+                    <p className="text-xs">{format(value, 'dd/MM/yyyy')}</p>
                   ) : (
-                    <p className="text-sm">Add due date</p>
+                    <p className="text-xs">Add due date</p>
                   )}
                 </div>
               </div>

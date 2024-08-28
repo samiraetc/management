@@ -2,13 +2,10 @@
 
 import {
   BlockquoteFigure,
-  CharacterCount,
   Color,
   Document,
   Dropcursor,
-  Emoji,
   Focus,
-  FontFamily,
   FontSize,
   Heading,
   Highlight,
@@ -21,14 +18,12 @@ import {
   Subscript,
   Superscript,
   Table,
-  TableOfContents,
   TableCell,
   TableHeader,
   TableRow,
   TextAlign,
   TextStyle,
   TrailingNode,
-  Typography,
   Underline,
   emojiSuggestion,
   Columns,
@@ -70,7 +65,6 @@ export const ExtensionKit = () => [
   }),
   TextStyle,
   FontSize,
-  FontFamily,
   Color,
   TrailingNode,
   Link.configure({
@@ -78,13 +72,7 @@ export const ExtensionKit = () => [
   }),
   Highlight.configure({ multicolor: true }),
   Underline,
-  CharacterCount.configure({ limit: 50000 }),
-  TableOfContents,
   TableOfContentsNode,
-  Emoji.configure({
-    enableEmoticons: true,
-    suggestion: emojiSuggestion,
-  }),
   TextAlign.extend({
     addKeyboardShortcuts() {
       return {};
@@ -98,7 +86,6 @@ export const ExtensionKit = () => [
   TableCell,
   TableHeader,
   TableRow,
-  Typography,
   Placeholder.configure({
     includeChildren: false,
     showOnlyCurrent: true,

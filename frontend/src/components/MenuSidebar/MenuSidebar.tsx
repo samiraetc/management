@@ -19,7 +19,7 @@ import { RootState } from '@/redux/store';
 import ConfigsDropdown from './components/ConfigsDropdown/ConfigsDropdown';
 import { getTeams } from '@/services/Teams/teamsService';
 import CreateTask from '../CreateTask/CreateTask';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 interface IMenuSidebar {
   shrink?: boolean;

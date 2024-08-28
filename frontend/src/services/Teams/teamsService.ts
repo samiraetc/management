@@ -1,4 +1,4 @@
-import api from '@/pages/api/api';
+import api from '@/app/api/api';
 
 export async function getTeams(workspaceId: string): Promise<Team[]> {
   const data = await api.get(`/workspaces/${workspaceId}/teams`);

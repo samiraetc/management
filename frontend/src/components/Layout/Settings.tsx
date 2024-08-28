@@ -12,11 +12,11 @@ import {
   ArrowLeft,
   Building,
   CircleUserRound,
+  PanelLeft,
   Plus,
   Users,
   X,
 } from 'lucide-react';
-import { LuPanelLeft } from 'react-icons/lu';
 import {
   ResizableHandle,
   ResizablePanel,
@@ -27,8 +27,8 @@ import { AccordionItem } from '@radix-ui/react-accordion';
 import MenuSidebarButton from '../MenuSidebar/components/MenuSidebarButton';
 import { useDispatch } from 'react-redux';
 import { getSession, useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import api from '@/pages/api/api';
+import { useRouter } from 'next/navigation';
+import api from '@/app/api/api';
 import { getWorkspaces } from '@/services/Workspace/workspace.services';
 import { getTeams } from '@/services/Teams/teamsService';
 import {
@@ -265,7 +265,7 @@ const Settings = ({ children }: ISettings) => {
           variant="ghost"
         >
           <span className="sr-only">Open sidebar</span>
-          <LuPanelLeft className="size-5" aria-hidden="true" />
+          <PanelLeft className="size-5" aria-hidden="true" />
         </Button>
 
         <div className="flex items-center gap-4 text-lg font-semibold">

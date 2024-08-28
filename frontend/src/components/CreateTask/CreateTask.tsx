@@ -27,7 +27,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import RichText from '../RichText/RichText';
 import { Input } from '../ui/input';
 import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
@@ -36,6 +35,7 @@ import CreateTaskProperties from './CreateTaskProperties';
 import { postTask } from '@/services/Task/taskService';
 import { toast } from '../ui/use-toast';
 import Link from 'next/link';
+import Tiptap from '../Tiptap';
 
 interface ICreateTask {
   open: boolean;
@@ -182,6 +182,7 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
 
           <div>
             <Input
+            autoFocus
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Issue title"
@@ -197,7 +198,7 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
                 : 'max-h-32 min-h-32 sm:max-h-56 sm:min-h-24',
             )}
           >
-            <RichText onChange={setDescription} />
+            <Tiptap onChange={setDescription} autoFocus={false} />
           </div>
 
           <div className="flex flex-wrap gap-1">

@@ -1,12 +1,12 @@
 import { toast } from '@/components/ui/use-toast';
-import { PiWarningCircleFill } from 'react-icons/pi';
+import { CircleAlert } from 'lucide-react';
 
 export const copyUrlToClipboard = (item?: string, description?: string) => {
   navigator.clipboard
     .writeText(item ? item : window.location.href)
     .then(() => {
       toast({
-        icon: <PiWarningCircleFill className="size-5" />,
+        icon: <CircleAlert className="size-5" />,
         title: `"${item ? item : 'Current URL'}" copied to clipboard`,
         description: <p className="text-xs text-stone-600">{description}</p>,
       });

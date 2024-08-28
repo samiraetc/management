@@ -1,4 +1,6 @@
 // app/layout.tsx
+'use client';
+
 import { ThemeProvider } from '@/provider/ThemeProvider';
 import '@/styles/globals.css';
 import { SessionProvider } from 'next-auth/react';
@@ -7,7 +9,11 @@ import { store } from '@/redux/store';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body>

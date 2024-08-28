@@ -3,8 +3,8 @@
 import { ReactNode, useEffect, useState } from 'react';
 import i18next from '@/i18n/i18n';
 import { Button } from '../ui/button';
-import { X } from 'lucide-react';
-import { useRouter } from 'next/router';
+import { PanelLeft, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useDispatch } from 'react-redux';
 import MenuSidebar from '../MenuSidebar/MenuSidebar';
@@ -14,13 +14,12 @@ import {
   Transition,
   TransitionChild,
 } from '@headlessui/react';
-import api from '@/pages/api/api';
+import api from '@/app/api/api';
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from '../ui/resizable';
-import { LuPanelLeft } from 'react-icons/lu';
 import { getWorkspaces } from '@/services/Workspace/workspace.services';
 
 type LayoutProps = {
@@ -141,7 +140,7 @@ const Layout = ({ children }: LayoutProps) => {
           variant="ghost"
         >
           <span className="sr-only">Open sidebar</span>
-          <LuPanelLeft className="size-5" aria-hidden="true" />
+          <PanelLeft className="size-5" aria-hidden="true" />
         </Button>
       </div>
 

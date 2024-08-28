@@ -71,6 +71,7 @@ const CreateTaskProperties = ({
         className="flex h-7 w-full items-center rounded-md border px-3 font-normal"
         open={openDueDate}
         setOpen={setOpenDueDate}
+
       />
     </>
   );

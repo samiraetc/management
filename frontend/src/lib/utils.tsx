@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import {
+  CalendarDays,
   Circle,
   CircleAlert,
   CircleCheck,
@@ -12,7 +13,6 @@ import {
 import { differenceInDays } from 'date-fns';
 import LowPriority from '@/assets/icon/Low';
 import HighPriority from '@/assets/icon/High';
-import { HiCalendar } from 'react-icons/hi2';
 import MediumPriority from '@/assets/icon/Medium';
 import { format, startOfDay, parseISO } from 'date-fns';
 
@@ -97,31 +97,31 @@ export function getDueDateIcon(date: Date | null | undefined | string) {
 
   if (difference === 0) {
     return {
-      icon: <HiCalendar size={18} className="text-red-500" />,
+      icon: <CalendarDays size={18} className="text-red-500" />,
       title: 'Today',
       label: 'Today',
     };
   } else if (difference === 1) {
     return {
-      icon: <HiCalendar size={18} className="text-orange-500" />,
+      icon: <CalendarDays size={18} className="text-orange-500" />,
       title: 'Tomorrow',
       label: 'Tomorrow',
     };
   } else if (difference >= 3 && difference <= 7) {
     return {
-      icon: <HiCalendar size={18} className="text-orange-500" />,
+      icon: <CalendarDays size={18} className="text-orange-500" />,
       title: `${difference} days remaining`,
       label: `${difference} days`,
     };
   } else if (difference >= 8) {
     return {
-      icon: <HiCalendar size={18} className="text-gray-500" />,
+      icon: <CalendarDays size={18} className="text-gray-500" />,
       title: `${difference} days remaining`,
       label: format(date ?? '', 'EEE dd'),
     };
   } else if (difference < 0) {
     return {
-      icon: <HiCalendar size={18} className="text-red-500" />,
+      icon: <CalendarDays size={18} className="text-red-500" />,
       title: `${Math.abs(difference)} days overdue`,
       label: 'Overdue',
     };

@@ -16,10 +16,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Check } from 'lucide-react';
-import { IoPrism } from 'react-icons/io5';
 import { getEstimativeByName } from '@/services/Estimatives/estimativeService';
 import useWindowSize from '@/hook/useWindowSize/useWindowSize';
 import { updateTaskDetails } from '@/services/Task/taskService';
+import Image from 'next/image';
 
 interface IEstimative {
   estimative: string | null;
@@ -62,7 +62,8 @@ const EstimativeList = ({
           >
             <div className="flex w-full items-center justify-between">
               <div className="flex items-center gap-4">
-                <IoPrism />
+              <Image src="/prism.svg" width={14} height={14} alt='prism' />
+
                 <p className="text-sm">{getEstimativeProps(point)}</p>
               </div>
 
@@ -122,7 +123,7 @@ const Estimative = ({
             className,
           )}
         >
-          <IoPrism />
+          <Image src="/prism.svg" width={14} height={14} alt='prism' />
 
           {label ? (
             value ? (
