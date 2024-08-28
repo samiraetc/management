@@ -8,7 +8,14 @@ import {
 } from '@headlessui/react';
 import React, { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
-import { ArrowLeft, Building, CircleUserRound, Plus, X } from 'lucide-react';
+import {
+  ArrowLeft,
+  Building,
+  CircleUserRound,
+  Plus,
+  Users,
+  X,
+} from 'lucide-react';
 import { LuPanelLeft } from 'react-icons/lu';
 import {
   ResizableHandle,
@@ -19,12 +26,16 @@ import { Accordion, AccordionContent, AccordionTrigger } from '../ui/accordion';
 import { AccordionItem } from '@radix-ui/react-accordion';
 import MenuSidebarButton from '../MenuSidebar/components/MenuSidebarButton';
 import { useDispatch } from 'react-redux';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import api from '@/pages/api/api';
 import { getWorkspaces } from '@/services/Workspace/workspace.services';
 import { getTeams } from '@/services/Teams/teamsService';
-import { settingsWorkspaceNavigation } from '../MenuSidebar/components/ConfigsDropdown/navigation';
+import {
+  settingsTeamsNavigation,
+  settingsWorkspaceNavigation,
+} from '../MenuSidebar/components/ConfigsDropdown/navigation';
+import { cn } from '@/lib/utils';
 
 interface ISettings {
   children: React.ReactElement;
@@ -38,6 +49,7 @@ const Settings = ({ children }: ISettings) => {
   const [workspace, setWorkspace] = useState<Workspace>();
   const [workspaceUrl, setWorkspaceUrl] = useState('');
   const [teams, setTeams] = useState<Team[]>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -51,6 +63,7 @@ const Settings = ({ children }: ISettings) => {
 
   useEffect(() => {
     if (workspaceUrl) {
+      setLoading(true);
       setWorkspaceInRedux();
     }
   }, [workspaceUrl]);
@@ -88,14 +101,16 @@ const Settings = ({ children }: ISettings) => {
   };
 
   const fetchTeams = async (id: string) => {
-    await getTeams(id).then((response) => {
-      setTeams(response);
+    await getTeams(id)
+      .then((response) => {
+        setTeams(response);
 
-      dispatch({
-        type: 'teams/setTeams',
-        payload: response,
-      });
-    });
+        dispatch({
+          type: 'teams/setTeams',
+          payload: response,
+        });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -293,6 +308,23 @@ const Settings = ({ children }: ISettings) => {
                   <AccordionItem value="home" className="border-none">
                     <div className="text-md mb-1 flex w-full items-center justify-start gap-3 text-black/70 dark:text-white/70">
                       <div>
+                        <CircleUserRound width={18} height={18} />
+                      </div>
+                      <p className="truncate">Account</p>
+                    </div>
+
+                    <div className="pl-7">
+                      <MenuSidebarButton
+                        url={`/${workspace?.url_key}/settings/my-account`}
+                        name="My account"
+                        className="pl-1"
+                      />
+                    </div>
+                  </AccordionItem>
+
+                  <AccordionItem value="home" className="mt-2 border-none">
+                    <div className="text-md mb-1 flex w-full items-center justify-start gap-3 text-black/70 dark:text-white/70">
+                      <div>
                         <Building width={18} height={18} />
                       </div>
                       <p className="truncate">Workspace</p>
@@ -313,7 +345,7 @@ const Settings = ({ children }: ISettings) => {
 
                   <AccordionItem value="home" className="mt-2 border-none">
                     <div className="text-md mb-1 flex w-full items-center justify-start gap-3 text-black/70 dark:text-white/70">
-                      <CircleUserRound width={18} height={18} />
+                      <Users width={18} height={18} />
                       Teams
                     </div>
 
@@ -325,15 +357,19 @@ const Settings = ({ children }: ISettings) => {
                               value={team.identifier}
                               className="border-none"
                             >
-                              <AccordionTrigger className="m-0 p-0">
-                                <MenuSidebarButton
-                                  key={team.id}
-                                  name={team.name}
-                                  className="pl-1"
-                                />
+                              <AccordionTrigger className="m-0 p-0 no-underline">
+                                <Button
+                                  variant="ghost"
+                                  className={cn(
+                                    'h-8 w-full justify-start gap-2 no-underline hover:bg-muted/80',
+                                    'pl-1',
+                                  )}
+                                >
+                                  {team.name}
+                                </Button>
                               </AccordionTrigger>
                               <AccordionContent className="border-none">
-                                {settingsWorkspaceNavigation.map((item) => {
+                                {settingsTeamsNavigation.map((item) => {
                                   return (
                                     <div className="pl-4" key={item.name}>
                                       <MenuSidebarButton

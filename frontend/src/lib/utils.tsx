@@ -185,3 +185,14 @@ export const getEstimativeProps = (estimative: string | null) => {
     return `${estimative} Points`;
   }
 };
+
+export const labelColors = [
+  { color: '#6e6e6e', name: 'gray' },
+  { color: '#747F8D', name: 'slate' },
+  { color: '#62b7d9', name: 'blue' },
+  { color: '#6664e0', name: 'blurple' },
+  { color: '#45936c', name: 'green' },
+  { color: '#FAA61A', name: 'yellow' },
+  { color: '#ff985e', name: 'orange' },
+  { color: '#F04747', name: 'red' },
+];

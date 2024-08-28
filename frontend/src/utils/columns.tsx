@@ -62,7 +62,7 @@ export const columns: ColumnDef<Task>[] = [
       return (
         <div className="ml-2 flex w-full cursor-pointer items-center justify-between space-x-1">
           <div
-            className={`${hasLabel ? 'sm:w-[40rem]' : 'sm:w-[60rem]'} mb-1.5 w-64 truncate text-sm font-medium`}
+            className={`${hasLabel ? 'sm:w-[30rem]' : 'sm:w-[56rem]'} mb-1.5 w-64 truncate text-sm font-medium`}
             onClick={() => {
               localStorage.setItem('task', row.original.id);
               Router.push(`/${workspace}/issue/${row.original.identifier}`);
@@ -74,7 +74,7 @@ export const columns: ColumnDef<Task>[] = [
           {(row.original.due_date || estimative >= 1 || hasLabel) && (
             <div className="hidden items-center justify-between gap-2 sm:flex">
               {hasLabel && (
-                <div className="w-72 sm:flex sm:justify-end">
+                <div className="w-80 sm:flex sm:justify-end">
                   <LabelList labels={labels} />
                 </div>
               )}
@@ -145,29 +145,72 @@ export const columns: ColumnDef<Task>[] = [
 
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger className="mr-2 text-stone-600">
+              <TooltipTrigger className="mr-1 text-stone-600">
                 <Avatar className="size-6">
-                  {row.original.assigned_to ? (
-                    <AvatarImage src="https://api.dicebear.com/8.x/lorelei/svg?backgroundColor=8fc69b&hair=variant18&earrings=variant01&mouth=happy16&eyes=variant23&scale=150" />
+                  {row.original.assigned_to.length >= 1 ? (
+                    <>
+                      <div>
+                        {row.original.assigned_to.map((item) => {
+                          return (
+                            <>
+                              {item.image ? (
+                                <AvatarImage
+                                  src={item.image as string}
+                                  alt="Profile"
+                                  className="flex size-5 h-full w-full rounded-full object-cover"
+                                />
+                              ) : (
+                                <CircleUserRound
+                                  width={24}
+                                  height={24}
+                                  className="text-stone-500"
+                                />
+                              )}
+                            </>
+                          );
+                        })}
+                      </div>
+                    </>
                   ) : (
-                    <CircleUserRound width={20} className="text-stone-500" />
+                    <CircleUserRound
+                      width={24}
+                      height={24}
+                      className="text-stone-500"
+                    />
                   )}
                 </Avatar>
               </TooltipTrigger>
-              <TooltipContent sideOffset={6} className="text-stone-700">
-                <div className="flex gap-2">
-                  <Avatar className="size-10">
-                    <AvatarImage
-                      className="wrounded-"
-                      src="https://api.dicebear.com/8.x/lorelei/svg?backgroundColor=8fc69b&hair=variant18&earrings=variant01&mouth=happy16&eyes=variant23&scale=160"
-                    />
-                  </Avatar>
-                  {/* <div className="flex items-center gap-1 text-base">
-                    <p className="text-base font-medium">{`${row.original.assigned_to?.full_name}`}</p>
-                    <p className="text-stone-400">{` (${row.original.assigned_to?.username})`}</p>
-                  </div> */}
-                </div>
-              </TooltipContent>
+              {row.original.assigned_to.length >= 1 && (
+                <TooltipContent sideOffset={6} className="text-stone-700">
+                  <div className="flex gap-2">
+                    {row.original.assigned_to.map((item) => {
+                      return (
+                        <>
+                          {item.image ? (
+                            <Avatar className="size-10">
+                              <AvatarImage
+                                src={item.image as string}
+                                alt="Profile"
+                                className="flex size-5 h-full w-full rounded-full object-cover"
+                              />
+                            </Avatar>
+                          ) : (
+                            <CircleUserRound
+                              width={20}
+                              height={20}
+                              className="text-stone-500"
+                            />
+                          )}
+                          <div className="flex items-center gap-1">
+                            <p className="text-sm font-medium">{`${item.full_name}`}</p>
+                            <p className="text-stone-400">{` (${item.username})`}</p>
+                          </div>
+                        </>
+                      );
+                    })}
+                  </div>
+                </TooltipContent>
+              )}
             </Tooltip>
           </TooltipProvider>
         </div>

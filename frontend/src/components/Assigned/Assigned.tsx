@@ -99,7 +99,17 @@ const Assigned = ({
                     )}
                     onClick={() => setOpen(!open)}
                   >
-                    <CircleUserRound width={15} />
+                    <div className="size-6">
+                      {user.image ? (
+                        <img
+                          src={user.image as string}
+                          alt="Profile"
+                          className="flex h-full w-full rounded-full object-cover"
+                        />
+                      ) : (
+                        <CircleUserRound width={16} />
+                      )}
+                    </div>
                     {user.full_name}
                   </div>
                 ))}
@@ -115,7 +125,17 @@ const Assigned = ({
                       key={index}
                       className="-ml-1.5 size-2.5 rounded-full border border-white"
                     >
-                      <CircleUserRound width={15} />
+                      <div className="size-6">
+                        {user.image ? (
+                          <img
+                            src={user.image as string}
+                            alt="Profile"
+                            className="flex h-full w-full rounded-full object-cover"
+                          />
+                        ) : (
+                          <CircleUserRound width={16} />
+                        )}
+                      </div>
                       {user.full_name}
                     </div>
                   ))}
@@ -133,7 +153,7 @@ const Assigned = ({
               )}
               onClick={() => setOpen(true)}
             >
-              <CircleUserRound width={15} />
+              <CircleUserRound width={16} />
               {showList && (
                 <p className="font-medium text-foreground">Assign</p>
               )}
@@ -171,7 +191,17 @@ const Assigned = ({
                       onChange={() => handleUserToggle(user)}
                     />
 
-                    <CircleUserRound width={15} />
+                    <div className="size-6">
+                      {user.image ? (
+                        <img
+                          src={user.image as string}
+                          alt="Profile"
+                          className="flex h-full w-full rounded-full object-cover"
+                        />
+                      ) : (
+                        <CircleUserRound width={20} />
+                      )}
+                    </div>
                     {user.full_name}
                   </div>
                 </CommandItem>

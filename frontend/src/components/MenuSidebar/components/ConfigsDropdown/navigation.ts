@@ -44,4 +44,21 @@ export const settingsWorkspaceNavigation = [
     name: 'Labels',
     url: 'labels',
   },
+
 ];
+
+export const settingsTeamsNavigation = [
+  {
+    name: 'General',
+    url: 'general',
+  },
+  {
+    name: 'Labels',
+    url: 'labels',
+  },
+  {
+    name: 'Members',
+    url: 'members',
+  },
+];
+

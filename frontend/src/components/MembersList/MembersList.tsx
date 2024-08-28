@@ -20,14 +20,24 @@ const MembersList = ({ members }: MembersListProps) => {
         <TooltipTrigger className="ml-3 flex items-center">
           {members.slice(0, maxMembersToShow).map((member: User) => (
             <div key={member.id}>
-              <span
-                className="fist:ml-0 -ml-3 flex size-6 items-center justify-center rounded-full border-2 border-white p-0.5 text-xs text-white dark:border-background"
-                style={{
-                  backgroundColor: generateHexaColor(),
-                }}
-              >
-                {`${member.first_name.charAt(0)}${member.last_name.charAt(0)}`}
-              </span>
+              {member.image ? (
+                <div className="size-5">
+                  <img
+                    src={member.image as string}
+                    alt="Profile"
+                    className="flex h-full w-full rounded-full object-cover"
+                  />
+                </div>
+              ) : (
+                <span
+                  className="fist:ml-0 -ml-3 flex size-6 items-center justify-center rounded-full border-2 border-white p-0.5 text-xs text-white dark:border-background"
+                  style={{
+                    backgroundColor: generateHexaColor(),
+                  }}
+                >
+                  {`${member.first_name.charAt(0)}${member.last_name.charAt(0)}`}
+                </span>
+              )}
             </div>
           ))}
         </TooltipTrigger>
@@ -37,14 +47,24 @@ const MembersList = ({ members }: MembersListProps) => {
               key={index}
               className="flex w-full items-center gap-1 rounded-md p-2 py-1 text-sm font-normal text-stone-700 hover:bg-accent dark:text-white"
             >
-              <span
-                className="fist:ml-0 flex size-6 items-center justify-center rounded-full border-2 border-white p-0.5 text-xs text-white dark:border-background"
-                style={{
-                  backgroundColor: generateHexaColor(),
-                }}
-              >
-                {`${mem.first_name.charAt(0)}${mem.last_name.charAt(0)}`}
-              </span>
+              {mem.image ? (
+                <div className="size-5">
+                  <img
+                    src={mem.image as string}
+                    alt="Profile"
+                    className="flex h-full w-full rounded-full object-cover"
+                  />
+                </div>
+              ) : (
+                <span
+                  className="fist:ml-0 -ml-3 flex size-6 items-center justify-center rounded-full border-2 border-white p-0.5 text-xs text-white dark:border-background"
+                  style={{
+                    backgroundColor: generateHexaColor(),
+                  }}
+                >
+                  {`${mem.first_name.charAt(0)}${mem.last_name.charAt(0)}`}
+                </span>
+              )}
               <span className="font-semibold">{mem.full_name}</span>
               <span className="text-gray-500"> ({mem.email})</span>
             </div>

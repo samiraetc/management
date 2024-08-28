@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { RootState } from '@/redux/store';
+import { editTeam } from '@/services/Teams/teamsService';
 import withSettings from '@/utils/hoc/withSettings';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -22,6 +23,13 @@ const TeamGeneral = () => {
     setName(team?.name ?? '');
     setIdentifier(team?.identifier ?? '');
   }, [team]);
+
+  const handleEditTeam = async () => {
+    await editTeam(team?.id ?? '', {
+      name,
+      identifier,
+    });
+  };
 
   return (
     <div className="m-4 mx-auto w-[21rem] sm:mt-12 sm:w-[35rem] lg:mt-24 lg:w-[40rem]">
@@ -69,7 +77,11 @@ const TeamGeneral = () => {
           </div>
 
           {(team?.name !== name || team.identifier !== identifier) && (
-            <Button className="h-8" disabled={identifier == '' || name == ''}>
+            <Button
+              className="h-8"
+              disabled={identifier == '' || name == ''}
+              onClick={() => handleEditTeam()}
+            >
               Update
             </Button>
           )}

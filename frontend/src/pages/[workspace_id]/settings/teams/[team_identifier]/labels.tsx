@@ -3,11 +3,11 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { RootState } from '@/redux/store';
 import {
-  createWorkspaceLabel,
-  deleteWorkspacelabel,
-  editWorkspacelabel,
-  getLabels,
-} from '@/services/Label/labelService';
+  createTeamLabel,
+  deleteTeamlabel,
+  editTeamlabel,
+  getTeamLabels,
+} from '@/services/Teams/teamsService';
 
 import withSettings from '@/utils/hoc/withSettings';
 import { Brush, Check, Palette, Pencil, Search, Trash } from 'lucide-react';
@@ -29,7 +29,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { format } from 'date-fns';
-
+import { useRouter } from 'next/router';
 
 function alreadyExist() {
   toast({
@@ -37,7 +37,7 @@ function alreadyExist() {
     title: 'Unable to save label',
     description: (
       <p className="text-gray-500 dark:text-white/70">
-        A label with this name already exists in the workspace labels.
+        A label with this name already exists in the team labels.
       </p>
     ),
   });
@@ -176,20 +176,24 @@ const LabelForm = ({
   );
 };
 
-const WorkspaceLabels = () => {
-  const [workspaceLabels, setWorkspaceLabels] = useState<Label[]>([]);
+const TeamLabels = () => {
+  const router = useRouter();
+  const [teamLabels, setTeamLabels] = useState<Label[]>([]);
   const [search, setSearch] = useState<string>();
   const [selectedColor, setSelectedColor] = useState(labelColors[0].color);
   const [labelName, setLabelName] = useState<string>('');
   const [newLabel, setNewLabel] = useState<boolean>(false);
   const [labelId, setLabelId] = useState<string>('');
-  const hasLabel = workspaceLabels.some((item) => item.name === labelName);
+  const hasLabel = teamLabels.some((item) => item.name === labelName);
 
-  const workspace =
-    useSelector((state: RootState) => state.workspace.workspace) ?? null;
+  const teams = useSelector((state: RootState) => state.teams.teams) ?? null;
 
-  const getWorkspaceLabels = async () => {
-    await getLabels(workspace?.id ?? '').then((res) => setWorkspaceLabels(res));
+  const team = teams?.find(
+    (item) => item.identifier === router.query.team_identifier,
+  );
+
+  const getLabels = async () => {
+    await getTeamLabels(team?.id ?? '').then((res) => setTeamLabels(res));
   };
 
   const handleCancelNewLabel = () => {
@@ -202,44 +206,42 @@ const WorkspaceLabels = () => {
   const handleCreateNewLabel = async () => {
     hasLabel
       ? alreadyExist()
-      : await createWorkspaceLabel(workspace?.id ?? '', {
+      : await createTeamLabel(team?.id ?? '', {
           name: labelName,
           color: selectedColor,
         })
-          .then(() => getWorkspaceLabels())
+          .then(() => getLabels())
           .finally(() => handleCancelNewLabel());
   };
 
   const handleEditLabel = async () => {
-    const currentLabel = workspaceLabels.find((item) => item.id === labelId);
+    const currentLabel = teamLabels.find((item) => item.id === labelId);
     const isNameSame = currentLabel?.name === labelName;
 
     const updateData = isNameSame
       ? { color: selectedColor }
       : { name: labelName, color: selectedColor };
 
-    await editWorkspacelabel(workspace?.id ?? '', labelId, updateData)
-      .then(() => getWorkspaceLabels())
+    await editTeamlabel(team?.id ?? '', labelId, updateData)
+      .then(() => getLabels())
       .finally(() => handleCancelNewLabel());
   };
 
-  const handleDeleteWorkspaceLabel = async (id: string) => {
-    await deleteWorkspacelabel(workspace?.id ?? '', id).then(() =>
-      getWorkspaceLabels(),
-    );
+  const handleDeleteTeamLabel = async (id: string) => {
+    await deleteTeamlabel(team?.id ?? '', id).then(() => getLabels());
   };
 
   useEffect(() => {
-    getWorkspaceLabels();
+    getLabels();
   }, []);
 
   return (
     <div className="lg:mt-18 m-4 mx-auto w-[21rem] sm:mt-12 sm:w-[35rem] lg:w-[40rem]">
       <div className="space-y-4">
         <div className="space-y-3">
-          <div className="text-3xl font-normal">Workspace Labels</div>
+          <div className="text-3xl font-normal">Team Labels</div>
           <div className="text-sm text-black/50 dark:text-white/70">
-            Manage your workspace labels
+            Manage your team labels
           </div>
           <Separator />
         </div>
@@ -276,7 +278,7 @@ const WorkspaceLabels = () => {
           />
         )}
         <div className="space-y-1">
-          {workspaceLabels
+          {teamLabels
             .filter((filter) =>
               search
                 ? filter.name.toLowerCase().includes(search.toLowerCase())
@@ -331,13 +333,15 @@ const WorkspaceLabels = () => {
                             />
                           )}
 
-                          <Trash
-                            width={14}
-                            className="cursor-pointer text-gray-500 opacity-0 group-hover:opacity-100"
-                            onClick={() => {
-                              handleDeleteWorkspaceLabel(label.id);
-                            }}
-                          />
+                          {label.can_edit && (
+                            <Trash
+                              width={14}
+                              className="cursor-pointer text-gray-500 opacity-0 group-hover:opacity-100"
+                              onClick={() => {
+                                handleDeleteTeamLabel(label.id);
+                              }}
+                            />
+                          )}
                         </div>
                       </div>
                     </div>
@@ -351,4 +355,4 @@ const WorkspaceLabels = () => {
   );
 };
 
-export default withSettings(WorkspaceLabels);
+export default withSettings(TeamLabels);

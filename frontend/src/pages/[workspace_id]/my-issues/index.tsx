@@ -36,34 +36,41 @@ const MyIssues = () => {
       <div>
         {tasks.length >= 1 ? (
           <div className="h-screen overflow-y-auto pb-24">
-            {statuses.map((status) => (
-              <section key={status.id} className="">
-                <div className="flex items-center justify-between bg-secondary py-2 pl-3.5 pr-5 sm:pl-7 sm:pr-2">
-                  <div className="flex items-center gap-2">
-                    {getStatusesProps(status.key)?.icon}
-                    <span className="text-md font-medium">{status.key}</span>
-                    <span className="mt-0.5 text-sm text-stone-500">
-                      {
-                        tasks.filter((task) => task.status === status.key)
-                          .length
-                      }
-                    </span>
-                  </div>
+            {statuses.map((status) => {
+              const filteredTasks = tasks.filter(
+                (task) => task.status === status.key,
+              );
 
-                  <Plus
-                    width={18}
-                    className="cursor-pointer text-stone-500"
-                    onClick={() => setOpenCreate(true)}
-                  />
-                </div>
-                <div className="z-0 sm:p-0">
-                  <DataTable
-                    data={tasks.filter((task) => task.status === status.key)}
-                    columns={columns}
-                  />
-                </div>
-              </section>
-            ))}
+              if (filteredTasks.length === 0) return null;
+              return (
+                <section key={status.id} className="">
+                  <div className="flex items-center justify-between bg-secondary py-2 pl-3.5 pr-5 sm:pl-7 sm:pr-2">
+                    <div className="flex items-center gap-2">
+                      {getStatusesProps(status.key)?.icon}
+                      <span className="text-md font-medium">{status.key}</span>
+                      <span className="mt-0.5 text-sm text-stone-500">
+                        {
+                          tasks.filter((task) => task.status === status.key)
+                            .length
+                        }
+                      </span>
+                    </div>
+
+                    <Plus
+                      width={18}
+                      className="cursor-pointer text-stone-500"
+                      onClick={() => setOpenCreate(true)}
+                    />
+                  </div>
+                  <div className="z-0 sm:p-0">
+                    <DataTable
+                      data={tasks.filter((task) => task.status === status.key)}
+                      columns={columns}
+                    />
+                  </div>
+                </section>
+              );
+            })}
           </div>
         ) : (
           <div className="flex h-screen items-center justify-center">

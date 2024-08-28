@@ -3,7 +3,7 @@ import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { Button } from '@headlessui/react';
 import { signOut, useSession } from 'next-auth/react';
-import { Check, LogOutIcon } from 'lucide-react';
+import { Check, CircleUserRound, LogOutIcon } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { logout } from '@/redux/actions/actions';
@@ -27,6 +27,7 @@ import {
   MenubarTrigger,
 } from '@/components/ui/menubar';
 import { getWorkspaces } from '@/services/Workspace/workspace.services';
+import { getUser } from '@/services/User/userService';
 
 const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
   const { data: session } = useSession();
@@ -36,6 +37,17 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
   const workspaceStorage = localStorage.getItem('workspace');
   const [workspace, setWorkspace] = useState<Workspace[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [image, setImage] = useState<string | ArrayBuffer | null>(null);
+
+  const handleGetUserInfos = async () => {
+    await getUser(session?.user?.id ?? '').then((response) => {
+      setImage(response.image ?? null);
+    });
+  };
+
+  useEffect(() => {
+    handleGetUserInfos();
+  }, []);
 
   const handleGetWorkspace = async () => {
     await getWorkspaces()
@@ -79,6 +91,8 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
     return () => document.removeEventListener('keydown', down);
   });
 
+
+
   return (
     <>
       <Menubar className="border-none">
@@ -88,9 +102,23 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
             asChild
           >
             <div>
-              <Avatar className="size-10">
-                <AvatarImage src="https://api.dicebear.com/8.x/lorelei/svg?backgroundColor=8fc69b&hair=variant18&earrings=variant01&mouth=happy16&eyes=variant23&scale=160" />
-              </Avatar>
+              <>
+                {image ? (
+                  <div className="size-10">
+                    <img
+                      src={image as string}
+                      alt="Profile"
+                      className="flex h-full w-full rounded-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <CircleUserRound
+                    width={35}
+                    height={35}
+                    className="text-stone-500"
+                  />
+                )}
+              </>
               {!shrink && (
                 <p className="font-medium">{session?.user.full_name}</p>
               )}
@@ -100,7 +128,7 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
             <>
               <MenubarItem>
                 <Link
-                  href={'/my-account'}
+                   href={`/${workspaceStorage}/settings/my-account`}
                   className="text-md flex w-full items-center justify-between p-1 font-medium"
                 >
                   <p>My Account</p>
