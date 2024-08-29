@@ -6,7 +6,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Avatar, AvatarImage } from '../ui/avatar';
 
 interface MembersListProps {
   members: User[];

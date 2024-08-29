@@ -40,7 +40,7 @@ const TeamsIndex = () => {
     <>
       <>
         <div className="sticky -top-0.5 z-50 w-full border-b bg-background">
-          <div className="flex items-center justify-between border-b py-2 pl-6 font-medium sm:pl-6 sm:pr-4">
+          <div className="py-2 pl-4 font-medium sm:pl-7 sm:pr-4">
             <div className="flex items-center gap-2">
               <span>Teams</span>
               <span className="text-gray-500">{teams.length}</span>
@@ -49,7 +49,7 @@ const TeamsIndex = () => {
         </div>
 
         <div className="mb-24">
-          <div className="sm:p-0">
+          <div className="">
             <DataTable
               data={teamMembers}
               columns={teamColumns}

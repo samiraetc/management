@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { CircleX, Copy, GitBranchPlus, Link } from 'lucide-react';
 import { copyUrlToClipboard, sanitizeBranchName } from '@/utils/clipboard';
 import { Separator } from '@/components/ui/separator';
-import { useParams } from 'next/navigation';
 import { TaskPriority } from '@/lib/utils';
 import Status from '@/components/Status/Status';
 import Priority from '@/components/Priority/Priority';
@@ -19,18 +18,17 @@ import DueDate from '@/components/DueDate/DueDate';
 import { getTaskDetails, updateTaskDetails } from '@/services/Task/taskService';
 import Assigned from '@/components/Assigned/Assigned';
 import Tiptap from '@/components/Tiptap';
+import { useParams } from 'next/navigation';
 
 const IssuePage = () => {
   const params = useParams();
-  const issueId = (params.issue_identifier as string) ?? '';
   const [title, setTitle] = useState<string>();
   const isMobile = useWindowSize();
   const [task, setTask] = useState<Task>();
   const [loading, setLoading] = useState<boolean>(true);
 
   const handleGetTaskDetails = async () => {
-    const taskId = localStorage.getItem('task') ?? '';
-    await getTaskDetails(taskId)
+    await getTaskDetails((params.issue_identifier as string) ?? '')
       .then((response) => {
         setTask(response);
         setTitle(response.title);
@@ -67,13 +65,20 @@ const IssuePage = () => {
     });
   };
 
+  const handleGetTaskByStorage = (task: Task) => {
+    setTask(task);
+    setTitle(task.title);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    handleGetTaskDetails();
+    const taskStorage = sessionStorage.getItem('task');
+    const task = taskStorage ? JSON.parse(taskStorage) : null;
+
+    task ? handleGetTaskByStorage(task) : handleGetTaskDetails();
   }, []);
 
-  return loading && !task ? (
-    <>Loading..</>
-  ) : (
+  return loading ? null : (
     <>
       <div className="flex h-full gap-1 overflow-hidden">
         <div className="w-full">
@@ -117,7 +122,7 @@ const IssuePage = () => {
                 className="cursor-pointer"
               />
               <Copy
-                onClick={() => copyUrlToClipboard(issueId)}
+                onClick={() => copyUrlToClipboard(task?.identifier)}
                 size={14}
                 className="cursor-pointer"
               />

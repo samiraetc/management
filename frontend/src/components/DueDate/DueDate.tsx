@@ -176,9 +176,12 @@ const DueDate = ({
           onClick={() => setOpen && setOpen(true)}
         >
           {getDueDateIcon(value).icon}
-          <p className="text-d text-stone-600">{getDueDateIcon(value).label}</p>
+          <p className="text-xs text-stone-600">
+            {getDueDateIcon(value).label}
+          </p>
         </div>
       )}
+
       {dialog ? (
         <CommandDialog
           open={open}

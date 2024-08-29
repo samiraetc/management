@@ -160,7 +160,6 @@ const Priority = ({
         <CommandDialog
           open={openDialog}
           onOpenChange={setOpenDialog}
-          overlayClassName="bg-black/10"
           showClose={false}
           className="top-1/4 w-11/12 -translate-x-1/2 translate-y-[-12%] rounded-md sm:w-full sm:-translate-x-1/2 sm:-translate-y-1/2"
         >

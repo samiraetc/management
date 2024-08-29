@@ -18,6 +18,7 @@ import Priority from '@/components/Priority/Priority';
 import Estimative from '@/components/Estimative/Estimative';
 import { CircleUserRound } from 'lucide-react';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import Link from 'next/link';
 
 export const issueColumns = (
   workspaceId: string,
@@ -64,15 +65,18 @@ export const issueColumns = (
         const { icon, title } = getDueDateIcon(date ?? '');
         return (
           <div className="ml-2 flex w-full cursor-pointer items-center justify-between space-x-1">
-            <div
-              className={`${hasLabel ? 'sm:w-[30rem]' : 'sm:w-[56rem]'} mb-1.5 w-64 truncate text-sm font-medium`}
+            <Link
+              href={`/${workspaceId}/issue/${row.original.identifier}`}
               onClick={() => {
-                localStorage.setItem('task', row.original.id);
-                router.push(`/${workspaceId}/issue/${row.original.identifier}`);
+                sessionStorage.setItem('task', JSON.stringify(row.original));
               }}
             >
-              {row.getValue('title')}
-            </div>
+              <div
+                className={`${hasLabel ? 'sm:w-[30rem]' : 'sm:w-[56rem]'} mb-1.5 w-64 truncate text-sm font-medium`}
+              >
+                {row.getValue('title')}
+              </div>
+            </Link>
 
             {(row.original.due_date || estimative >= 1 || hasLabel) && (
               <div className="hidden items-center justify-between gap-2 sm:flex">
@@ -160,7 +164,7 @@ export const issueColumns = (
                                   <AvatarImage
                                     src={item.image as string}
                                     alt="Profile"
-                               className="flex size-full rounded-full object-cover"
+                                    className="flex size-full rounded-full object-cover"
                                   />
                                 ) : (
                                   <CircleUserRound
@@ -194,7 +198,7 @@ export const issueColumns = (
                                 <AvatarImage
                                   src={item.image as string}
                                   alt="Profile"
-                             className="flex size-full rounded-full object-cover"
+                                  className="flex size-full rounded-full object-cover"
                                 />
                               </Avatar>
                             ) : (

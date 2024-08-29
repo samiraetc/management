@@ -5,6 +5,7 @@ import {
   editTeamTask,
   getAllTaskByCreatedUser,
   getAllTasksByTeam,
+  getTaskByIdentifier,
   getUniqueTask,
 } from '@/models/task/task';
 import { createTaskSchema, editTaskSchema } from '@/models/task/types';
@@ -101,7 +102,7 @@ const selectAllTasks = async (request: FastifyRequest, reply: FastifyReply) => {
 const selectTaskById = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const { id } = request.params as { id: string };
-    const task = await getUniqueTask(id);
+    const task = await getTaskByIdentifier(id);
 
     if (!task) {
       reply.code(404).send({ message: 'Task not found' });

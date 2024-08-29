@@ -82,6 +82,14 @@ const getUniqueTask = async (id: string): Promise<Tasks | null> => {
   });
 };
 
+const getTaskByIdentifier = async (id: string): Promise<Tasks | null> => {
+  return await prisma.tasks.findFirst({
+    where: {
+      identifier: id,
+    },
+  });
+};
+
 const editTeamTask = async (data: any, id: string): Promise<Tasks> => {
   const task = await prisma.tasks.update({
     where: { id: id },
@@ -152,4 +160,5 @@ export {
   getUniqueTask,
   editTeamTask,
   getAllTaskByCreatedUser,
+  getTaskByIdentifier
 };

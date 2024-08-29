@@ -12,23 +12,23 @@ import { getAllTasksByUserFilters } from '@/services/Task/taskService';
 import { useParams, useRouter } from 'next/navigation';
 
 const MyIssues = () => {
-  const [openCreate, setOpenCreate] = useState<boolean>(false);
-  const [tasks, setTasks] = useState<Task[]>([]);
   const params = useParams();
   const router = useRouter();
+  const [openCreate, setOpenCreate] = useState<boolean>(false);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const workspaceId = (params.workspace_id as string) ?? '';
 
-  const handleGetAllTasks = async () => {
-    await getAllTasksByUserFilters('created').then((response) =>
-      setTasks(response),
-    );
-  };
-
   useEffect(() => {
+    const handleGetAllTasks = async () => {
+      await getAllTasksByUserFilters('created')
+        .then((response) => setTasks(response))
+        .finally(() => setLoading(false));
+    };
     handleGetAllTasks();
   }, []);
 
-  return (
+  return loading && !tasks ? null : (
     <div className="h-full overflow-hidden">
       <div className="sticky -top-0.5 z-50 w-full rounded-sm border-b bg-background">
         <p className="border-b py-2 pl-4 font-medium sm:pl-7 sm:pr-4">
@@ -37,7 +37,7 @@ const MyIssues = () => {
       </div>
 
       <div>
-        {tasks.length >= 1 ? (
+        {tasks.length > 0 ? (
           <div className="h-screen overflow-y-auto pb-24">
             {statuses.map((status) => {
               const filteredTasks = tasks.filter(

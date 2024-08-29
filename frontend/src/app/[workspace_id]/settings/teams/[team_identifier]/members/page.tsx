@@ -193,9 +193,6 @@ const MembersPage = () => {
                           <Trash
                             width={16}
                             className="cursor-pointer text-gray-500"
-                            onClick={() => {
-                              console.log('oi');
-                            }}
                           />
                         )}
                       </div>
