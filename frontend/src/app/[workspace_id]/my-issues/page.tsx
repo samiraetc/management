@@ -10,6 +10,8 @@ import { issueColumns } from '@/utils/columns';
 import CreateTask from '@/components/CreateTask/CreateTask';
 import { getAllTasksByUserFilters } from '@/services/Task/taskService';
 import { useParams, useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 const MyIssues = () => {
   const params = useParams();
@@ -19,9 +21,13 @@ const MyIssues = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const workspaceId = (params.workspace_id as string) ?? '';
 
+  const workspace = useSelector(
+    (state: RootState) => state.workspace.workspace,
+  );
+
   useEffect(() => {
     const handleGetAllTasks = async () => {
-      await getAllTasksByUserFilters('created')
+      await getAllTasksByUserFilters('created', workspace?.id ?? '')
         .then((response) => setTasks(response))
         .finally(() => setLoading(false));
     };

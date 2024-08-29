@@ -9,6 +9,8 @@ export interface CreateTask extends Task {
   updated_at: Date;
   created_at: Date;
   due_date?: string | null;
+  workspace_id: string
+  assigned?: string | null
 }
 
 export interface EditTask extends Task {
@@ -28,6 +30,7 @@ const createTaskSchema = z.object({
   description: z.string().nullable().optional(),
   priority: z.string().nullable().optional(),
   estimative: z.string().nullable().optional(),
+  assigned: z.string().nullable().optional(),
   status: z.string().nullable().optional(),
   due_date: z.string().nullable().optional(),
   labels: z
@@ -41,6 +44,7 @@ const createTaskSchema = z.object({
 
 const editTaskSchema = z.object({
   title: z.string().optional(),
+  assigned: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
   priority: z.string().nullable().optional(),
   estimative: z.string().nullable().optional(),

@@ -20,7 +20,6 @@ const WorkspaceGeneral = () => {
   const router = useRouter();
   const [name, setName] = useState<string>(workspace?.name ?? '');
   const [urlKey, setUrlKey] = useState<string>(workspace?.url_key ?? '');
-
   const workspaceId = workspace?.id ?? '';
 
   useEffect(() => {

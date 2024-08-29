@@ -213,9 +213,9 @@ const DueDate = ({
                     <CalendarDays size={18} className="text-gray-500" />
                   )}
                   {value ? (
-                    <p className="text-xs">{format(value, 'dd/MM/yyyy')}</p>
+                    <p className="text-xs font-medium">{format(value, 'dd/MM/yyyy')}</p>
                   ) : (
-                    <p className="text-xs">Add due date</p>
+                    <p className="text-xs font-medium">Add due date</p>
                   )}
                 </div>
               </div>

@@ -1,229 +1,214 @@
+import { cn } from '@/lib/utils';
 import React, { useEffect, useState } from 'react';
-import { Badge } from '@/components/ui/badge';
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
-import { CircleUserRound } from 'lucide-react';
-import { Checkbox } from '../ui/checkbox';
-import { cn } from '@/lib/utils';
+import { Check, CircleUserRound } from 'lucide-react';
+import useWindowSize from '@/hook/useWindowSize/useWindowSize';
+import { updateTaskDetails } from '@/services/Task/taskService';
 import { getTeamMembers } from '@/services/Teams/teamsService';
-import { postAssignedTask } from '@/services/Task/taskService';
 import { Avatar, AvatarImage } from '../ui/avatar';
 
-interface AssignedProps {
-  assignedUser: TaskAssigned[];
+interface IAssigned {
+  assigned: User | null;
   showList?: boolean;
   task?: Task;
   className?: string;
-  position?: {
-    align: 'start' | 'center' | 'end' | undefined;
-    side: 'left' | 'top' | 'right' | 'bottom' | undefined;
-  };
-  setProperties?: (value: TaskAssigned[]) => void;
+  setProperties?: (value: User | null) => void;
   teamId?: string;
+  label?: boolean;
 }
 
+const UserList = ({
+  member,
+  value,
+  setValue,
+  onClose,
+}: {
+  member: User[];
+  value: User | null;
+  setValue: (selected: User | null) => void;
+  onClose: () => void;
+}) => (
+  <>
+    <CommandInput
+      placeholder="Change assigned..."
+      autoFocus={true}
+      className="text-sm"
+    />
+
+    <CommandList className="p-1">
+      <CommandEmpty>No results found.</CommandEmpty>
+
+      <CommandItem
+        className="cursor-pointer px-4 py-1.5"
+        onSelect={() => {
+          setValue(null);
+          onClose();
+        }}
+      >
+        <div className="flex w-full items-center justify-between">
+          <div className="flex items-center gap-4">
+            <CircleUserRound width={22} />
+
+            <p className="text-sm">No assignee</p>
+          </div>
+
+          {value === null && <Check width={20} height={20} className="mr-2" />}
+        </div>
+      </CommandItem>
+      {member.map((user, index) => {
+        return (
+          <CommandItem
+            className="cursor-pointer px-4 py-1.5"
+            key={index}
+            onSelect={() => {
+              setValue(user);
+              onClose();
+            }}
+          >
+            <div className="flex w-full items-center justify-between">
+              <div className="flex items-center justify-between gap-4">
+                {user.image ? (
+                  <Avatar className="size-[1.35rem]">
+                    <AvatarImage
+                      width={12}
+                      height={12}
+                      src={user.image as string}
+                      alt="Profile"
+                      className="flex rounded-full object-cover"
+                    />
+                  </Avatar>
+                ) : (
+                  <CircleUserRound width={22} />
+                )}
+
+                <p className="text-sm"> {user.full_name}</p>
+              </div>
+
+              {value?.id === user.id && (
+                <Check width={20} height={20} className="mr-2" />
+              )}
+            </div>
+          </CommandItem>
+        );
+      })}
+    </CommandList>
+  </>
+);
+
 const Assigned = ({
-  assignedUser,
-  showList = true,
+  assigned,
   className,
-  position = {
-    align: 'start',
-    side: 'left',
-  },
+  task,
   setProperties,
   teamId,
-  task,
-}: AssignedProps) => {
+}: IAssigned) => {
+  const [value, setValue] = useState<User | null>(assigned);
   const [open, setOpen] = useState<boolean>(false);
-  const [assigned, setAssigned] = useState<TaskAssigned[]>(assignedUser);
-  const [assignedUsers, setAssignedUsers] = useState<TaskAssigned[]>([]);
-
-  const handleUserToggle = (user: TaskAssigned) => {
-    const isSelected = assigned.some(
-      (selectedUser) => selectedUser.id === user.id,
-    );
-
-    if (isSelected) {
-      const selected = assigned.filter((u) => u.id !== user.id);
-      setAssigned(selected);
-    } else {
-      setAssigned([...assigned, ...assignedUsers]);
-    }
-  };
-
-  const handleGetWorkspaceUsers = async () => {
-    return await getTeamMembers(teamId ?? '').then((response) => {
-      setAssignedUsers(response);
-    });
-  };
+  const [members, setMembers] = useState<User[]>([]);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const isMobile = useWindowSize();
 
   useEffect(() => {
+    const handleGetWorkspaceUsers = async () => {
+      return await getTeamMembers(teamId ?? '').then((response) => {
+        setMembers(response);
+      });
+    };
     handleGetWorkspaceUsers();
   }, []);
 
-  const handleSetValue = async (value: TaskAssigned[]) => {
+  const handleSetValue = async (value: User | null) => {
+    setValue(value);
     setProperties
       ? setProperties(value)
-      : await postAssignedTask(task?.id ?? '', {
-          user_ids: value.map((task) => task.id),
+      : await updateTaskDetails(task?.id ?? '', {
+          assigned: value ? value.id : null,
         });
   };
 
-  useEffect(() => {
-    handleSetValue(assigned);
-  }, [assigned]);
-
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger className="outline-none">
-        <div className="flex flex-wrap items-center gap-2">
-          {assigned.length ? (
-            showList ? (
+    <div>
+      <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenuTrigger
+          onClick={() => (isMobile ? setOpenDialog(true) : setOpen(true))}
+          className={cn(
+            'outline-none flex h-8 w-48 items-center text-stone-600 gap-4 p-1 text-xs font-medium text-foreground hover:rounded-md hover:bg-muted/70',
+            className,
+          )}
+        >
+          <div className="flex items-center gap-2">
+            {value?.id ? (
               <>
-                {assigned.map((user, index) => (
-                  <div
-                    key={index}
-                    className={cn(
-                      'outline-none',
-                      'flex w-48 cursor-pointer items-center gap-2 p-1 text-xs hover:rounded-md hover:bg-muted',
-                    )}
-                    onClick={() => setOpen(!open)}
-                  >
-                    <div className="size-6">
-                      {user.image ? (
-                        <Avatar className="size-6">
-                          <AvatarImage
-                            width={12}
-                            height={12}
-                            src={user.image as string}
-                            alt="Profile"
-                            className="flex rounded-full object-cover"
-                          />
-                        </Avatar>
-                      ) : (
-                        <CircleUserRound width={16} />
-                      )}
-                    </div>
-                    {user.full_name}
-                  </div>
-                ))}
+                {value.image ? (
+                  <Avatar className="size-4">
+                    <AvatarImage
+                      width={12}
+                      height={12}
+                      src={value.image as string}
+                      alt="Profile"
+                      className="flex rounded-full object-cover"
+                    />
+                  </Avatar>
+                ) : (
+                  <CircleUserRound width={16} />
+                )}
+                <p className='text-stone-600'>{value.full_name}</p>
               </>
             ) : (
-              <Badge
-                variant="outline"
-                className="flex h-7 items-center rounded-md p-1 px-3 text-sm font-normal text-stone-600 dark:text-white"
-              >
-                <div className="flex">
-                  {assigned.slice(0, 2 + 3).map((user, index: number) => (
-                    <div
-                      key={index}
-                      className="-ml-1.5 size-2.5 rounded-full border border-white"
-                    >
-                      <div className="size-6">
-                        {user.image ? (
-                          <Avatar className="size-6">
-                            <AvatarImage
-                              width={12}
-                              height={12}
-                              src={user.image as string}
-                              alt="Profile"
-                              className="flex rounded-full object-cover"
-                            />
-                          </Avatar>
-                        ) : (
-                          <CircleUserRound width={16} />
-                        )}
-                      </div>
-                      {user.full_name}
-                    </div>
-                  ))}
-                </div>
-              </Badge>
-            )
-          ) : (
-            <div
-              className={cn(
-                'outline-none',
-                showList
-                  ? 'flex h-8 w-48 items-center gap-2 p-1 text-xs font-medium text-foreground hover:rounded-md hover:bg-muted/70'
-                  : 'flex w-48 cursor-pointer items-center gap-2 p-1 text-xs hover:rounded-md hover:bg-muted',
-                className,
-              )}
-              onClick={() => setOpen(true)}
-            >
-              <CircleUserRound width={16} />
-              {showList && (
-                <p className="font-medium text-foreground">Assign</p>
-              )}
-            </div>
-          )}
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="w-56"
-        align={position.align}
-        side={position.side}
-      >
-        <Command className="w-full text-gray-700">
-          <CommandInput
-            placeholder="Add user..."
-            autoFocus
-            className="text-sm"
+              <>
+                <CircleUserRound width={16} />
+                <p className='text-stone-600'>Assigned</p>
+              </>
+            )}
+          </div>
+        </DropdownMenuTrigger>
+
+        {!isMobile && (
+          <DropdownMenuContent className="w-56" align="center" side="bottom">
+            <Command className="w-full text-gray-700">
+              <UserList
+                member={members}
+                value={value}
+                setValue={handleSetValue}
+                onClose={() => setOpen(false)}
+              />
+            </Command>
+          </DropdownMenuContent>
+        )}
+      </DropdownMenu>
+
+      {isMobile && (
+        <CommandDialog
+          open={openDialog}
+          onOpenChange={setOpenDialog}
+          showClose={false}
+          className="top-1/4 w-11/12 -translate-x-1/2 translate-y-[-12%] rounded-md sm:w-full sm:-translate-x-1/2 sm:-translate-y-1/2"
+        >
+          <div className="mb-2 mt-3 px-3">
+            <p className="max-w-full truncate rounded-sm border bg-muted p-1 text-xs text-muted-foreground">{`${task?.identifier} - ${task?.title}`}</p>
+          </div>
+          <UserList
+            member={members}
+            value={value}
+            setValue={handleSetValue}
+            onClose={() => setOpenDialog(false)}
           />
-          <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-
-            <CommandGroup>
-              {assignedUsers.map((user, index) => (
-                <CommandItem
-                  className="cursor-pointer px-4 py-1.5"
-                  key={index}
-                  onSelect={() => handleUserToggle(user)}
-                >
-                  <div className="flex items-center gap-4">
-                    <Checkbox
-                      className="border-none data-[state=checked]:bg-transparent data-[state=checked]:text-black"
-                      checked={assigned.some(
-                        (selectedLabel) => selectedLabel.id === user.id,
-                      )}
-                      onChange={() => handleUserToggle(user)}
-                    />
-
-                    <div className="size-6">
-                      {user.image ? (
-                        <Avatar className="size-6">
-                          <AvatarImage
-                            width={12}
-                            height={12}
-                            src={user.image as string}
-                            alt="Profile"
-                            className="flex rounded-full object-cover"
-                          />
-                        </Avatar>
-                      ) : (
-                        <CircleUserRound width={20} />
-                      )}
-                    </div>
-                    {user.full_name}
-                  </div>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </CommandDialog>
+      )}
+    </div>
   );
 };
 

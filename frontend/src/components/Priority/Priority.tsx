@@ -93,13 +93,13 @@ const Priority = ({
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const isMobile = useWindowSize();
 
-  const handleGetPriorities = async () => {
-    await getPriorities().then((response) => {
-      setPriorities(response);
-    });
-  };
-
   useEffect(() => {
+    const handleGetPriorities = async () => {
+      await getPriorities().then((response) => {
+        setPriorities(response);
+      });
+    };
+
     handleGetPriorities();
   }, []);
 

@@ -11,9 +11,8 @@ import workspaceLabelsRouters from './workspace-labels';
 import workspaceMembersRouters from './workspace-members';
 import workspaceRouters from './workspace';
 import teamMembersRoutes from './team-members';
-import taskAssignedsRoutes from './task-assigneds';
 import taskLabelsRoutes from './task-labels';
-import teamTasksRoutes from './team-tasks';
+// import teamTasksRoutes from './team-tasks';
 import TaskRoutes from './task';
 
 const routes = async (app: FastifyInstance) => {
@@ -21,12 +20,11 @@ const routes = async (app: FastifyInstance) => {
   app.register(estimativesRoutes);
   app.register(labelRoutes);
   app.register(priorityRoutes);
-  app.register(taskAssignedsRoutes);
   app.register(taskLabelsRoutes);
   app.register(teamRoutes);
   app.register(teamLabelsRoutes);
   app.register(teamMembersRoutes);
-  app.register(teamTasksRoutes);
+  // app.register(teamTasksRoutes);
   app.register(userRoutes);
   app.register(workspaceRouters);
   app.register(workspaceLabelsRouters);

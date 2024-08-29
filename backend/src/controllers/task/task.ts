@@ -12,7 +12,6 @@ import { createTaskSchema, editTaskSchema } from '@/models/task/types';
 import { selectTeam } from '@/models/teams/teams';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { selectAllTaskLabels } from '@/models/task-labels/task-labels';
-import { selectAllTaskAssignedByTask } from '@/models/task-assigneds/task-assigneds';
 
 const createTaskController = async (
   request: FastifyRequest,
@@ -47,19 +46,19 @@ const createTaskController = async (
       identifier: team.identifier,
       due_date: parsedBody.due_date,
       team_id: team.id,
+      workspace_id: team.workspace_id,
+      assigned: parsedBody.assigned,
       updated_at: new Date(),
       created_at: new Date(),
     };
 
     const task = await createTask(body);
     const labels = await selectAllTaskLabels(task.id);
-    const taskAssigned = await selectAllTaskAssignedByTask(task.id);
 
     reply.code(201).send({
       data: {
         ...task,
         labels,
-        assigned_to: taskAssigned,
       },
     });
   } catch (error) {
@@ -81,12 +80,10 @@ const selectAllTasks = async (request: FastifyRequest, reply: FastifyReply) => {
     const allTasks = await Promise.all(
       tasks.map(async (task) => {
         const labels = await selectAllTaskLabels(task.id);
-        const taskAssigned = await selectAllTaskAssignedByTask(task.id);
 
         return {
           ...task,
           labels,
-          assigned_to: taskAssigned,
         };
       }),
     );
@@ -102,7 +99,14 @@ const selectAllTasks = async (request: FastifyRequest, reply: FastifyReply) => {
 const selectTaskById = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const { id } = request.params as { id: string };
-    const task = await getTaskByIdentifier(id);
+    const { workspace_id } = request.query as any;
+
+    if (!workspace_id) {
+      reply.code(404).send({ message: 'Missing workspace ID' });
+      return;
+    }
+
+    const task = await getTaskByIdentifier(id, workspace_id);
 
     if (!task) {
       reply.code(404).send({ message: 'Task not found' });
@@ -110,11 +114,9 @@ const selectTaskById = async (request: FastifyRequest, reply: FastifyReply) => {
     }
 
     const labels = await selectAllTaskLabels(task.id);
-    const taskAssigned = await selectAllTaskAssignedByTask(task.id);
+    const team = await selectTeam(task.team_id);
 
-    reply
-      .code(201)
-      .send({ data: { ...task, labels, assigned_to: taskAssigned } });
+    reply.code(201).send({ data: { ...task, labels, team } });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to select task', details: error });
   }
@@ -160,17 +162,16 @@ const updateTeamTask = async (request: FastifyRequest, reply: FastifyReply) => {
       status: parsedBody.status,
       labels: parsedBody.labels,
       due_date: parsedBody.due_date,
+      assigned: parsedBody.assigned,
       updated_at: new Date(),
     };
 
     const editedLabel = await editTeamTask(body, task.id);
-    const taskAssigned = await selectAllTaskAssignedByTask(task.id);
 
     reply.code(201).send({
       data: {
         ...editedLabel,
         labels: await selectAllTaskLabels(task.id),
-        assigned_to: taskAssigned,
       },
     });
   } catch (error) {
@@ -185,7 +186,12 @@ const selectAllTasksCreatedBy = async (
   try {
     const user = await findUserByToken(request, reply);
 
-    const { filter } = request.query as any;
+    const { filter, workspace_id } = request.query as any;
+
+    if (!workspace_id) {
+      reply.code(400).send({ message: 'Missing workspace ID' });
+      return;
+    }
 
     if (!user) {
       reply.code(400).send({ message: 'User not found' });
@@ -193,16 +199,14 @@ const selectAllTasksCreatedBy = async (
     }
 
     if (filter === 'created') {
-      const tasks = await getAllTaskByCreatedUser(user.id);
+      const tasks = await getAllTaskByCreatedUser(user.id, workspace_id);
       const allTasks = await Promise.all(
         tasks.map(async (task) => {
           const labels = await selectAllTaskLabels(task.id);
-          const taskAssigned = await selectAllTaskAssignedByTask(task.id);
 
           return {
             ...task,
             labels,
-            assigned_to: taskAssigned,
           };
         }),
       );

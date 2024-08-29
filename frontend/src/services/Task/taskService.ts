@@ -27,8 +27,11 @@ export async function postTask(teamId: string, payload: any): Promise<Task> {
   return tasks.data.data;
 }
 
-export async function getTaskDetails(taskId: string): Promise<Task> {
-  const tasks = await api.get(`task/${taskId}`);
+export async function getTaskDetails(
+  taskId: string,
+  workspaceId: string,
+): Promise<Task> {
+  const tasks = await api.get(`task/${taskId}?workspace_id=${workspaceId}`);
 
   return tasks.data.data;
 }
@@ -44,8 +47,11 @@ export async function updateTaskDetails(
 
 export async function getAllTasksByUserFilters(
   filter: string,
+  workspaceId: string,
 ): Promise<Task[]> {
-  const tasks = await api.get(`/task?filter=${filter}`);
+  const tasks = await api.get(
+    `/task?filter=${filter}&workspace_id=${workspaceId}`,
+  );
 
   return tasks.data.data;
 }

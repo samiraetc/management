@@ -154,67 +154,47 @@ export const issueColumns = (
               <Tooltip>
                 <TooltipTrigger className="mr-1 text-stone-600">
                   <Avatar className="size-6">
-                    {row.original.assigned_to.length >= 1 ? (
-                      <>
-                        <div>
-                          {row.original.assigned_to.map((item) => {
-                            return (
-                              <>
-                                {item.image ? (
-                                  <AvatarImage
-                                    src={item.image as string}
-                                    alt="Profile"
-                                    className="flex size-full rounded-full object-cover"
-                                  />
-                                ) : (
-                                  <CircleUserRound
-                                    width={24}
-                                    height={24}
-                                    className="text-stone-500"
-                                  />
-                                )}
-                              </>
-                            );
-                          })}
-                        </div>
-                      </>
-                    ) : (
-                      <CircleUserRound
-                        width={24}
-                        height={24}
-                        className="text-stone-500"
-                      />
-                    )}
+                    <>
+                      {row.original.assigned?.image ? (
+                        <AvatarImage
+                          src={row.original.assigned?.image as string}
+                          alt="Profile"
+                          className="flex size-full rounded-full object-cover"
+                        />
+                      ) : (
+                        <CircleUserRound
+                          width={24}
+                          height={24}
+                          className="text-stone-500"
+                        />
+                      )}
+                    </>
                   </Avatar>
                 </TooltipTrigger>
-                {row.original.assigned_to.length >= 1 && (
+                {row.original.assigned && (
                   <TooltipContent sideOffset={6} className="text-stone-700">
                     <div className="flex gap-2">
-                      {row.original.assigned_to.map((item) => {
-                        return (
-                          <>
-                            {item.image ? (
-                              <Avatar className="size-10">
-                                <AvatarImage
-                                  src={item.image as string}
-                                  alt="Profile"
-                                  className="flex size-full rounded-full object-cover"
-                                />
-                              </Avatar>
-                            ) : (
-                              <CircleUserRound
-                                width={20}
-                                height={20}
-                                className="text-stone-500"
-                              />
-                            )}
-                            <div className="flex items-center gap-1">
-                              <p className="text-sm font-medium">{`${item.full_name}`}</p>
-                              <p className="text-stone-400">{` (${item.username})`}</p>
-                            </div>
-                          </>
-                        );
-                      })}
+                      <>
+                        {row.original.assigned?.image ? (
+                          <Avatar className="size-10">
+                            <AvatarImage
+                              src={row.original.assigned?.image as string}
+                              alt="Profile"
+                              className="flex size-full rounded-full object-cover"
+                            />
+                          </Avatar>
+                        ) : (
+                          <CircleUserRound
+                            width={20}
+                            height={20}
+                            className="text-stone-500"
+                          />
+                        )}
+                        <div className="flex items-center gap-1">
+                          <p className="text-sm font-medium">{`${row.original.assigned?.full_name}`}</p>
+                          <p className="text-stone-400">{` (${row.original.assigned?.username})`}</p>
+                        </div>
+                      </>
                     </div>
                   </TooltipContent>
                 )}

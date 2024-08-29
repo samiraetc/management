@@ -92,13 +92,12 @@ const Estimative = ({
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const isMobile = useWindowSize();
 
-  const handleGetEstimatives = async () => {
-    await getEstimativeByName('exponential').then((response) => {
-      setEstimatives(response);
-    });
-  };
-
   useEffect(() => {
+    const handleGetEstimatives = async () => {
+      await getEstimativeByName('exponential').then((response) => {
+        setEstimatives(response);
+      });
+    };
     handleGetEstimatives();
   }, []);
 
@@ -123,16 +122,16 @@ const Estimative = ({
             className,
           )}
         >
-          <Image src="/prism.svg" width={14} height={14} alt="prism" />
+          <Image src="/prism.svg" width={14} height={14} alt="prism"  />
 
           {label ? (
             value ? (
-              <p>{getEstimativeProps(value ?? null)}</p>
+              <p className='text-stone-600'>{getEstimativeProps(value ?? null)}</p>
             ) : (
-              'Set Estimative'
+              <p className="text-stone-600">Set Estimative</p>
             )
           ) : (
-            value
+            <p className="text-stone-600">{value}</p>
           )}
         </DropdownMenuTrigger>
 

@@ -11,19 +11,22 @@ import {
   DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-  CalendarDays,
   ChevronRight,
   ClipboardPen,
   Copy,
   Ellipsis,
   GitBranchPlus,
   Link2,
-  // Trash,
 } from 'lucide-react';
 import { copyUrlToClipboard, sanitizeBranchName } from '@/utils/clipboard';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import Status from '@/components/Status/Status';
+import Priority from '@/components/Priority/Priority';
+import Estimative from '@/components/Estimative/Estimative';
+import LabelDropdown from '@/components/LabelDropdown/LabelDropdown';
+import useWindowSize from '@/hook/useWindowSize/useWindowSize';
+import { TaskPriority } from '@/lib/utils';
 import DueDate from '../DueDate/DueDate';
+import Assigned from '../Assigned/Assigned';
 
 interface IIssueHeader {
   task?: Task;
@@ -49,95 +52,130 @@ const DropdownMenuItemComponent = ({
 );
 
 const IssueHeader = ({ task }: IIssueHeader) => {
-  const teams = useSelector((state: RootState) => state.teams.teams) ?? [];
   const [openDueDate, setOpenDueDate] = useState<boolean>(false);
-
   const handleCopy = (text?: string) => () => copyUrlToClipboard(text);
+  const isMobile = useWindowSize();
 
   return (
-    <div className="sticky -top-0.5 z-50 w-full rounded-tl-md border-b bg-background">
-      <div className="flex items-center justify-between py-2 pl-6 font-medium sm:pl-6 sm:pr-4">
-        <div className="flex items-center gap-1">
-          <span className="text-xs">{teams[0]?.name}</span>
-          <ChevronRight size={12} strokeWidth={1.25} className="font-light" />
-          <span className="text-xs">{task?.identifier}</span>
+    <div>
+      <div className="sticky -top-0.5 z-50 w-full rounded-tl-md border-b bg-background">
+        <div className="flex items-center justify-between py-2 pl-6 font-medium sm:pl-6 sm:pr-4">
+          <div className="flex items-center gap-1">
+            <span className="text-xs">{task?.team?.name}</span>
+            <ChevronRight size={12} strokeWidth={1.25} className="font-light" />
+            <span className="text-xs">{task?.identifier}</span>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger className="outline-none">
-              <Ellipsis
-                width={24}
-                height={24}
-                className="ml-2 rounded-md p-1 hover:bg-muted"
-              />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="start">
-              <DropdownMenuItemComponent
-                icon={CalendarDays}
-                text={task?.due_date ? 'Change due date...' : 'Set due date...'}
-                onClick={() => setOpenDueDate(true)}
-              />
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
-                  <div className="flex w-full items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <Copy width={14} />
-                      <p>Copy</p>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="outline-none">
+                <Ellipsis
+                  width={24}
+                  height={24}
+                  className="ml-2 rounded-md p-1 hover:bg-muted"
+                />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="start">
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <div className="flex w-full items-center justify-between">
+                      <div className="flex items-center gap-1">
+                        <Copy width={14} />
+                        <p>Copy</p>
+                      </div>
                     </div>
-                  </div>
-                </DropdownMenuSubTrigger>
-                <DropdownMenuPortal>
-                  <DropdownMenuSubContent sideOffset={5}>
-                    <DropdownMenuItemComponent
-                      icon={Copy}
-                      text="Copy ID"
-                      onClick={handleCopy(task?.identifier)}
-                    />
-                    <DropdownMenuItemComponent
-                      icon={ClipboardPen}
-                      text="Copy title"
-                      onClick={handleCopy(task?.title)}
-                    />
-                    <DropdownMenuItemComponent
-                      icon={ClipboardPen}
-                      text="Copy title as link"
-                      onClick={handleCopy(
-                        `[${task?.identifier}: ${task?.title}](${window.location.href})`,
-                      )}
-                    />
-                    <DropdownMenuItemComponent
-                      icon={Link2}
-                      text="Copy link"
-                      onClick={handleCopy()}
-                    />
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItemComponent
-                      icon={GitBranchPlus}
-                      text="Copy git branch name"
-                      onClick={() =>
-                        copyUrlToClipboard(
-                          sanitizeBranchName(
-                            `${task?.identifier} ${task?.title}`,
-                          ),
-                          'Branch name copied to clipboard. Paste it into your favorite git client',
-                        )
-                      }
-                    />
-                  </DropdownMenuSubContent>
-                </DropdownMenuPortal>
-              </DropdownMenuSub>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent sideOffset={5}>
+                      <DropdownMenuItemComponent
+                        icon={Copy}
+                        text="Copy ID"
+                        onClick={handleCopy(task?.identifier)}
+                      />
+                      <DropdownMenuItemComponent
+                        icon={ClipboardPen}
+                        text="Copy title"
+                        onClick={handleCopy(task?.title)}
+                      />
+                      <DropdownMenuItemComponent
+                        icon={ClipboardPen}
+                        text="Copy title as link"
+                        onClick={handleCopy(
+                          `[${task?.identifier}: ${task?.title}](${window.location.href})`,
+                        )}
+                      />
+                      <DropdownMenuItemComponent
+                        icon={Link2}
+                        text="Copy link"
+                        onClick={handleCopy()}
+                      />
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItemComponent
+                        icon={GitBranchPlus}
+                        text="Copy git branch name"
+                        onClick={() =>
+                          copyUrlToClipboard(
+                            sanitizeBranchName(
+                              `${task?.identifier} ${task?.title}`,
+                            ),
+                            'Branch name copied to clipboard. Paste it into your favorite git client',
+                          )
+                        }
+                      />
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
+      {isMobile && (
+        <div className="sticky top-0 z-50 w-full border-b bg-background">
+          <div className="flex flex-wrap gap-2 p-2">
+            <Status
+              status={task?.status ?? 'backlog'}
+              label
+              className="h-7 w-full rounded-md border px-3 font-normal"
+              task={task}
+            />
 
-      {openDueDate && (
-        <DueDate
-          task={task}
-          open={openDueDate}
-          setOpen={setOpenDueDate}
-          dueDate={task?.due_date}
-          dialog={true}
-        />
+            <Priority
+              priority={task?.priority as TaskPriority}
+              className="h-7 w-full rounded-md border px-3 font-normal"
+              task={task}
+              label
+            />
+            <Estimative
+              estimative={task?.estimative ?? null}
+              className="flex h-7 w-full items-center rounded-md border px-3 font-normal"
+              task={task}
+            />
+            <LabelDropdown
+              labels={task?.labels ?? []}
+              showList={false}
+              position={{
+                align: 'center',
+                side: 'bottom',
+              }}
+              className="flex h-7 w-full items-center rounded-md border px-3 font-normal"
+              teamId={task?.team_id}
+              task={task}
+            />
+            <DueDate
+              dialog
+              dueDate={task?.due_date}
+              className="flex h-7 w-full items-center rounded-md border px-3 font-normal"
+              open={openDueDate}
+              setOpen={setOpenDueDate}
+              task={task}
+            />
+            <Assigned
+              assigned={task?.assigned ?? null}
+              teamId={task?.team_id}
+              className="flex h-7 w-full items-center rounded-md border px-3 font-normal"
+              task={task}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

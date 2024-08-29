@@ -56,18 +56,20 @@ const LabelDropdown = ({
     if (isSelected) {
       const selected = selectedLabels.filter((l) => l.name !== label.name);
       setSelectedLabels(selected);
+      handleSetValue(selected)
     } else {
       setSelectedLabels([...selectedLabels, label]);
+      handleSetValue([...selectedLabels, label])
     }
   };
 
-  const handleGetWorkspaceLabels = async () => {
-    await getTeamLabels(teamId ?? '').then((response) => {
-      setLabelList(response);
-    });
-  };
-
   useEffect(() => {
+    const handleGetWorkspaceLabels = async () => {
+      await getTeamLabels(teamId ?? '').then((response) => {
+        setLabelList(response);
+      });
+    };
+
     handleGetWorkspaceLabels();
   }, []);
 
@@ -79,9 +81,7 @@ const LabelDropdown = ({
         });
   };
 
-  useEffect(() => {
-    handleSetValue(selectedLabels);
-  }, [selectedLabels]);
+
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>

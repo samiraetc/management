@@ -24,6 +24,7 @@ import {
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
 import { Toaster } from '@/components/ui/toaster';
+import { getTeams } from '@/services/Teams/teamsService';
 
 export default function RootLayout({
   children,
@@ -68,6 +69,8 @@ export default function RootLayout({
           payload: foundWorkspace,
         });
 
+
+        fetchTeams(foundWorkspace.id);
         setWorkspace(foundWorkspace);
       } else if (defaultWorkspace) {
         localStorage.setItem('workspace', defaultWorkspace.url_key);
@@ -76,11 +79,22 @@ export default function RootLayout({
           payload: defaultWorkspace,
         });
 
+
+        fetchTeams(defaultWorkspace.id);
         setWorkspace(defaultWorkspace);
       }
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const fetchTeams = async (id: string) => {
+    await getTeams(id).then((response) => {
+      dispatch({
+        type: 'teams/setTeams',
+        payload: response,
+      });
+    });
   };
 
   return !workspace ? (

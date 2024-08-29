@@ -24,22 +24,32 @@ const createTask = async (data: CreateTask): Promise<Tasks> => {
     : 0;
 
   const newIdentifier = `${data.identifier}-${lastNumber + 1}`;
-  const task = await prisma.tasks.create({
-    data: {
-      title: data.title,
-      description: data.description,
-      priority: data.priority,
-      estimative: data.estimative,
-      identifier: newIdentifier,
-      status: data.status,
-      team_id: data.team_id,
-      due_date: data.due_date,
-      created_at: data.created_at,
-      updated_at: data.updated_at,
-      creator: {
-        connect: { id: data.creator },
-      },
+
+  const taskData: any = {
+    title: data.title,
+    description: data.description,
+    priority: data.priority,
+    estimative: data.estimative,
+    identifier: newIdentifier,
+    status: data.status,
+    team_id: data.team_id,
+    due_date: data.due_date,
+    created_at: data.created_at,
+    updated_at: data.updated_at,
+    workspace_id: data.workspace_id,
+    creator: {
+      connect: { id: data.creator },
     },
+  };
+
+  if (data.assigned) {
+    taskData.assigned = {
+      connect: { id: data.assigned },
+    };
+  }
+
+  const task = await prisma.tasks.create({
+    data: taskData,
   });
 
   if (data.labels && data.labels.length > 0) {
@@ -63,13 +73,43 @@ const getAllTasksByTeam = async (id: string): Promise<Tasks[] | []> => {
     where: {
       team_id: id,
     },
+   include: {
+      assigned: {
+        select: {
+          id: true,
+          first_name: true,
+          last_name: true,
+          full_name: true,
+          username: true,
+          image: true,
+          email: true
+        },
+      },
+    },
   });
 };
 
-const getAllTaskByCreatedUser = async (id: string): Promise<Tasks[] | []> => {
+const getAllTaskByCreatedUser = async (
+  id: string,
+  workspaceId: string,
+): Promise<Tasks[] | []> => {
   return await prisma.tasks.findMany({
     where: {
       creator_id: id,
+      workspace_id: workspaceId,
+    },
+   include: {
+      assigned: {
+        select: {
+          id: true,
+          first_name: true,
+          last_name: true,
+          full_name: true,
+          username: true,
+          image: true,
+          email: true
+        },
+      },
     },
   });
 };
@@ -79,28 +119,83 @@ const getUniqueTask = async (id: string): Promise<Tasks | null> => {
     where: {
       id: id,
     },
+   include: {
+      assigned: {
+        select: {
+          id: true,
+          first_name: true,
+          last_name: true,
+          full_name: true,
+          username: true,
+          image: true,
+          email: true
+        },
+      },
+    },
   });
 };
 
-const getTaskByIdentifier = async (id: string): Promise<Tasks | null> => {
+const getTaskByIdentifier = async (
+  id: string,
+  workspaceId: string,
+): Promise<Tasks | null> => {
   return await prisma.tasks.findFirst({
     where: {
       identifier: id,
+      workspace_id: workspaceId,
+    },
+    include: {
+      assigned: {
+        select: {
+          id: true,
+          first_name: true,
+          last_name: true,
+          full_name: true,
+          username: true,
+          image: true,
+          email: true
+        },
+      },
     },
   });
 };
 
 const editTeamTask = async (data: any, id: string): Promise<Tasks> => {
+  const taskData: any = {
+    title: data.title,
+    description: data.description,
+    priority: data.priority,
+    estimative: data.estimative,
+    status: data.status,
+    due_date: data.due_date,
+    updated_at: data.updated_at,
+  };
+
+  if (data.assigned) {
+    taskData.assigned = {
+      connect: { id: data.assigned },
+    };
+  } else {
+    taskData.assigned = {
+      disconnect: true,
+    };
+  }
+
   const task = await prisma.tasks.update({
     where: { id: id },
-    data: {
-      title: data.title,
-      description: data.description,
-      priority: data.priority,
-      estimative: data.estimative,
-      status: data.status,
-      due_date: data.due_date,
-      updated_at: data.updated_at,
+    data: taskData,
+    include: {
+      assigned: {
+        select: {
+          id: true,
+          first_name: true,
+          last_name: true,
+          full_name: true,
+          username: true,
+          image: true,
+          email: true
+        },
+      },
     },
   });
 
@@ -160,5 +255,5 @@ export {
   getUniqueTask,
   editTeamTask,
   getAllTaskByCreatedUser,
-  getTaskByIdentifier
+  getTaskByIdentifier,
 };

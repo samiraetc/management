@@ -3,25 +3,29 @@ import Status from '../Status/Status';
 import Priority from '../Priority/Priority';
 import { TaskPriority } from '@/lib/utils';
 import Estimative from '../Estimative/Estimative';
-import { issue } from '@/mock/issue';
 import LabelDropdown from '../LabelDropdown/LabelDropdown';
 import DueDate from '../DueDate/DueDate';
 import { Properties } from './CreateTask';
+import Assigned from '../Assigned/Assigned';
 
 interface ICreateTaskProperties {
   setProperties?: (value: Properties) => void;
   teamId?: string;
+  task?: Task
 }
 
 const CreateTaskProperties = ({
   setProperties,
   teamId,
+  task
 }: ICreateTaskProperties) => {
   const [openDueDate, setOpenDueDate] = useState<boolean>(false);
   const [status, setStatus] = useState<string>('backlog');
-  const [estimative, setEstimative] = useState<string | null>('');
-  const [priority, setPriority] = useState<TaskPriority>(TaskPriority.None);
-  const [labels, setLabels] = useState<Label[]>([]);
+  const [estimative, setEstimative] = useState<string | null>(task?.estimative ?? null);
+  const [priority, setPriority] = useState<TaskPriority>(task?.priority as TaskPriority ?? TaskPriority.None);
+  const [labels, setLabels] = useState<Label[]>(task?.labels ?? []);
+  const [assigned, setAssigned] = useState<User | null>(task?.assigned ?? null);
+  const [dueDate, setDueDate] = useState<Date | string | null>(task?.due_date ?? null)
 
   useEffect(() => {
     return (
@@ -31,9 +35,10 @@ const CreateTaskProperties = ({
         estimative,
         priority,
         labels,
+        assigned
       })
     );
-  }, [status, estimative, priority, labels]);
+  }, [status, estimative, priority, labels, assigned]);
   return (
     <>
       <Status
@@ -50,7 +55,7 @@ const CreateTaskProperties = ({
         setProperties={setPriority}
       />
       <Estimative
-        estimative={null}
+        estimative={estimative}
         className="flex h-7 w-full items-center rounded-md border px-3 font-normal"
         setProperties={setEstimative}
       />
@@ -67,10 +72,16 @@ const CreateTaskProperties = ({
       />
       <DueDate
         dialog
-        dueDate={issue.due_date}
+        dueDate={dueDate}
         className="flex h-7 w-full items-center rounded-md border px-3 font-normal"
         open={openDueDate}
         setOpen={setOpenDueDate}
+      />
+      <Assigned
+        assigned={assigned}
+        teamId={teamId}
+        className="flex h-7 w-full items-center rounded-md border px-3 font-normal"
+        setProperties={setAssigned}
       />
     </>
   );

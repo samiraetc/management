@@ -11,24 +11,27 @@ import Estimative from '@/components/Estimative/Estimative';
 import LabelDropdown from '@/components/LabelDropdown/LabelDropdown';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
-import CreateTaskProperties from '@/components/CreateTask/CreateTaskProperties';
-import useWindowSize from '@/hook/useWindowSize/useWindowSize';
 import IssueHeader from '@/components/IssueHeader/IssueHeader';
 import DueDate from '@/components/DueDate/DueDate';
 import { getTaskDetails, updateTaskDetails } from '@/services/Task/taskService';
 import Assigned from '@/components/Assigned/Assigned';
 import Tiptap from '@/components/Tiptap';
 import { useParams } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 const IssuePage = () => {
   const params = useParams();
   const [title, setTitle] = useState<string>();
-  const isMobile = useWindowSize();
   const [task, setTask] = useState<Task>();
   const [loading, setLoading] = useState<boolean>(true);
+  const taskIdentifier = (params.issue_identifier as string) ?? '';
+  const workspace = useSelector(
+    (state: RootState) => state.workspace.workspace,
+  );
 
   const handleGetTaskDetails = async () => {
-    await getTaskDetails((params.issue_identifier as string) ?? '')
+    await getTaskDetails(taskIdentifier, workspace?.id ?? '')
       .then((response) => {
         setTask(response);
         setTitle(response.title);
@@ -74,6 +77,7 @@ const IssuePage = () => {
   useEffect(() => {
     const taskStorage = sessionStorage.getItem('task');
     const task = taskStorage ? JSON.parse(taskStorage) : null;
+    sessionStorage.removeItem('task');
 
     task ? handleGetTaskByStorage(task) : handleGetTaskDetails();
   }, []);
@@ -83,13 +87,7 @@ const IssuePage = () => {
       <div className="flex h-full gap-1 overflow-hidden">
         <div className="w-full">
           <IssueHeader task={task} />
-          {isMobile && (
-            <div className="sticky top-0 z-50 w-full border-b bg-background">
-              <div className="flex flex-wrap gap-2 p-2">
-                <CreateTaskProperties teamId={task?.team_id} />
-              </div>
-            </div>
-          )}
+
           <div className="h-full overflow-x-scroll">
             <Input
               value={title}
@@ -149,7 +147,7 @@ const IssuePage = () => {
           <Estimative estimative={task?.estimative ?? ''} task={task} label />
 
           <Assigned
-            assignedUser={task?.assigned_to ?? []}
+            assigned={task?.assigned ?? null}
             teamId={task?.team_id}
             task={task}
           />

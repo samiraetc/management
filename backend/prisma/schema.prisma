@@ -24,7 +24,7 @@ model User {
   tasks_creator     Tasks[]             @relation("task-creator")
   member_of         WorkspaceMembers[]
   team_member_of    TeamMembers[]
-  task_assigned     TaskAssigneds[]
+  assigned       Tasks[]             @relation("task-assigned")
 }
 
 model Label {
@@ -143,20 +143,14 @@ model Tasks {
   due_date          DateTime?
   created_at        DateTime            @default(now())
   updated_at        DateTime?
+  workspace_id      String
   creator           User                @relation("task-creator", fields: [creator_id], references: [id])
-  assigned          TaskAssigneds[]
+  assigned          User?                @relation("task-assigned", fields: [assigned_to], references: [id])
+  assigned_to       String?
   labels            TaskLabels[]
   team              TeamTasks[]
 }
 
-model TaskAssigneds {
-  user_id           String
-  task_id           String
-  user              User                 @relation(fields: [user_id], references: [id])
-  task              Tasks                @relation(fields: [task_id], references: [id])
-
-  @@id([user_id, task_id])
-}
 
 model TaskLabels {
   team_label_id           String

@@ -47,6 +47,7 @@ export type Properties = {
   estimative: string | null;
   priority: string | null;
   labels: Label[];
+  assigned: User | null;
 };
 const CreateTask = ({ open, setOpen }: ICreateTask) => {
   const teams = useSelector((state: RootState) => state.teams.teams) ?? [];
@@ -60,6 +61,7 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
   const [expandDialog, setExpandDialog] = useState<boolean>(false);
   const [properties, setProperties] = useState<Properties>();
   const [description, setDescription] = useState<string>('');
+
 
   const handleCloseDialog = () => {
     setTitle('');

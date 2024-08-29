@@ -1,5 +1,5 @@
 import { selectTeam } from '@/models/teams/teams';
-import { TaskLabels } from '@prisma/client';
+import { Label, TaskLabels } from '@prisma/client';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { createTaskLabelsSchema } from '@/models/task-labels/types';
 import {
@@ -26,7 +26,7 @@ const selectAllTaskLabel = async (
     const teamLabels = await selectAllTaskLabels(id);
 
     const labels = await Promise.all(
-      teamLabels.map(async (item: TaskLabels) => {
+      teamLabels.map(async (item: any) => {
         return await selectTeamLabel(item.team_label_id, id);
       }),
     );
