@@ -62,7 +62,7 @@ const WorkspaceGeneral = () => {
             <div className="flex items-center justify-center">
               <div className="relative flex size-36 items-center justify-center overflow-hidden rounded-full bg-gray-200">
                 {image ? (
-                  <Avatar>
+                  <Avatar className='size-36'>
                     <AvatarImage
                       src={image as string}
                       alt="Profile"

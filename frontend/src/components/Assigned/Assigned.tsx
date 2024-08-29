@@ -102,11 +102,13 @@ const Assigned = ({
                   >
                     <div className="size-6">
                       {user.image ? (
-                        <Avatar>
+                        <Avatar className="size-6">
                           <AvatarImage
+                            width={12}
+                            height={12}
                             src={user.image as string}
                             alt="Profile"
-                            className="flex size-full rounded-full object-cover"
+                            className="flex rounded-full object-cover"
                           />
                         </Avatar>
                       ) : (
@@ -130,11 +132,13 @@ const Assigned = ({
                     >
                       <div className="size-6">
                         {user.image ? (
-                          <Avatar>
+                          <Avatar className="size-6">
                             <AvatarImage
+                              width={12}
+                              height={12}
                               src={user.image as string}
                               alt="Profile"
-                              className="flex size-full rounded-full object-cover"
+                              className="flex rounded-full object-cover"
                             />
                           </Avatar>
                         ) : (
@@ -198,11 +202,13 @@ const Assigned = ({
 
                     <div className="size-6">
                       {user.image ? (
-                        <Avatar>
+                        <Avatar className="size-6">
                           <AvatarImage
+                            width={12}
+                            height={12}
                             src={user.image as string}
                             alt="Profile"
-                            className="flex size-full rounded-full object-cover"
+                            className="flex rounded-full object-cover"
                           />
                         </Avatar>
                       ) : (

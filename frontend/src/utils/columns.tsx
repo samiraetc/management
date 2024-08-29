@@ -160,7 +160,7 @@ export const issueColumns = (
                                   <AvatarImage
                                     src={item.image as string}
                                     alt="Profile"
-                                    className="flex size-full rounded-full object-cover"
+                               className="flex size-full rounded-full object-cover"
                                   />
                                 ) : (
                                   <CircleUserRound
@@ -194,7 +194,7 @@ export const issueColumns = (
                                 <AvatarImage
                                   src={item.image as string}
                                   alt="Profile"
-                                  className="flex size-full rounded-full object-cover"
+                             className="flex size-full rounded-full object-cover"
                                 />
                               </Avatar>
                             ) : (

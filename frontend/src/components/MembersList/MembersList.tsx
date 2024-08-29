@@ -22,15 +22,11 @@ const MembersList = ({ members }: MembersListProps) => {
           {members.slice(0, maxMembersToShow).map((member: User) => (
             <div key={member.id}>
               {member.image ? (
-                <div className="size-5">
-                  <Avatar>
-                    <AvatarImage
-                      src={member.image as string}
-                      alt="Profile"
-                      className="flex size-full rounded-full object-cover"
-                    />
-                  </Avatar>
-                </div>
+                <img
+                  src={member.image as string}
+                  alt="Profile"
+                  className="flex size-5 rounded-full object-cover"
+                />
               ) : (
                 <span
                   className="fist:ml-0 -ml-3 flex size-6 items-center justify-center rounded-full border-2 border-white p-0.5 text-xs text-white dark:border-background"
@@ -51,15 +47,11 @@ const MembersList = ({ members }: MembersListProps) => {
               className="flex w-full items-center gap-1 rounded-md p-2 py-1 text-sm font-normal text-stone-700 hover:bg-accent dark:text-white"
             >
               {mem.image ? (
-                <div className="size-5">
-                  <Avatar>
-                    <AvatarImage
-                      src={mem.image as string}
-                      alt="Profile"
-                      className="flex size-full rounded-full object-cover"
-                    />
-                  </Avatar>
-                </div>
+                <img
+                  src={mem.image as string}
+                  alt="Profile"
+                  className="flex size-5 rounded-full object-cover"
+                />
               ) : (
                 <span
                   className="fist:ml-0 -ml-3 flex size-6 items-center justify-center rounded-full border-2 border-white p-0.5 text-xs text-white dark:border-background"

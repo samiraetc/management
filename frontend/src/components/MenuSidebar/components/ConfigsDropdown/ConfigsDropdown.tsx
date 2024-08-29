@@ -102,15 +102,13 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
             <div>
               <>
                 {image ? (
-                  <div className="size-10">
-                    <Avatar>
-                      <AvatarImage
-                        src={image as string}
-                        alt="Profile"
-                        className="flex size-full rounded-full object-cover"
-                      />
-                    </Avatar>
-                  </div>
+                  <Avatar className="size-10">
+                    <AvatarImage
+                      src={image as string}
+                      alt="Profile"
+                      className="flex size-full rounded-full object-cover"
+                    />
+                  </Avatar>
                 ) : (
                   <CircleUserRound
                     width={35}
