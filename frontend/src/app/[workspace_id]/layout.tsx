@@ -86,92 +86,87 @@ export default function RootLayout({
   return !workspace ? (
     <div>loading...</div>
   ) : (
+    <div>
+      <Toaster />
+      <Transition show={sidebarOpen}>
+        <Dialog className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
+          <TransitionChild
+            enter="transition-opacity ease-linear duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity ease-linear duration-300"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-foreground/40" />
+          </TransitionChild>
 
-        <div>
-          <Toaster />
-          <Transition show={sidebarOpen}>
-            <Dialog
-              className="relative z-50 lg:hidden"
-              onClose={setSidebarOpen}
+          <div className="fixed inset-0 flex">
+            <TransitionChild
+              enter="transition ease-in-out duration-300 transform"
+              enterFrom="-translate-x-full"
+              enterTo="translate-x-0"
+              leave="transition ease-in-out duration-300 transform"
+              leaveFrom="translate-x-0"
+              leaveTo="-translate-x-full"
             >
-              <TransitionChild
-                enter="transition-opacity ease-linear duration-300"
-                enterFrom="opacity-0"
-                enterTo="opacity-100"
-                leave="transition-opacity ease-linear duration-300"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <div className="fixed inset-0 bg-foreground/40" />
-              </TransitionChild>
-
-              <div className="fixed inset-0 flex">
+              <DialogPanel className="relative mr-16 flex w-full max-w-xs flex-1 bg-background">
                 <TransitionChild
-                  enter="transition ease-in-out duration-300 transform"
-                  enterFrom="-translate-x-full"
-                  enterTo="translate-x-0"
-                  leave="transition ease-in-out duration-300 transform"
-                  leaveFrom="translate-x-0"
-                  leaveTo="-translate-x-full"
+                  enter="ease-in-out duration-300"
+                  enterFrom="opacity-0"
+                  enterTo="opacity-100"
+                  leave="ease-in-out duration-300"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
                 >
-                  <DialogPanel className="relative mr-16 flex w-full max-w-xs flex-1 bg-background">
-                    <TransitionChild
-                      enter="ease-in-out duration-300"
-                      enterFrom="opacity-0"
-                      enterTo="opacity-100"
-                      leave="ease-in-out duration-300"
-                      leaveFrom="opacity-100"
-                      leaveTo="opacity-0"
+                  <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
+                    <Button
+                      variant="ghost"
+                      className="-m-2.5 p-2.5"
+                      onClick={() => setSidebarOpen(!sidebarOpen)}
                     >
-                      <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
-                        <Button
-                          variant="ghost"
-                          className="-m-2.5 p-2.5"
-                          onClick={() => setSidebarOpen(!sidebarOpen)}
-                        >
-                          <span className="sr-only">Close sidebar</span>
-                          <X className="size-6 text-white" aria-hidden="true" />
-                        </Button>
-                      </div>
-                    </TransitionChild>
-
-                    <MenuSidebar />
-                  </DialogPanel>
+                      <span className="sr-only">Close sidebar</span>
+                      <X className="size-6 text-white" aria-hidden="true" />
+                    </Button>
+                  </div>
                 </TransitionChild>
-              </div>
-            </Dialog>
-          </Transition>
 
-          <div className="sticky top-0 z-40 flex items-center border-b bg-background px-6 py-2 shadow-sm sm:px-6 lg:hidden">
-            <Button
-              type="button"
-              className="-m-2.5 p-2.5 lg:hidden"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              variant="ghost"
-            >
-              <span className="sr-only">Open sidebar</span>
-              <PanelLeft className="size-5" aria-hidden="true" />
-            </Button>
+                <MenuSidebar />
+              </DialogPanel>
+            </TransitionChild>
           </div>
+        </Dialog>
+      </Transition>
 
-          <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel
-              minSize={shrink ? 5 : 15}
-              maxSize={shrink ? 4.5 : 20}
-              className={
-                'hidden lg:inset-y-0 lg:z-50 lg:flex lg:h-screen lg:flex-col'
-              }
-            >
-              <MenuSidebar shrink={shrink} setShrink={setShrink} />
-            </ResizablePanel>
-            <ResizableHandle className="border-none" />
-            <ResizablePanel className="flex h-lvh min-w-0 !overflow-visible">
-              <main className="relative flex-1 overflow-visible rounded-md border-border bg-background sm:my-2 sm:mr-2 sm:border">
-                {children}
-              </main>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </div>
+      <div className="sticky top-0 z-40 flex items-center border-b bg-background px-6 py-2 shadow-sm sm:px-6 lg:hidden">
+        <Button
+          type="button"
+          className="-m-2.5 p-2.5 lg:hidden"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          variant="ghost"
+        >
+          <span className="sr-only">Open sidebar</span>
+          <PanelLeft className="size-5" aria-hidden="true" />
+        </Button>
+      </div>
 
+      <ResizablePanelGroup direction="horizontal">
+        <ResizablePanel
+          minSize={shrink ? 5 : 15}
+          maxSize={shrink ? 4.5 : 20}
+          className={
+            'hidden lg:inset-y-0 lg:z-50 lg:flex lg:h-screen lg:flex-col'
+          }
+        >
+          <MenuSidebar shrink={shrink} setShrink={setShrink} />
+        </ResizablePanel>
+        <ResizableHandle className="border-none" />
+        <ResizablePanel className="flex h-lvh min-w-0 !overflow-visible">
+          <main className="relative flex-1 overflow-visible rounded-md border-border bg-background sm:my-2 sm:mr-2 sm:border">
+            {children}
+          </main>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </div>
   );
 }

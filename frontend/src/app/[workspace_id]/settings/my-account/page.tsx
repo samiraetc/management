@@ -1,5 +1,6 @@
 'use client';
 
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
@@ -61,11 +62,13 @@ const WorkspaceGeneral = () => {
             <div className="flex items-center justify-center">
               <div className="relative flex size-36 items-center justify-center overflow-hidden rounded-full bg-gray-200">
                 {image ? (
-                  <img
-                    src={image as string}
-                    alt="Profile"
-                    className="size-full object-cover"
-                  />
+                  <Avatar>
+                    <AvatarImage
+                      src={image as string}
+                      alt="Profile"
+                      className="size-full object-cover"
+                    />
+                  </Avatar>
                 ) : (
                   <CircleUserRound
                     className="text-7xl text-gray-500"

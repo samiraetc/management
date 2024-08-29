@@ -11,7 +11,15 @@ import {
   getLabels,
 } from '@/services/Label/labelService';
 
-import { Brush, Check, CircleAlert, Palette, Pencil, Search, Trash } from 'lucide-react';
+import {
+  Brush,
+  Check,
+  CircleAlert,
+  Palette,
+  Pencil,
+  Search,
+  Trash,
+} from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 

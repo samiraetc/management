@@ -8,13 +8,8 @@ export async function getWorkspaces(): Promise<Workspace[]> {
 
 export async function createWorkspaces(
   payload: CreateWorkspace,
-  token: string,
 ): Promise<Workspace> {
-  const data = await api.post(`/workspaces`, payload, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const data = await api.post(`/workspaces`, payload);
 
   return data.data;
 }

@@ -25,7 +25,6 @@ import api from '@/app/api/api';
 
 import { getWorkspaces } from '@/services/Workspace/workspace.services';
 import { Button } from '@/components/ui/button';
-import MenuSidebar from '@/components/MenuSidebar/MenuSidebar';
 import {
   ResizableHandle,
   ResizablePanel,
@@ -57,7 +56,6 @@ export default function RootLayout({
   const [workspace, setWorkspace] = useState<Workspace>();
   const [workspaceUrl, setWorkspaceUrl] = useState('');
   const [teams, setTeams] = useState<Team[]>();
-  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -71,7 +69,6 @@ export default function RootLayout({
 
   useEffect(() => {
     if (workspaceUrl) {
-      setLoading(true);
       setWorkspaceInRedux();
     }
   }, [workspaceUrl]);
@@ -109,20 +106,18 @@ export default function RootLayout({
   };
 
   const fetchTeams = async (id: string) => {
-    await getTeams(id)
-      .then((response) => {
-        setTeams(response);
+    await getTeams(id).then((response) => {
+      setTeams(response);
 
-        dispatch({
-          type: 'teams/setTeams',
-          payload: response,
-        });
-      })
-      .finally(() => setLoading(false));
+      dispatch({
+        type: 'teams/setTeams',
+        payload: response,
+      });
+    });
   };
   return !teams ? (
     <div>loading...</div>
-  ) :  (
+  ) : (
     <html lang="en">
       <body>
         <div>

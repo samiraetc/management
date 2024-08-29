@@ -1,8 +1,8 @@
 type TaskAssigned = {
   id: string;
   full_name: string;
-  image?: string
-  username?: string
+  image?: string;
+  username?: string;
 };
 
 type Task = {

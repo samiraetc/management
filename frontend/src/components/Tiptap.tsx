@@ -1,6 +1,5 @@
 'use client';
 
-
 import { EditorContent, useEditor } from '@tiptap/react';
 import { useRef } from 'react';
 import { cn } from '@/lib/utils';
@@ -13,10 +12,15 @@ interface ITiptap {
   content?: string;
   onChange: (text: string) => void;
   className?: string;
-  autoFocus?: boolean
+  autoFocus?: boolean;
 }
 
-const Tiptap = ({ content = '', onChange, className, autoFocus = false }: ITiptap) => {
+const Tiptap = ({
+  content = '',
+  onChange,
+  className,
+  autoFocus = false,
+}: ITiptap) => {
   const menuContainerRef = useRef(null);
   const editor = useEditor(
     {

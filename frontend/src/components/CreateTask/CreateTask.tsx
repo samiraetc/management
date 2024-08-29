@@ -182,7 +182,7 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
 
           <div>
             <Input
-            autoFocus
+              autoFocus
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Issue title"

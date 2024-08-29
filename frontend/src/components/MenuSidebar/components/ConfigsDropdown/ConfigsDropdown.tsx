@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { Button } from '@headlessui/react';
 import { signOut, useSession } from 'next-auth/react';
@@ -28,6 +27,7 @@ import {
 } from '@/components/ui/menubar';
 import { getWorkspaces } from '@/services/Workspace/workspace.services';
 import { getUser } from '@/services/User/userService';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
 const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
   const { data: session } = useSession();
@@ -91,8 +91,6 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
     return () => document.removeEventListener('keydown', down);
   });
 
-
-
   return (
     <>
       <Menubar className="border-none">
@@ -105,11 +103,13 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
               <>
                 {image ? (
                   <div className="size-10">
-                    <img
-                      src={image as string}
-                      alt="Profile"
-                      className="flex h-full w-full rounded-full object-cover"
-                    />
+                    <Avatar>
+                      <AvatarImage
+                        src={image as string}
+                        alt="Profile"
+                        className="flex size-full rounded-full object-cover"
+                      />
+                    </Avatar>
                   </div>
                 ) : (
                   <CircleUserRound
@@ -128,7 +128,7 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
             <>
               <MenubarItem>
                 <Link
-                   href={`/${workspaceStorage}/settings/my-account`}
+                  href={`/${workspaceStorage}/settings/my-account`}
                   className="text-md flex w-full items-center justify-between p-1 font-medium"
                 >
                   <p>My Account</p>

@@ -18,6 +18,7 @@ import { Checkbox } from '../ui/checkbox';
 import { cn } from '@/lib/utils';
 import { getTeamMembers } from '@/services/Teams/teamsService';
 import { postAssignedTask } from '@/services/Task/taskService';
+import { Avatar, AvatarImage } from '../ui/avatar';
 
 interface AssignedProps {
   assignedUser: TaskAssigned[];
@@ -101,11 +102,13 @@ const Assigned = ({
                   >
                     <div className="size-6">
                       {user.image ? (
-                        <img
-                          src={user.image as string}
-                          alt="Profile"
-                          className="flex h-full w-full rounded-full object-cover"
-                        />
+                        <Avatar>
+                          <AvatarImage
+                            src={user.image as string}
+                            alt="Profile"
+                            className="flex size-full rounded-full object-cover"
+                          />
+                        </Avatar>
                       ) : (
                         <CircleUserRound width={16} />
                       )}
@@ -127,11 +130,13 @@ const Assigned = ({
                     >
                       <div className="size-6">
                         {user.image ? (
-                          <img
-                            src={user.image as string}
-                            alt="Profile"
-                            className="flex h-full w-full rounded-full object-cover"
-                          />
+                          <Avatar>
+                            <AvatarImage
+                              src={user.image as string}
+                              alt="Profile"
+                              className="flex size-full rounded-full object-cover"
+                            />
+                          </Avatar>
                         ) : (
                           <CircleUserRound width={16} />
                         )}
@@ -193,11 +198,13 @@ const Assigned = ({
 
                     <div className="size-6">
                       {user.image ? (
-                        <img
-                          src={user.image as string}
-                          alt="Profile"
-                          className="flex h-full w-full rounded-full object-cover"
-                        />
+                        <Avatar>
+                          <AvatarImage
+                            src={user.image as string}
+                            alt="Profile"
+                            className="flex size-full rounded-full object-cover"
+                          />
+                        </Avatar>
                       ) : (
                         <CircleUserRound width={20} />
                       )}

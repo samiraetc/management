@@ -27,7 +27,6 @@ import DueDate from '../DueDate/DueDate';
 
 interface IIssueHeader {
   task?: Task;
-  onUpdateDueDate: (taks: Date | string | null) => void
 }
 
 const DropdownMenuItemComponent = ({
@@ -49,7 +48,7 @@ const DropdownMenuItemComponent = ({
   </DropdownMenuItem>
 );
 
-const IssueHeader = ({ task,   onUpdateDueDate }: IIssueHeader) => {
+const IssueHeader = ({ task }: IIssueHeader) => {
   const teams = useSelector((state: RootState) => state.teams.teams) ?? [];
   const [openDueDate, setOpenDueDate] = useState<boolean>(false);
 
@@ -138,7 +137,6 @@ const IssueHeader = ({ task,   onUpdateDueDate }: IIssueHeader) => {
           setOpen={setOpenDueDate}
           dueDate={task?.due_date}
           dialog={true}
-          onUpdateDueDate={onUpdateDueDate}
         />
       )}
     </div>

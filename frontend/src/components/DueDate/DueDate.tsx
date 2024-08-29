@@ -26,7 +26,6 @@ interface IDueDate {
   dueDate?: Date | string | null;
   dialog?: boolean;
   className?: string;
-  onUpdateDueDate?: (update: Date | string | null) => void
 }
 
 const DueDateList = ({
@@ -155,22 +154,17 @@ const DueDate = ({
   dueDate,
   dialog,
   className,
-  onUpdateDueDate
 }: IDueDate) => {
-  const [value, setValue] = useState<Date | null>(dueDate ? new Date(dueDate) : null);
+  const [value, setValue] = useState<Date | null>(
+    dueDate ? new Date(dueDate) : null,
+  );
   const isMobile = useWindowSize();
 
   const handleSetValue = async (date: Date | null) => {
-    if (onUpdateDueDate) {
-      onUpdateDueDate(date?.toISOString() ?? '');
-    }
     if (task) {
-
       await updateTaskDetails(task?.id ?? '', {
         due_date: date,
       });
-
-
     }
   };
 
@@ -206,7 +200,7 @@ const DueDate = ({
         </CommandDialog>
       ) : (
         <Popover>
-          <div className="flex items-center gap-2 rounded-md h-8 w-48 p-1 hover:bg-accent text-xs">
+          <div className="flex h-8 w-48 items-center gap-2 rounded-md p-1 text-xs hover:bg-accent">
             <PopoverTrigger asChild>
               <div className="flex w-full items-center justify-between">
                 <div className="flex cursor-pointer items-center gap-2">

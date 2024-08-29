@@ -5,7 +5,7 @@ type User = {
   username: string;
   full_name: string;
   email: string;
-  image?: string
+  image?: string;
 };
 
 type CreateUser = {

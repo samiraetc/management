@@ -96,7 +96,7 @@ const MyIssues = () => {
         )}
       </div>
 
-      {/* {openCreate && <CreateTask open={openCreate} setOpen={setOpenCreate} />} */}
+      {openCreate && <CreateTask open={openCreate} setOpen={setOpenCreate} />}
     </div>
   );
 };

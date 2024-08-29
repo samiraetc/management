@@ -17,8 +17,12 @@ import Status from '@/components/Status/Status';
 import Priority from '@/components/Priority/Priority';
 import Estimative from '@/components/Estimative/Estimative';
 import { CircleUserRound } from 'lucide-react';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
-export const issueColumns = (workspaceId: string, router: any) => {
+export const issueColumns = (
+  workspaceId: string,
+  router: AppRouterInstance,
+) => {
   const columns: ColumnDef<Task>[] = [
     {
       accessorKey: 'items',

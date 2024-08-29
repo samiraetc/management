@@ -25,7 +25,6 @@ import {
   TextStyle,
   TrailingNode,
   Underline,
-  emojiSuggestion,
   Columns,
   Column,
   TaskItem,

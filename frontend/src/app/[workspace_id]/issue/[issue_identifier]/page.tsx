@@ -67,12 +67,6 @@ const IssuePage = () => {
     });
   };
 
-  const handleUpdateDueDate = (newDueDate: Date | string | null) => {
-    if (task) {
-      setTask({ ...task, due_date: newDueDate });
-    }
-  };
-
   useEffect(() => {
     handleGetTaskDetails();
   }, []);
@@ -83,11 +77,11 @@ const IssuePage = () => {
     <>
       <div className="flex h-full gap-1 overflow-hidden">
         <div className="w-full">
-          <IssueHeader task={task} onUpdateDueDate={handleGetTaskDetails}/>
+          <IssueHeader task={task} />
           {isMobile && (
             <div className="sticky top-0 z-50 w-full border-b bg-background">
               <div className="flex flex-wrap gap-2 p-2">
-                <CreateTaskProperties teamId={task?.team_id}  />
+                <CreateTaskProperties teamId={task?.team_id} />
               </div>
             </div>
           )}
@@ -106,7 +100,6 @@ const IssuePage = () => {
                 onChange={handleChangeDescription}
                 className="p-8"
               />
-
             </div>
           </div>
         </div>
@@ -168,21 +161,18 @@ const IssuePage = () => {
             </div>
           </div>
 
+          <>
+            <Separator />
+            <div>
+              <p className="text-xs font-medium text-muted-foreground">
+                Due Date
+              </p>
 
-
-            <>
-              <Separator />
-              <div>
-                <p className="text-xs font-medium text-muted-foreground">
-                  Due Date
-                </p>
-
-                <div className="mt-3 flex flex-wrap gap-1">
-                  <DueDate dueDate={task?.due_date ?? null} task={task} />
-                </div>
+              <div className="mt-3 flex flex-wrap gap-1">
+                <DueDate dueDate={task?.due_date ?? null} task={task} />
               </div>
-            </>
-
+            </div>
+          </>
         </div>
       </div>
     </>

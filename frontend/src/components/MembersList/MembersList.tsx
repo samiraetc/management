@@ -6,6 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { Avatar, AvatarImage } from '../ui/avatar';
 
 interface MembersListProps {
   members: User[];
@@ -22,11 +23,13 @@ const MembersList = ({ members }: MembersListProps) => {
             <div key={member.id}>
               {member.image ? (
                 <div className="size-5">
-                  <img
-                    src={member.image as string}
-                    alt="Profile"
-                    className="flex h-full w-full rounded-full object-cover"
-                  />
+                  <Avatar>
+                    <AvatarImage
+                      src={member.image as string}
+                      alt="Profile"
+                      className="flex size-full rounded-full object-cover"
+                    />
+                  </Avatar>
                 </div>
               ) : (
                 <span
@@ -49,11 +52,13 @@ const MembersList = ({ members }: MembersListProps) => {
             >
               {mem.image ? (
                 <div className="size-5">
-                  <img
-                    src={mem.image as string}
-                    alt="Profile"
-                    className="flex h-full w-full rounded-full object-cover"
-                  />
+                  <Avatar>
+                    <AvatarImage
+                      src={mem.image as string}
+                      alt="Profile"
+                      className="flex size-full rounded-full object-cover"
+                    />
+                  </Avatar>
                 </div>
               ) : (
                 <span

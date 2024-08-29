@@ -10,6 +10,7 @@ import { RootState } from '@/redux/store';
 import { addTeamMembers, getTeamMembers } from '@/services/Teams/teamsService';
 import { useParams } from 'next/navigation';
 import { toast } from '@/components/ui/use-toast';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
 interface ILabelForm {
   email: string;
@@ -70,7 +71,6 @@ const MembersPage = () => {
   const teams = useSelector((state: RootState) => state.teams.teams) ?? null;
   const [email, setEmail] = useState<string>('');
   const memberAlreadyInTeam = teamMembers.some((item) => item.email === email);
-  const [error, setError] = useState<string>('');
 
   const team = teams?.find(
     (item) => item.identifier === params.team_identifier,
@@ -168,11 +168,13 @@ const MembersPage = () => {
                       <div className="flex items-center gap-5">
                         <div className="size-10">
                           {user.image ? (
-                            <img
-                              src={user.image as string}
-                              alt="Profile"
-                              className="flex size-full rounded-full object-cover"
-                            />
+                            <Avatar>
+                              <AvatarImage
+                                src={user.image as string}
+                                alt="Profile"
+                                className="flex size-full rounded-full object-cover"
+                              />
+                            </Avatar>
                           ) : (
                             <div className="flex size-10 items-center justify-center rounded-full border-2 border-dashed p-0.5 text-xs dark:border-background">
                               {`${user.first_name.charAt(0)}${user.last_name.charAt(0)}`}

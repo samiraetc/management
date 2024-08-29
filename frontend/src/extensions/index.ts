@@ -35,4 +35,3 @@ export { Quote } from './BlockquoteFigure/Quote';
 export { QuoteCaption } from './BlockquoteFigure/QuoteCaption';
 export { Link } from './Link';
 export { Columns, Column } from './MultiColumn';
-export { emojiSuggestion } from './EmojiSuggestion';

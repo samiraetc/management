@@ -62,7 +62,7 @@ const EstimativeList = ({
           >
             <div className="flex w-full items-center justify-between">
               <div className="flex items-center gap-4">
-              <Image src="/prism.svg" width={14} height={14} alt='prism' />
+                <Image src="/prism.svg" width={14} height={14} alt="prism" />
 
                 <p className="text-sm">{getEstimativeProps(point)}</p>
               </div>
@@ -123,7 +123,7 @@ const Estimative = ({
             className,
           )}
         >
-          <Image src="/prism.svg" width={14} height={14} alt='prism' />
+          <Image src="/prism.svg" width={14} height={14} alt="prism" />
 
           {label ? (
             value ? (
