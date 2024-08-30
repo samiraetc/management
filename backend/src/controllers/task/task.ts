@@ -59,6 +59,7 @@ const createTaskController = async (
       data: {
         ...task,
         labels,
+        team,
       },
     });
   } catch (error) {
@@ -80,10 +81,12 @@ const selectAllTasks = async (request: FastifyRequest, reply: FastifyReply) => {
     const allTasks = await Promise.all(
       tasks.map(async (task) => {
         const labels = await selectAllTaskLabels(task.id);
+        const team = await selectTeam(task.team_id);
 
         return {
           ...task,
           labels,
+          team,
         };
       }),
     );
@@ -167,11 +170,13 @@ const updateTeamTask = async (request: FastifyRequest, reply: FastifyReply) => {
     };
 
     const editedLabel = await editTeamTask(body, task.id);
+    const team = await selectTeam(task.team_id);
 
     reply.code(201).send({
       data: {
         ...editedLabel,
         labels: await selectAllTaskLabels(task.id),
+        team,
       },
     });
   } catch (error) {
@@ -203,10 +208,12 @@ const selectAllTasksCreatedBy = async (
       const allTasks = await Promise.all(
         tasks.map(async (task) => {
           const labels = await selectAllTaskLabels(task.id);
+          const team = await selectTeam(task.team_id);
 
           return {
             ...task,
             labels,
+            team,
           };
         }),
       );

@@ -73,7 +73,7 @@ const getAllTasksByTeam = async (id: string): Promise<Tasks[] | []> => {
     where: {
       team_id: id,
     },
-   include: {
+    include: {
       assigned: {
         select: {
           id: true,
@@ -82,7 +82,7 @@ const getAllTasksByTeam = async (id: string): Promise<Tasks[] | []> => {
           full_name: true,
           username: true,
           image: true,
-          email: true
+          email: true,
         },
       },
     },
@@ -98,7 +98,7 @@ const getAllTaskByCreatedUser = async (
       creator_id: id,
       workspace_id: workspaceId,
     },
-   include: {
+    include: {
       assigned: {
         select: {
           id: true,
@@ -107,7 +107,7 @@ const getAllTaskByCreatedUser = async (
           full_name: true,
           username: true,
           image: true,
-          email: true
+          email: true,
         },
       },
     },
@@ -119,7 +119,7 @@ const getUniqueTask = async (id: string): Promise<Tasks | null> => {
     where: {
       id: id,
     },
-   include: {
+    include: {
       assigned: {
         select: {
           id: true,
@@ -128,7 +128,7 @@ const getUniqueTask = async (id: string): Promise<Tasks | null> => {
           full_name: true,
           username: true,
           image: true,
-          email: true
+          email: true,
         },
       },
     },
@@ -153,7 +153,7 @@ const getTaskByIdentifier = async (
           full_name: true,
           username: true,
           image: true,
-          email: true
+          email: true,
         },
       },
     },
@@ -193,7 +193,7 @@ const editTeamTask = async (data: any, id: string): Promise<Tasks> => {
           full_name: true,
           username: true,
           image: true,
-          email: true
+          email: true,
         },
       },
     },
