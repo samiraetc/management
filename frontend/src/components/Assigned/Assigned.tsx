@@ -163,13 +163,13 @@ const Assigned = ({
                     />
                   </Avatar>
                 ) : (
-                  <CircleUserRound width={16} />
+                  <CircleUserRound width={16} className='text-stone-600' />
                 )}
                 <p className='text-stone-600'>{value.full_name}</p>
               </>
             ) : (
               <>
-                <CircleUserRound width={16} />
+                <CircleUserRound width={16} className='text-stone-600' />
                 <p className='text-stone-600'>Assigned</p>
               </>
             )}

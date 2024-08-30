@@ -90,10 +90,11 @@ const IssuePage = () => {
 
           <div className="h-full overflow-x-scroll">
             <Input
+              data-testid="issue-title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Issue title"
-              className="mt-5 border-none pl-8 text-4xl font-semibold outline-none ring-0 focus-visible:ring-0"
+              className="mt-5 border-none px-20 py-8 text-2xl font-semibold outline-none ring-0 focus-visible:ring-0"
               onBlur={() => handleChangeIssueTitle()}
             />
 
@@ -101,7 +102,7 @@ const IssuePage = () => {
               <Tiptap
                 content={task?.description}
                 onChange={handleChangeDescription}
-                className="p-8"
+                className="px-20"
               />
             </div>
           </div>

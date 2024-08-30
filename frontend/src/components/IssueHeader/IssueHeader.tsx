@@ -61,16 +61,16 @@ const IssueHeader = ({ task }: IIssueHeader) => {
       <div className="sticky -top-0.5 z-50 w-full rounded-tl-md border-b bg-background">
         <div className="flex items-center justify-between py-2 pl-6 font-medium sm:pl-6 sm:pr-4">
           <div className="flex items-center gap-1">
-            <span className="text-xs">{task?.team?.name}</span>
-            <ChevronRight size={12} strokeWidth={1.25} className="font-light" />
-            <span className="text-xs">{task?.identifier}</span>
+            <span className="text-xs text-stone-600">{task?.team?.name}</span>
+            <ChevronRight size={12} strokeWidth={1.25} className="font-light text-stone-600" />
+            <span className="text-xs text-stone-600">{task?.identifier}</span>
 
             <DropdownMenu>
               <DropdownMenuTrigger className="outline-none">
                 <Ellipsis
                   width={24}
                   height={24}
-                  className="ml-2 rounded-md p-1 hover:bg-muted"
+                  className="ml-2 rounded-md p-1 hover:bg-muted text-stone-600"
                 />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="start">
