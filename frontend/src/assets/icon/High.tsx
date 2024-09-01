@@ -11,9 +11,9 @@ const HighPriority = ({ className }: IHighPriority) => {
       height="22"
       viewBox="0 0 22 22"
       fill="none"
-      stroke-width="3"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       className={className}
     >
       <path d="M2 20h.034" stroke="#4A4A4A" />

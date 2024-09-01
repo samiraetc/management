@@ -55,12 +55,11 @@ const teamMembersRoutes = async (server: FastifyInstance) => {
         body: {
           type: 'object',
           properties: {
-            user_ids: {
-              type: 'array',
-              items: { type: 'string' },
+            email: {
+              type: 'string',
             },
           },
-          required: ['user_ids'],
+          required: ['email'],
         },
         response: {
           200: {

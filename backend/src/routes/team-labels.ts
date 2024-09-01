@@ -1,6 +1,6 @@
 import {
   createTeamLabel,
-  patchTeamLabel,
+  updateTeamLabel,
   removeTeamLabel,
   selectAllTeamLabels,
 } from '@/controllers/team-labels/team-labels';
@@ -150,7 +150,7 @@ const teamLabelsRoutes = async (server: FastifyInstance) => {
         },
       },
     },
-    patchTeamLabel,
+    updateTeamLabel,
   );
 
   server.delete(

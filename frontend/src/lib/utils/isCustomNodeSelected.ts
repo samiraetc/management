@@ -1,7 +1,9 @@
 import { Editor } from '@tiptap/react';
 
-import { HorizontalRule, Link, CodeBlock } from '@/extensions';
 import { TableOfContentsNode } from '@/extensions/TableOfContentsNode';
+import { HorizontalRule } from '@/extensions/HorizontalRule';
+import { Link } from '@/extensions/Link';
+import CodeBlock from '@tiptap/extension-code-block';
 
 export const isTableGripSelected = (node: HTMLElement) => {
   let container = node;

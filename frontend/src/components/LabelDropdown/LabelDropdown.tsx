@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import {
   Command,
   CommandEmpty,
@@ -15,15 +15,9 @@ import {
 } from '@/components/ui/command';
 import { Plus, Tags } from 'lucide-react';
 import { Checkbox } from '../ui/checkbox';
-import { getLabels } from '@/services/Label/labelService';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { getTeamLabels } from '@/services/Label/labelService';
 import { cn } from '@/lib/utils';
-
-interface Label {
-  name: string;
-  color: string;
-}
+import { updateTaskDetails } from '@/services/Task/taskService';
 
 interface LabelDropdownProps {
   labels: Label[];
@@ -34,6 +28,8 @@ interface LabelDropdownProps {
     align: 'start' | 'center' | 'end' | undefined;
     side: 'left' | 'top' | 'right' | 'bottom' | undefined;
   };
+  setProperties?: (value: Label[]) => void;
+  teamId?: string;
 }
 
 const LabelDropdown = ({
@@ -44,13 +40,13 @@ const LabelDropdown = ({
     align: 'start',
     side: 'left',
   },
+  setProperties,
+  teamId,
+  task,
 }: LabelDropdownProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const [selectedLabels, setSelectedLabels] = useState<Label[]>(labels);
   const [labelList, setLabelList] = useState<Label[]>([]);
-  const workspace = useSelector(
-    (state: RootState) => state.workspace.workspace,
-  );
 
   const handleLabelToggle = (label: Label) => {
     const isSelected = selectedLabels.some(
@@ -58,25 +54,41 @@ const LabelDropdown = ({
     );
 
     if (isSelected) {
-      setSelectedLabels(selectedLabels.filter((l) => l.name !== label.name));
+      const selected = selectedLabels.filter((l) => l.name !== label.name);
+      setSelectedLabels(selected);
+      handleSetValue(selected);
     } else {
       setSelectedLabels([...selectedLabels, label]);
+      handleSetValue([...selectedLabels, label]);
     }
   };
 
   const handleGetWorkspaceLabels = async () => {
-    await getLabels(workspace?.id ?? '').then((response) => {
-      setLabelList(response);
-    });
+    if (!open) {
+      return await getTeamLabels(teamId ?? '')
+        .then((response) => {
+          setLabelList(response);
+        })
+        .finally(() => setOpen(true));
+    } else {
+      setOpen(!open);
+    }
   };
 
-  useEffect(() => {
-    handleGetWorkspaceLabels();
-  }, []);
+  const handleSetValue = async (value: Label[]) => {
+    setProperties
+      ? setProperties(value)
+      : await updateTaskDetails(task?.id ?? '', {
+          labels: value,
+        });
+  };
 
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger className="outline-none">
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        className="outline-none"
+        onClick={() => handleGetWorkspaceLabels()}
+      >
         <div className="flex flex-wrap items-center gap-2">
           {selectedLabels.length ? (
             showList ? (
@@ -136,16 +148,16 @@ const LabelDropdown = ({
               )}
               onClick={() => setOpen(true)}
             >
-              <Tags width={15} />
+              <Tags width={15} className="text-stone-600" />
               {showList && (
-                <p className="font-medium text-foreground">Add Label</p>
+                <p className="font-medium text-stone-600">Add Label</p>
               )}
             </div>
           )}
         </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="w-56"
+      </PopoverTrigger>
+      <PopoverContent
+        className="w-56 p-1"
         align={position.align}
         side={position.side}
       >
@@ -155,7 +167,7 @@ const LabelDropdown = ({
             autoFocus
             className="text-sm"
           />
-          <CommandList className="p-1">
+          <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
 
             <CommandGroup>
@@ -183,8 +195,8 @@ const LabelDropdown = ({
             </CommandGroup>
           </CommandList>
         </Command>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </PopoverContent>
+    </Popover>
   );
 };
 

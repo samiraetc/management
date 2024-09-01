@@ -1,4 +1,4 @@
-import api from '@/pages/api/api';
+import api from '@/app/api/api';
 
 export async function getWorkspaces(): Promise<Workspace[]> {
   const data = await api.get(`/workspaces`);
@@ -8,13 +8,8 @@ export async function getWorkspaces(): Promise<Workspace[]> {
 
 export async function createWorkspaces(
   payload: CreateWorkspace,
-  token: string,
 ): Promise<Workspace> {
-  const data = await api.post(`/workspaces`, payload, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const data = await api.post(`/workspaces`, payload);
 
   return data.data;
 }

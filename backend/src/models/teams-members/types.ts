@@ -11,7 +11,7 @@ const teamMembers = z.object({
 });
 
 const createTeamMembers = z.object({
-  user_ids: z.string().min(1, 'User is required').array(),
+  email: z.string().min(1, 'User is required'),
 });
 
 const editTeamMembersSchema = teamMembers.omit({

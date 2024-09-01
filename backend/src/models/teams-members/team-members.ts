@@ -3,20 +3,14 @@ import { TeamMembersWithoutPermission } from './types';
 
 const prisma = new PrismaClient();
 
-const addTeamsMembers = async (
-  members: TeamMembers[],
-): Promise<TeamMembers[]> => {
-  return await prisma.$transaction(
-    members.map((member) =>
-      prisma.teamMembers.create({
-        data: {
-          team_id: member.team_id,
-          user_id: member.user_id,
-          permission: member.permission,
-        },
-      }),
-    ),
-  );
+const addTeamsMembers = async (data: TeamMembers): Promise<TeamMembers> => {
+  return await prisma.teamMembers.create({
+    data: {
+      team_id: data.team_id,
+      user_id: data.user_id,
+      permission: data.permission,
+    },
+  });
 };
 
 const selectTeamsMember = async (

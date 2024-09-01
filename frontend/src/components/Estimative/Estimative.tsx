@@ -1,5 +1,5 @@
 import { cn, getEstimativeProps } from '@/lib/utils';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Command,
   CommandDialog,
@@ -10,24 +10,22 @@ import {
   CommandShortcut,
 } from '@/components/ui/command';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Check } from 'lucide-react';
-import { IoPrism } from 'react-icons/io5';
 import { getEstimativeByName } from '@/services/Estimatives/estimativeService';
 import useWindowSize from '@/hook/useWindowSize/useWindowSize';
+import { updateTaskDetails } from '@/services/Task/taskService';
+import Image from 'next/image';
+import { Popover, PopoverTrigger, PopoverContent } from '../ui/popover';
 
 interface IEstimative {
   estimative: string | null;
-  task: Task;
+  task?: Task;
   label?: boolean;
   className?: string;
+  setProperties?: (value: string | null) => void;
 }
 
-const EstimativeList = ({
+const EstimativeItem = ({
   points,
   value,
   setValue,
@@ -60,7 +58,8 @@ const EstimativeList = ({
           >
             <div className="flex w-full items-center justify-between">
               <div className="flex items-center gap-4">
-                <IoPrism />
+                <Image src="/prism.svg" width={14} height={14} alt="prism" />
+
                 <p className="text-sm">{getEstimativeProps(point)}</p>
               </div>
 
@@ -76,28 +75,44 @@ const EstimativeList = ({
   </>
 );
 
-const Estimative = ({ estimative, label, className, task }: IEstimative) => {
-  const [value, setValue] = useState<string | null>(estimative);
-  const [open, setOpen] = useState<boolean>(false);
+const Estimative = ({
+  estimative,
+  label,
+  className,
+  task,
+  setProperties,
+}: IEstimative) => {
+  const [currentEstimative, setCurrentEstimative] = useState<string | null>(estimative);
+  const [openPopover, setOpenPopover] = useState<boolean>(false);
   const [estimatives, setEstimatives] = useState<Estimative>();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const isMobile = useWindowSize();
 
-  const handleGetEstimatives = async () => {
-    await getEstimativeByName('exponential').then((response) => {
-      setEstimatives(response);
-    });
+  const getEstimatives = async () => {
+    if (!openDialog && !openPopover) {
+      return await getEstimativeByName('exponential')
+        .then((response) => {
+          setEstimatives(response);
+        })
+        .finally(() => (isMobile ? setOpenDialog(true) : setOpenPopover(true)));
+    } else {
+      isMobile ? setOpenDialog(!openDialog) : setOpenPopover(!open);
+    }
   };
 
-  useEffect(() => {
-    handleGetEstimatives();
-  }, []);
-
+  const handleSetValue = async (value: string | null) => {
+    setCurrentEstimative(value);
+    setProperties
+      ? setProperties(value)
+      : await updateTaskDetails(task?.id ?? '', {
+          estimative: value,
+        });
+  };
   return (
     <div>
-      <DropdownMenu open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger
-          onClick={() => (isMobile ? setOpenDialog(true) : setOpen(true))}
+      <Popover open={openPopover} onOpenChange={setOpenPopover}>
+        <PopoverTrigger
+          onClick={() => getEstimatives()}
           className={cn(
             'outline-none',
             label
@@ -106,40 +121,49 @@ const Estimative = ({ estimative, label, className, task }: IEstimative) => {
             className,
           )}
         >
-          <IoPrism />
+          <Image src="/prism.svg" width={14} height={14} alt="prism" />
 
-          {label ? <p>{getEstimativeProps(value ?? null)}</p> : value}
-        </DropdownMenuTrigger>
+          {label ? (
+            currentEstimative ? (
+              <p className="text-stone-600">
+                {getEstimativeProps(currentEstimative ?? null)}
+              </p>
+            ) : (
+              <p className="text-stone-600">Set Estimative</p>
+            )
+          ) : (
+            <p className="text-stone-600">{currentEstimative}</p>
+          )}
+        </PopoverTrigger>
 
         {!isMobile && (
-         <DropdownMenuContent className="w-56" align="center" side="bottom">
+          <PopoverContent className="w-56 p-1" align="center" side="bottom">
             <Command className="w-full text-gray-700">
-              <EstimativeList
+              <EstimativeItem
                 points={[null, ...(estimatives?.points ?? [])]}
-                value={value}
-                setValue={setValue}
-                onClose={() => setOpen(false)}
+                value={currentEstimative}
+                setValue={handleSetValue}
+                onClose={() => setOpenPopover(false)}
               />
             </Command>
-          </DropdownMenuContent>
+          </PopoverContent>
         )}
-      </DropdownMenu>
+      </Popover>
 
       {isMobile && (
         <CommandDialog
           open={openDialog}
           onOpenChange={setOpenDialog}
-          overlayClassName="bg-black/10"
           showClose={false}
           className="top-1/4 w-11/12 -translate-x-1/2 translate-y-[-12%] rounded-md sm:w-full sm:-translate-x-1/2 sm:-translate-y-1/2"
         >
           <div className="mb-2 mt-3 px-3">
             <p className="max-w-full truncate rounded-sm border bg-muted p-1 text-xs text-muted-foreground">{`${task?.identifier} - ${task?.title}`}</p>
           </div>
-          <EstimativeList
+          <EstimativeItem
             points={[null, ...(estimatives?.points ?? [])]}
-            value={value}
-            setValue={setValue}
+            value={currentEstimative}
+            setValue={handleSetValue}
             onClose={() => setOpenDialog(false)}
           />
         </CommandDialog>

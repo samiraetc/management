@@ -1,4 +1,4 @@
-import { selectTeam } from '@/models/teams/teams';
+import { findTeam } from '@/models/teams/teams';
 import {
   addTeamsMembers,
   deleteTeamMember,
@@ -6,7 +6,7 @@ import {
   selectAllTeamsMember,
   selectTeamsMember,
 } from '@/models/teams-members/team-members';
-import { selectUser } from '@/models/user/user';
+import { selectAllUsers, selectUser } from '@/models/user/user';
 import { MemberPermission } from '@/utils/member-permission';
 import { TeamMembers } from '@prisma/client';
 import { FastifyReply, FastifyRequest } from 'fastify';
@@ -21,7 +21,7 @@ const selectAllTeamMembers = async (
 ) => {
   try {
     const { id } = request.params as { id: string };
-    const team = await selectTeam(id);
+    const team = await findTeam(id);
 
     if (!team) {
       reply.code(404).send({ message: 'Team not found' });
@@ -36,7 +36,7 @@ const selectAllTeamMembers = async (
         return await { ...selectedMember, permission: member.permission };
       }),
     );
-    reply.code(201).send({ data: members });
+    reply.code(200).send({ data: members });
   } catch (error) {
     reply
       .code(400)
@@ -49,11 +49,20 @@ const addTeamMember = async (request: FastifyRequest, reply: FastifyReply) => {
     const { id } = request.params as { id: string };
     const parsedBody = createTeamMembers.parse(request.body);
 
-    const body = parsedBody.user_ids.map((member: string) => ({
+    const users = await selectAllUsers();
+
+    const user = users.find((item) => item.email === parsedBody.email);
+
+    if (!user) {
+      reply.code(400).send({ message: 'Member not found' });
+      return;
+    }
+
+    const body = {
       team_id: id,
-      user_id: member,
+      user_id: user.id,
       permission: MemberPermission.MEMBER,
-    }));
+    };
 
     const member = await addTeamsMembers(body);
     reply.code(201).send({ data: member });
@@ -93,7 +102,7 @@ const editTeamMembers = async (
     const selectedMember = await selectUser(editedMember.user_id);
 
     reply
-      .code(201)
+      .code(200)
       .send({ data: { ...selectedMember, permission: member.permission } });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to create member', details: error });
@@ -123,7 +132,7 @@ const removeTeamMember = async (
     }
 
     const deletedMember = await deleteTeamMember(body);
-    reply.code(201).send({ data: deletedMember });
+    reply.code(200).send({ data: deletedMember });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to remove member', details: error });
   }

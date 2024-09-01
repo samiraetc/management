@@ -1,4 +1,4 @@
-import api from '@/pages/api/api';
+import api from '@/app/api/api';
 
 export async function getTaskAssignedByUserId(
   workspaceId: string,
@@ -13,4 +13,56 @@ export async function changeIssueTitle(
   payload: string,
 ) {
   return await api.patch(`/workspace/${workspaceId}/task/${taskId}`, payload);
+}
+
+export async function getAllTasksByTeam(teamId: string): Promise<Task[]> {
+  const tasks = await api.get(`team/${teamId}/task`);
+
+  return tasks.data.data;
+}
+
+export async function postTask(teamId: string, payload: any): Promise<Task> {
+  const tasks = await api.post(`team/${teamId}/task`, payload);
+
+  return tasks.data.data;
+}
+
+export async function getTaskDetails(
+  taskId: string,
+  workspaceId: string,
+): Promise<Task> {
+  const tasks = await api.get(`task/${taskId}?workspace_id=${workspaceId}`);
+
+  return tasks.data.data;
+}
+
+export async function updateTaskDetails(
+  taskId: string,
+  payload: EditTask,
+): Promise<Task> {
+  const tasks = await api.patch(`task/${taskId}`, payload);
+
+  return tasks.data.data;
+}
+
+export async function getAllTasksByUserFilters(
+  filter: string,
+  workspaceId: string,
+): Promise<Task[]> {
+  const tasks = await api.get(
+    `/task?filter=${filter}&workspace_id=${workspaceId}`,
+  );
+
+  return tasks.data.data;
+}
+
+export async function postAssignedTask(
+  teamId: string,
+  payload: {
+    user_ids: string[];
+  },
+): Promise<Task> {
+  const tasks = await api.post(`task/${teamId}/assigned`, payload);
+
+  return tasks.data.data;
 }

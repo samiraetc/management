@@ -26,6 +26,40 @@ export const useTextmenuContentTypes = (editor: Editor) => {
         type: 'option',
         className: 'text-sm',
       },
+      {
+        icon: 'Heading1',
+        onClick: () =>
+          editor
+            .chain()
+            .focus()
+            .lift('taskItem')
+            .liftListItem('listItem')
+            .setHeading({ level: 1 })
+            .run(),
+        id: 'heading1',
+        disabled: () => !editor.can().setHeading({ level: 1 }),
+        isActive: () => editor.isActive('heading', { level: 1 }),
+        label: 'Heading 1',
+        type: 'option',
+        className: 'text-lg',
+      },
+      {
+        icon: 'Heading2',
+        onClick: () =>
+          editor
+            .chain()
+            .focus()
+            .lift('taskItem')
+            .liftListItem('listItem')
+            .setHeading({ level: 2 })
+            .run(),
+        id: 'heading2',
+        disabled: () => !editor.can().setHeading({ level: 2 }),
+        isActive: () => editor.isActive('heading', { level: 2 }),
+        label: 'Heading 2',
+        type: 'option',
+        className: 'text-base',
+      },
 
       {
         icon: 'Heading3',
@@ -43,40 +77,6 @@ export const useTextmenuContentTypes = (editor: Editor) => {
         label: 'Heading 3',
         type: 'option',
         className: 'text-md',
-      },
-      {
-        icon: 'Heading2',
-        onClick: () =>
-          editor
-            .chain()
-            .focus()
-            .lift('taskItem')
-            .liftListItem('listItem')
-            .setHeading({ level: 2 })
-            .run(),
-        id: 'heading2',
-        disabled: () => !editor.can().setHeading({ level: 2 }),
-        isActive: () => editor.isActive('heading', { level: 2 }),
-        label: 'Heading 2',
-        type: 'option',
-        className: 'text-lg',
-      },
-      {
-        icon: 'Heading1',
-        onClick: () =>
-          editor
-            .chain()
-            .focus()
-            .lift('taskItem')
-            .liftListItem('listItem')
-            .setHeading({ level: 1 })
-            .run(),
-        id: 'heading1',
-        disabled: () => !editor.can().setHeading({ level: 1 }),
-        isActive: () => editor.isActive('heading', { level: 1 }),
-        label: 'Heading 1',
-        type: 'option',
-        className: 'text-xl',
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps

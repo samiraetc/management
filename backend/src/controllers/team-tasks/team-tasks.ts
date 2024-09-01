@@ -1,4 +1,4 @@
-import { selectTeam } from '@/models/teams/teams';
+import { findTeam } from '@/models/teams/teams';
 import { TeamTasks } from '@prisma/client';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
@@ -16,7 +16,7 @@ const selectAllTeamTask = async (
 ) => {
   try {
     const { id } = request.params as { id: string };
-    const team = await selectTeam(id);
+    const team = await findTeam(id);
 
     if (!team) {
       reply.code(404).send({ message: 'Team not found' });
@@ -33,7 +33,7 @@ const selectAllTeamTask = async (
         });
       }),
     );
-    reply.code(201).send({ data: tasks });
+    reply.code(200).send({ data: tasks });
   } catch (error) {
     reply
       .code(400)
@@ -76,7 +76,7 @@ const removeTeamTask = async (request: FastifyRequest, reply: FastifyReply) => {
       return;
     }
 
-    reply.code(201).send({ data: await deleteTeamTask(body) });
+    reply.code(200).send({ data: await deleteTeamTask(body) });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to remove task', details: error });
   }

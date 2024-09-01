@@ -2,6 +2,7 @@ import {
   createUserController,
   getAllUsers,
   selectUserController,
+  updateUser,
 } from '@/controllers/user/user';
 import { FastifyInstance } from 'fastify';
 
@@ -59,51 +60,6 @@ const userRoutes = async (server: FastifyInstance) => {
     '/users/:id',
     {
       preValidation: [server.authenticate],
-      schema: {
-        tags: ['Users'],
-        security: [{ bearerAuth: [] }],
-        params: {
-          type: 'object',
-          properties: {
-            id: { type: 'string' },
-          },
-          required: ['id'],
-        },
-        response: {
-          200: {
-            description: 'User retrieved successfully',
-            type: 'object',
-            properties: {
-              data: {
-                id: { type: 'string', format: 'uuid' },
-                first_name: { type: 'string' },
-                last_name: { type: 'string' },
-                full_name: { type: 'string' },
-                email: { type: 'string', format: 'email' },
-                username: { type: 'string' },
-                position: { type: 'string' },
-                created_at: { type: 'string' },
-                language: { type: ['string', 'null'] },
-              },
-            },
-            examples: [
-              {
-                data: {
-                  id: '39c293b9-374e-41c7-b0f0-bc6502123b0c',
-                  first_name: 'Admin',
-                  last_name: 'Dev',
-                  full_name: 'Admin Dev',
-                  email: 'admindevvv@gmail.com',
-                  created_at: '2024-06-22T23:19:23.464Z',
-                  username: 'admindevvvv',
-                  position: 'Frontend Developer',
-                  language: null,
-                },
-              },
-            ],
-          },
-        },
-      },
     },
     selectUserController,
   );
@@ -177,6 +133,12 @@ const userRoutes = async (server: FastifyInstance) => {
       },
     },
     createUserController,
+  );
+
+  server.patch(
+    '/user/:id',
+    { preValidation: [server.authenticate] },
+    updateUser,
   );
 };
 

@@ -1,5 +1,4 @@
-import { selectTeam } from '@/models/teams/teams';
-import { TaskLabels } from '@prisma/client';
+import { findTeam } from '@/models/teams/teams';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { createTaskLabelsSchema } from '@/models/task-labels/types';
 import {
@@ -16,7 +15,7 @@ const selectAllTaskLabel = async (
 ) => {
   try {
     const { id } = request.params as { id: string };
-    const team = await selectTeam(id);
+    const team = await findTeam(id);
 
     if (!team) {
       reply.code(404).send({ message: 'Team not found' });
@@ -26,11 +25,11 @@ const selectAllTaskLabel = async (
     const teamLabels = await selectAllTaskLabels(id);
 
     const labels = await Promise.all(
-      teamLabels.map(async (item: TaskLabels) => {
+      teamLabels.map(async (item: any) => {
         return await selectTeamLabel(item.team_label_id, id);
       }),
     );
-    reply.code(201).send({ data: labels });
+    reply.code(200).send({ data: labels });
   } catch (error) {
     reply
       .code(400)
@@ -77,7 +76,7 @@ const removeTaskLabel = async (
     }
 
     const deletedTask = await deleteTaskLabel(body);
-    reply.code(201).send({ data: deletedTask });
+    reply.code(200).send({ data: deletedTask });
   } catch (error) {
     reply
       .code(400)

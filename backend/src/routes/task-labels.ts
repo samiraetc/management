@@ -1,8 +1,4 @@
-import {
-  addTaskAssigned,
-  removeTaskAssigned,
-  selectAllTaskAssigned,
-} from '@/controllers/task-assigned/task-assigned';
+import { addTaskLabel, removeTaskLabel, selectAllTaskLabel } from '@/controllers/task-labels/task-labels';
 import { FastifyInstance } from 'fastify';
 
 const taskLabelsRoutes = async (server: FastifyInstance) => {
@@ -34,7 +30,7 @@ const taskLabelsRoutes = async (server: FastifyInstance) => {
         },
       },
     },
-    selectAllTaskAssigned,
+    selectAllTaskLabel,
   );
 
   server.post(
@@ -75,7 +71,7 @@ const taskLabelsRoutes = async (server: FastifyInstance) => {
         },
       },
     },
-    addTaskAssigned,
+    addTaskLabel,
   );
 
   server.delete(
@@ -105,7 +101,7 @@ const taskLabelsRoutes = async (server: FastifyInstance) => {
         },
       },
     },
-    removeTaskAssigned,
+    removeTaskLabel,
   );
 };
 

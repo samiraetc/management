@@ -9,21 +9,22 @@ import {
   CommandList,
   CommandShortcut,
 } from '@/components/ui/command';
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Check } from 'lucide-react';
 import { getPriorities } from '@/services/Priorities/prioritiesService';
 import useWindowSize from '@/hook/useWindowSize/useWindowSize';
+import { updateTaskDetails } from '@/services/Task/taskService';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 interface IPriority {
   priority: TaskPriority;
-  task: Task;
+  task?: Task;
   label?: boolean;
   className?: string;
+  setProperties?: (value: TaskPriority) => void;
 }
 
 const PriorityList = ({
@@ -33,7 +34,7 @@ const PriorityList = ({
   onClose,
 }: {
   priorities: Priority[];
-  value: string;
+  value: TaskPriority;
   setValue: (val: TaskPriority) => void;
   onClose: () => void;
 }) => (
@@ -78,7 +79,13 @@ const PriorityList = ({
   </>
 );
 
-const Priority = ({ priority, label, className, task }: IPriority) => {
+const Priority = ({
+  priority,
+  label,
+  className,
+  task,
+  setProperties,
+}: IPriority) => {
   const [value, setValue] = useState<TaskPriority>(priority);
   const [open, setOpen] = useState<boolean>(false);
   const [priorities, setPriorities] = useState<Priority[]>([]);
@@ -86,14 +93,24 @@ const Priority = ({ priority, label, className, task }: IPriority) => {
   const isMobile = useWindowSize();
 
   const handleGetPriorities = async () => {
-    await getPriorities().then((response) => {
-      setPriorities(response);
-    });
+    if (!openDialog && !open) {
+      return await getPriorities().then((response) => {
+        setPriorities(response);
+        isMobile ? setOpenDialog(true) : setOpen(true);
+      });
+    } else {
+      isMobile ? setOpenDialog(!openDialog) : setOpen(!open);
+    }
   };
 
-  useEffect(() => {
-    handleGetPriorities();
-  }, []);
+  const handleSetValue = async (value: TaskPriority) => {
+    setValue(value);
+    setProperties
+      ? setProperties(value)
+      : await updateTaskDetails(task?.id ?? '', {
+          priority: value,
+        });
+  };
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -109,39 +126,40 @@ const Priority = ({ priority, label, className, task }: IPriority) => {
 
   return (
     <div className={!label ? 'ml-2 w-4 sm:ml-0' : ''}>
-      <DropdownMenu open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger
-          onClick={() => (isMobile ? setOpenDialog(true) : setOpen(true))}
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger
           className={cn(
             'outline-none',
             label &&
-              'flex h-8 w-48 items-center gap-2 p-1  text-xs font-medium text-foreground hover:rounded-md hover:bg-muted/70',
+              'flex h-8 w-48 items-center gap-2 p-1 text-xs font-medium text-foreground hover:rounded-md hover:bg-muted/70',
             className,
           )}
+          onClick={() => handleGetPriorities()}
         >
-          <span>{getPriorityProps(value)?.icon}</span>
-          {label && <p className='text-stone-600'>{getPriorityProps(value)?.label}</p>}
-        </DropdownMenuTrigger>
+          <span>{getPriorityProps(value ?? '')?.icon}</span>
+          {label && (
+            <p className="text-stone-600">{getPriorityProps(value)?.label}</p>
+          )}
+        </PopoverTrigger>
 
         {!isMobile && (
-        <DropdownMenuContent className="w-56" align="center" side="bottom">
+          <PopoverContent className="w-56 p-1" align="center" side="bottom">
             <Command className="w-full text-gray-700">
               <PriorityList
                 priorities={priorities}
                 value={value}
-                setValue={setValue}
+                setValue={handleSetValue}
                 onClose={() => setOpen(false)}
               />
             </Command>
-          </DropdownMenuContent>
+          </PopoverContent>
         )}
-      </DropdownMenu>
+      </Popover>
 
       {isMobile && (
         <CommandDialog
           open={openDialog}
           onOpenChange={setOpenDialog}
-          overlayClassName="bg-black/10"
           showClose={false}
           className="top-1/4 w-11/12 -translate-x-1/2 translate-y-[-12%] rounded-md sm:w-full sm:-translate-x-1/2 sm:-translate-y-1/2"
         >
@@ -151,7 +169,7 @@ const Priority = ({ priority, label, className, task }: IPriority) => {
           <PriorityList
             priorities={priorities}
             value={value}
-            setValue={setValue}
+            setValue={handleSetValue}
             onClose={() => setOpenDialog(false)}
           />
         </CommandDialog>

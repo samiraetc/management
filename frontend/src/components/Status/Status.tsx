@@ -21,9 +21,10 @@ import useWindowSize from '@/hook/useWindowSize/useWindowSize';
 
 interface IStatus {
   status: string;
-  task: Task;
+  task?: Task;
   label?: boolean;
   className?: string;
+  setProperties?: (value: string) => void;
 }
 
 const StatusList = ({
@@ -40,7 +41,7 @@ const StatusList = ({
       placeholder="Change status..."
       className="text-md sm:text-sm"
     />
-    <CommandList className="p-2 sm:p-1">
+    <CommandList className="p-2 text-stone-600 sm:p-1">
       <CommandEmpty>No results found.</CommandEmpty>
       {statuses.map((stat, index) => {
         const { icon, label } = getStatusesProps(stat.key);
@@ -56,7 +57,7 @@ const StatusList = ({
             <div className="flex w-full items-center justify-between">
               <div className="flex items-center gap-4">
                 {icon}
-                <p className="text-sm ">{label}</p>
+                <p className="text-sm">{label}</p>
               </div>
               {value === stat.key && (
                 <Check width={20} height={20} className="mr-2" />
@@ -70,14 +71,19 @@ const StatusList = ({
   </>
 );
 
-const Status = ({ status, label, className, task }: IStatus) => {
+const Status = ({ status, label, className, task, setProperties }: IStatus) => {
   const [value, setValue] = useState<string>(status);
   const [open, setOpen] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const isMobile = useWindowSize();
 
+  const handleSetValue = (value: string) => {
+    setValue(value);
+    setProperties && setProperties(value);
+  };
+
   return (
-    <div className="text-stone-600">
+    <div>
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger
           onClick={() => (isMobile ? setOpenDialog(true) : setOpen(true))}
@@ -88,16 +94,20 @@ const Status = ({ status, label, className, task }: IStatus) => {
             className,
           )}
         >
-          {getStatusesProps(value).icon}
-          {label && <p className="pl-0.5 text-stone-600">{getStatusesProps(value).label}</p>}
+          {getStatusesProps(value ?? '').icon}
+          {label && (
+            <p className="pl-0.5 text-stone-600">
+              {getStatusesProps(value ?? '').label}
+            </p>
+          )}
         </DropdownMenuTrigger>
 
         {!isMobile && (
-         <DropdownMenuContent className="w-56" align="center" side="bottom">
+          <DropdownMenuContent className="w-56" align="center" side="bottom">
             <Command className="w-full text-gray-700">
               <StatusList
                 value={value}
-                setValue={setValue}
+                setValue={handleSetValue}
                 onClose={() => setOpen(false)}
               />
             </Command>
@@ -109,7 +119,6 @@ const Status = ({ status, label, className, task }: IStatus) => {
         <CommandDialog
           open={openDialog}
           onOpenChange={setOpenDialog}
-          overlayClassName="bg-black/10"
           showClose={false}
           className="top-1/4 w-11/12 -translate-x-1/2 translate-y-[-12%] rounded-md sm:w-full sm:-translate-x-1/2 sm:-translate-y-1/2"
         >
@@ -118,7 +127,7 @@ const Status = ({ status, label, className, task }: IStatus) => {
           </div>
           <StatusList
             value={value}
-            setValue={setValue}
+            setValue={handleSetValue}
             onClose={() => setOpenDialog(false)}
           />
         </CommandDialog>

@@ -1,4 +1,4 @@
-import api from '@/pages/api/api';
+import api from '@/app/api/api';
 
 export async function getLabels(workspaceId: string): Promise<Label[]> {
   const data = await api.get(`/workspaces/${workspaceId}/labels`);
@@ -33,6 +33,12 @@ export async function deleteWorkspacelabel(
   labelId: string,
 ): Promise<Label> {
   const data = await api.delete(`/workspaces/${workspaceId}/labels/${labelId}`);
+
+  return data.data.data;
+}
+
+export async function getTeamLabels(teamId: string): Promise<Label[]> {
+  const data = await api.get(`/teams/${teamId}/labels`);
 
   return data.data.data;
 }

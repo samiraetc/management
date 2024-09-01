@@ -14,10 +14,10 @@ import { Button } from '@/components/ui/button';
 export const teamColumns: ColumnDef<TeamWithMembers>[] = [
   {
     accessorKey: 'name',
-    header: () => <div className="pl-5">Name</div>,
+    header: () => <div className="pl-7">Name</div>,
     cell: ({ row }) => {
       return (
-        <div className="flex w-60 items-center gap-2 truncate pl-5">
+        <div className="ml-2 flex w-60 items-center gap-2 truncate pl-5">
           <span>{row.getValue('name')}</span>
           {row.original.joined_team && (
             <div className="flex items-center gap-1 rounded-sm border border-border bg-accent p-0.5 px-1 text-xs font-medium text-primary/60 shadow">

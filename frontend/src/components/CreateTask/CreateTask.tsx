@@ -14,30 +14,53 @@ import {
   CommandItem,
   CommandList,
 } from '../ui/command';
-import { Check, ChevronRight, Maximize2, Minimize2 } from 'lucide-react';
+import {
+  Check,
+  ChevronRight,
+  CircleCheck,
+  CircleX,
+  Maximize2,
+  Minimize2,
+} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import RichText from '../RichText/RichText';
 import { Input } from '../ui/input';
 import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import CreateTaskProperties from './CreateTaskProperties';
+import { postTask } from '@/services/Task/taskService';
+import { toast } from '../ui/use-toast';
+import Link from 'next/link';
+import Tiptap from '../TipTap/Tiptap';
 
 interface ICreateTask {
   open: boolean;
   setOpen: (open: boolean) => void;
 }
+
+export type Properties = {
+  status: string | null;
+  estimative: string | null;
+  priority: string | null;
+  labels: Label[];
+  assigned: User | null;
+};
 const CreateTask = ({ open, setOpen }: ICreateTask) => {
   const teams = useSelector((state: RootState) => state.teams.teams) ?? [];
+  const workspace = useSelector(
+    (state: RootState) => state.workspace.workspace,
+  );
 
   const [selectedTeam, setSelectedTeam] = useState<Team>(teams[0]);
   const [openTeam, setOpenTeam] = useState<boolean>(false);
   const [title, setTitle] = useState<string>('');
   const [expandDialog, setExpandDialog] = useState<boolean>(false);
+  const [properties, setProperties] = useState<Properties>();
+  const [description, setDescription] = useState<string>('');
 
   const handleCloseDialog = () => {
     setTitle('');
@@ -45,6 +68,42 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
     setOpen(false);
   };
 
+  const handleCreateTask = async () => {
+    if (title) {
+      const body = {
+        title,
+        description,
+        ...properties,
+      };
+
+      await postTask(selectedTeam.id, body).then((response) => {
+        handleCloseDialog();
+        toast({
+          icon: <CircleCheck className="size-5 text-green-700" />,
+          title: 'Issue created',
+          variant: 'default',
+          description: (
+            <div className="space-y-5">
+              <p>{`${response.identifier} — ${response.title}`}</p>
+              <Link
+                href={`${workspace?.url_key}/issue/${response.identifier}`}
+                className="text-blue-500"
+              >
+                View issue
+              </Link>
+            </div>
+          ),
+        });
+      });
+    } else {
+      toast({
+        icon: <CircleX className="size-5" />,
+        title: 'Created failed',
+        variant: 'destructive',
+        description: <p>The title must contain at least 1 character.</p>,
+      });
+    }
+  };
   return (
     <Dialog open={open} onOpenChange={handleCloseDialog}>
       <DialogContent
@@ -124,6 +183,7 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
 
           <div>
             <Input
+              autoFocus
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Issue title"
@@ -139,16 +199,21 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
                 : 'max-h-32 min-h-32 sm:max-h-56 sm:min-h-24',
             )}
           >
-            <RichText onChange={() => console.log('todo')} />
+            <Tiptap onChange={setDescription} autoFocus={false} />
           </div>
 
           <div className="flex flex-wrap gap-1">
-            <CreateTaskProperties />
+            <CreateTaskProperties
+              setProperties={setProperties}
+              teamId={selectedTeam?.id}
+            />
           </div>
         </div>
         <Separator />
         <DialogFooter className="items-end px-2 pb-2 pt-1">
-          <Button className="h-7 text-xs">Create issue</Button>
+          <Button className="h-7 text-xs" onClick={() => handleCreateTask()}>
+            Create issue
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

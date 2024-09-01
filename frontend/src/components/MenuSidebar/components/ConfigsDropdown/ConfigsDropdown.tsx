@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { Button } from '@headlessui/react';
 import { signOut, useSession } from 'next-auth/react';
-import { Check, LogOutIcon } from 'lucide-react';
+import { Check, CircleUserRound, LogOutIcon } from 'lucide-react';
 import { useDispatch } from 'react-redux';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { logout } from '@/redux/actions/actions';
 import {
   CommandDialog,
@@ -27,6 +26,8 @@ import {
   MenubarTrigger,
 } from '@/components/ui/menubar';
 import { getWorkspaces } from '@/services/Workspace/workspace.services';
+import { getUser } from '@/services/User/userService';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
 const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
   const { data: session } = useSession();
@@ -36,6 +37,17 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
   const workspaceStorage = localStorage.getItem('workspace');
   const [workspace, setWorkspace] = useState<Workspace[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [user, setUser] = useState<User>();
+
+  useEffect(() => {
+    const handleGetUserInfos = async () => {
+      await getUser(session?.user?.id ?? '').then((response) => {
+        setUser(response);
+      });
+    };
+
+    handleGetUserInfos();
+  }, []);
 
   const handleGetWorkspace = async () => {
     await getWorkspaces()
@@ -81,26 +93,38 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
 
   return (
     <>
-      <Menubar className="border-none">
+      <Menubar className="border-none bg-gray-50">
         <MenubarMenu>
           <MenubarTrigger
             className="flex cursor-pointer items-center gap-2 focus:bg-transparent data-[state=open]:bg-transparent"
             asChild
           >
             <div>
-              <Avatar className="size-10">
-                <AvatarImage src="https://api.dicebear.com/8.x/lorelei/svg?backgroundColor=8fc69b&hair=variant18&earrings=variant01&mouth=happy16&eyes=variant23&scale=160" />
-              </Avatar>
-              {!shrink && (
-                <p className="font-medium">{session?.user.full_name}</p>
-              )}
+              <>
+                {user?.image ? (
+                  <Avatar className="size-10">
+                    <AvatarImage
+                      src={user?.image as string}
+                      alt="Profile"
+                      className="flex size-full rounded-full object-cover"
+                    />
+                  </Avatar>
+                ) : (
+                  <CircleUserRound
+                    width={35}
+                    height={35}
+                    className="text-stone-500"
+                  />
+                )}
+              </>
+              {!shrink && <p className="font-medium">{user?.full_name}</p>}
             </div>
           </MenubarTrigger>
           <MenubarContent className="ml-4 w-64" sideOffset={10}>
             <>
               <MenubarItem>
                 <Link
-                  href={'/my-account'}
+                  href={`/${workspaceStorage}/settings/my-account`}
                   className="text-md flex w-full items-center justify-between p-1 font-medium"
                 >
                   <p>My Account</p>

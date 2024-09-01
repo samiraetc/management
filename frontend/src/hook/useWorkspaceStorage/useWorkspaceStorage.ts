@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const useWorkspaceUrl = () => {
@@ -18,6 +18,7 @@ const useWorkspaceUrl = () => {
       const targetWorkspace =
         workspaceUrl ||
         (session?.user.workspaces && session?.user.workspaces[0]?.url_key);
+      localStorage.setItem('workspace', targetWorkspace ? targetWorkspace : '');
       router.push(targetWorkspace ? `/${targetWorkspace}` : '/join');
     }
   }, [status, session, router, workspaceUrl]);
