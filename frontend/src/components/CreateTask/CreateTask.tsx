@@ -35,7 +35,7 @@ import CreateTaskProperties from './CreateTaskProperties';
 import { postTask } from '@/services/Task/taskService';
 import { toast } from '../ui/use-toast';
 import Link from 'next/link';
-import Tiptap from '../Tiptap';
+import Tiptap from '../TipTap/Tiptap';
 
 interface ICreateTask {
   open: boolean;
@@ -61,7 +61,6 @@ const CreateTask = ({ open, setOpen }: ICreateTask) => {
   const [expandDialog, setExpandDialog] = useState<boolean>(false);
   const [properties, setProperties] = useState<Properties>();
   const [description, setDescription] = useState<string>('');
-
 
   const handleCloseDialog = () => {
     setTitle('');

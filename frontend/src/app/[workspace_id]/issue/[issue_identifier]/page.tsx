@@ -15,10 +15,11 @@ import IssueHeader from '@/components/IssueHeader/IssueHeader';
 import DueDate from '@/components/DueDate/DueDate';
 import { getTaskDetails, updateTaskDetails } from '@/services/Task/taskService';
 import Assigned from '@/components/Assigned/Assigned';
-import Tiptap from '@/components/Tiptap';
 import { useParams } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { Toolbar } from '@/components/ui/toolbar';
+import Tiptap from '@/components/TipTap/Tiptap';
 
 const IssuePage = () => {
   const params = useParams();
@@ -114,31 +115,35 @@ const IssuePage = () => {
             <p className="pl-0.5 text-xs font-medium text-muted-foreground">
               Properties
             </p>
-            <div className="flex gap-4">
-              <Link
+            <div className="flex">
+              <Toolbar.Button
+                tooltip="Copy task URL"
                 onClick={() => copyUrlToClipboard()}
-                size={14}
-                className="cursor-pointer"
-              />
-              <Copy
+              >
+                <Link size={14} className="cursor-pointer" />
+              </Toolbar.Button>
+
+              <Toolbar.Button
+                tooltip="Copy task ID"
                 onClick={() => copyUrlToClipboard(task?.identifier)}
-                size={14}
-                className="cursor-pointer"
-              />
-              <GitBranchPlus
+              >
+                <Copy size={14} className="cursor-pointer" />
+              </Toolbar.Button>
+
+              <Toolbar.Button
+                tooltip="Copy git branch name"
                 onClick={() =>
                   copyUrlToClipboard(
                     sanitizeBranchName(`${task?.identifier} ${task?.title}`),
                   )
                 }
-                size={14}
-                className="cursor-pointer"
-              />
+              >
+                <GitBranchPlus size={14} className="cursor-pointer" />
+              </Toolbar.Button>
             </div>
           </div>
 
           <Status status={task?.status ?? ''} task={task} label />
-
           <Priority
             priority={task?.priority as TaskPriority}
             task={task}
