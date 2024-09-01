@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import {
   Command,
   CommandEmpty,
@@ -56,22 +56,24 @@ const LabelDropdown = ({
     if (isSelected) {
       const selected = selectedLabels.filter((l) => l.name !== label.name);
       setSelectedLabels(selected);
-      handleSetValue(selected)
+      handleSetValue(selected);
     } else {
       setSelectedLabels([...selectedLabels, label]);
-      handleSetValue([...selectedLabels, label])
+      handleSetValue([...selectedLabels, label]);
     }
   };
 
-  useEffect(() => {
-    const handleGetWorkspaceLabels = async () => {
-      await getTeamLabels(teamId ?? '').then((response) => {
-        setLabelList(response);
-      });
-    };
-
-    handleGetWorkspaceLabels();
-  }, []);
+  const handleGetWorkspaceLabels = async () => {
+    if (!open) {
+      return await getTeamLabels(teamId ?? '')
+        .then((response) => {
+          setLabelList(response);
+        })
+        .finally(() => setOpen(true));
+    } else {
+      setOpen(!open);
+    }
+  };
 
   const handleSetValue = async (value: Label[]) => {
     setProperties
@@ -81,11 +83,12 @@ const LabelDropdown = ({
         });
   };
 
-
-
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger className="outline-none">
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        className="outline-none"
+        onClick={() => handleGetWorkspaceLabels()}
+      >
         <div className="flex flex-wrap items-center gap-2">
           {selectedLabels.length ? (
             showList ? (
@@ -145,16 +148,16 @@ const LabelDropdown = ({
               )}
               onClick={() => setOpen(true)}
             >
-              <Tags width={15} />
+              <Tags width={15} className="text-stone-600" />
               {showList && (
-                <p className="font-medium text-foreground">Add Label</p>
+                <p className="font-medium text-stone-600">Add Label</p>
               )}
             </div>
           )}
         </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="w-56"
+      </PopoverTrigger>
+      <PopoverContent
+        className="w-56 p-1"
         align={position.align}
         side={position.side}
       >
@@ -164,7 +167,7 @@ const LabelDropdown = ({
             autoFocus
             className="text-sm"
           />
-          <CommandList className="p-1">
+          <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
 
             <CommandGroup>
@@ -192,8 +195,8 @@ const LabelDropdown = ({
             </CommandGroup>
           </CommandList>
         </Command>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </PopoverContent>
+    </Popover>
   );
 };
 
