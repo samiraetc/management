@@ -3,7 +3,6 @@
 import { getDueDateIcon, TaskPriority } from '@/lib/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import DataTableCell from '@/components/DataTable/DataTableCell';
 import { Checkbox } from '@/components/ui/checkbox';
 import LabelList from '@/components/LabelList/LabelList';
 import {
@@ -17,13 +16,9 @@ import Status from '@/components/Status/Status';
 import Priority from '@/components/Priority/Priority';
 import Estimative from '@/components/Estimative/Estimative';
 import { CircleUserRound } from 'lucide-react';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import Link from 'next/link';
 
-export const issueColumns = (
-  workspaceId: string,
-  router: AppRouterInstance,
-) => {
+export const issueColumns = (workspaceId: string) => {
   const columns: ColumnDef<Task>[] = [
     {
       accessorKey: 'items',
@@ -43,10 +38,13 @@ export const issueColumns = (
               className="-ml-1 w-full sm:ml-0"
             />
 
-            <DataTableCell
-              value={row.original.identifier}
-              className="mb-1 hidden w-14 justify-center text-clip text-stone-600 sm:flex"
-            />
+            <div
+              className={
+                'mb-1 hidden w-14 justify-center text-clip text-sm font-normal text-stone-600 dark:text-white sm:flex'
+              }
+            >
+              {row.original.identifier}
+            </div>
 
             <Status status={row.original.status} task={row.original} />
           </div>

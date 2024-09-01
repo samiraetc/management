@@ -11,21 +11,27 @@ import Assigned from '../Assigned/Assigned';
 interface ICreateTaskProperties {
   setProperties?: (value: Properties) => void;
   teamId?: string;
-  task?: Task
+  task?: Task;
 }
 
 const CreateTaskProperties = ({
   setProperties,
   teamId,
-  task
+  task,
 }: ICreateTaskProperties) => {
   const [openDueDate, setOpenDueDate] = useState<boolean>(false);
   const [status, setStatus] = useState<string>('backlog');
-  const [estimative, setEstimative] = useState<string | null>(task?.estimative ?? null);
-  const [priority, setPriority] = useState<TaskPriority>(task?.priority as TaskPriority ?? TaskPriority.None);
+  const [estimative, setEstimative] = useState<string | null>(
+    task?.estimative ?? null,
+  );
+  const [priority, setPriority] = useState<TaskPriority>(
+    (task?.priority as TaskPriority) ?? TaskPriority.None,
+  );
   const [labels, setLabels] = useState<Label[]>(task?.labels ?? []);
   const [assigned, setAssigned] = useState<User | null>(task?.assigned ?? null);
-  const [dueDate, setDueDate] = useState<Date | string | null>(task?.due_date ?? null)
+  const [dueDate, setDueDate] = useState<Date | string | null>(
+    task?.due_date ?? null,
+  );
 
   useEffect(() => {
     return (
@@ -35,7 +41,7 @@ const CreateTaskProperties = ({
         estimative,
         priority,
         labels,
-        assigned
+        assigned,
       })
     );
   }, [status, estimative, priority, labels, assigned]);
@@ -76,7 +82,9 @@ const CreateTaskProperties = ({
         className="flex h-7 w-full items-center rounded-md border px-3 font-normal"
         open={openDueDate}
         setOpen={setOpenDueDate}
+        // setProperties={setDueDate}
       />
+
       <Assigned
         assigned={assigned}
         teamId={teamId}

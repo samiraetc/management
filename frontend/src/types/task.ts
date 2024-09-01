@@ -17,10 +17,11 @@ type Task = {
   due_date: Date | string | null;
   estimative: string | null;
   created_at: string;
+  creator_id: string;
   updated_at: string;
   assigned_to: string;
   assigned: User;
-  team: Team
+  team: Team;
 };
 
 type EditTask = {
@@ -32,7 +33,9 @@ type EditTask = {
   labels?: Label[];
   due_date?: Date | string | null;
   estimative?: string | null;
-  assigned?: string | null
+  assigned?: string | null;
 };
 
 type Tasks = Task[];
+
+type FilterTaskKey = 'created' | 'assigned';

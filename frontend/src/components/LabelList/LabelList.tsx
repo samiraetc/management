@@ -6,20 +6,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import Link from 'next/link';
 
 interface ILabelList {
   labels: Label[];
 }
 
 const LabelList = ({ labels }: ILabelList) => {
-  const router = useRouter();
-  const maxVisibleLabels = 2;
-  const visibleLabels = labels.slice(0, maxVisibleLabels);
-  const hiddenCount = labels.length - maxVisibleLabels;
-  const hiddenLabels = labels.slice(maxVisibleLabels, labels.length);
+  const MAX_VISIBLE_LABELS = 2;
+  const visibleLabels = labels.slice(0, MAX_VISIBLE_LABELS);
+  const hiddenCount = labels.length - MAX_VISIBLE_LABELS;
+  const hiddenLabels = labels.slice(MAX_VISIBLE_LABELS, labels.length);
   const workspace = useSelector(
     (state: RootState) => state.workspace.workspace,
   );
@@ -27,20 +26,19 @@ const LabelList = ({ labels }: ILabelList) => {
   return (
     <div className="flex justify-end gap-1">
       {visibleLabels.map((label, index) => (
-        <Badge
-          variant="outline"
-          key={index}
-          className="flex cursor-pointer items-center gap-2 py-1 text-xs font-normal text-stone-600 dark:text-white"
-          onClick={() =>
-            router.push(`/${workspace?.url_key}/label/${label.name}`)
-          }
-        >
-          <div
-            className="rounded-lg p-1.5"
-            style={{ backgroundColor: label.color }}
-          ></div>
-          {label.name}
-        </Badge>
+        <Link href={`/${workspace?.url_key}/label/${label.name}`}>
+          <Badge
+            variant="outline"
+            key={index}
+            className="flex cursor-pointer items-center gap-2 py-1 text-xs font-normal text-stone-600 dark:text-white"
+          >
+            <div
+              className="rounded-lg p-1.5"
+              style={{ backgroundColor: label.color }}
+            ></div>
+            {label.name}
+          </Badge>
+        </Link>
       ))}
       {hiddenCount > 0 && (
         <TooltipProvider>
@@ -52,7 +50,7 @@ const LabelList = ({ labels }: ILabelList) => {
               >
                 <div className="flex">
                   {labels
-                    .slice(maxVisibleLabels, maxVisibleLabels + 3)
+                    .slice(MAX_VISIBLE_LABELS, MAX_VISIBLE_LABELS + 3)
                     .map((label, index: number) => (
                       <div
                         key={index}
@@ -66,19 +64,17 @@ const LabelList = ({ labels }: ILabelList) => {
             </TooltipTrigger>
             <TooltipContent sideOffset={6} className="w-44">
               {hiddenLabels.map((label, index) => (
-                <div
+                <Link
                   key={index}
+                  href={`/${workspace?.url_key}/label/${label.name}`}
                   className="flex w-24 cursor-pointer items-center gap-2 py-1 text-sm font-normal text-stone-700 dark:text-white"
-                  onClick={() =>
-                    router.replace(`/${workspace?.url_key}/label/${label.name}`)
-                  }
                 >
                   <div
                     className="rounded-lg p-1.5"
                     style={{ backgroundColor: label.color }}
                   ></div>
                   <p className="font-medium">{label.name}</p>
-                </div>
+                </Link>
               ))}
             </TooltipContent>
           </Tooltip>
