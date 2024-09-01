@@ -37,15 +37,15 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
   const workspaceStorage = localStorage.getItem('workspace');
   const [workspace, setWorkspace] = useState<Workspace[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [image, setImage] = useState<string | ArrayBuffer | null>(null);
-
-  const handleGetUserInfos = async () => {
-    await getUser(session?.user?.id ?? '').then((response) => {
-      setImage(response.image ?? null);
-    });
-  };
+  const [user, setUser] = useState<User>();
 
   useEffect(() => {
+    const handleGetUserInfos = async () => {
+      await getUser(session?.user?.id ?? '').then((response) => {
+        setUser(response);
+      });
+    };
+
     handleGetUserInfos();
   }, []);
 
@@ -93,7 +93,7 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
 
   return (
     <>
-      <Menubar className="border-none">
+      <Menubar className="border-none bg-gray-50">
         <MenubarMenu>
           <MenubarTrigger
             className="flex cursor-pointer items-center gap-2 focus:bg-transparent data-[state=open]:bg-transparent"
@@ -101,10 +101,10 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
           >
             <div>
               <>
-                {image ? (
+                {user?.image ? (
                   <Avatar className="size-10">
                     <AvatarImage
-                      src={image as string}
+                      src={user?.image as string}
                       alt="Profile"
                       className="flex size-full rounded-full object-cover"
                     />
@@ -117,9 +117,7 @@ const ConfigsDropdown = ({ shrink }: { shrink?: boolean }) => {
                   />
                 )}
               </>
-              {!shrink && (
-                <p className="font-medium">{session?.user.full_name}</p>
-              )}
+              {!shrink && <p className="font-medium">{user?.full_name}</p>}
             </div>
           </MenubarTrigger>
           <MenubarContent className="ml-4 w-64" sideOffset={10}>
