@@ -9,16 +9,15 @@ import {
   CommandList,
   CommandShortcut,
 } from '@/components/ui/command';
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Check } from 'lucide-react';
 import { getPriorities } from '@/services/Priorities/prioritiesService';
 import useWindowSize from '@/hook/useWindowSize/useWindowSize';
 import { updateTaskDetails } from '@/services/Task/taskService';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 interface IPriority {
   priority: TaskPriority;
@@ -93,15 +92,16 @@ const Priority = ({
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const isMobile = useWindowSize();
 
-  useEffect(() => {
-    const handleGetPriorities = async () => {
-      await getPriorities().then((response) => {
+  const handleGetPriorities = async () => {
+    if (!openDialog && !open) {
+      return await getPriorities().then((response) => {
         setPriorities(response);
+        isMobile ? setOpenDialog(true) : setOpen(true);
       });
-    };
-
-    handleGetPriorities();
-  }, []);
+    } else {
+      isMobile ? setOpenDialog(!openDialog) : setOpen(!open);
+    }
+  };
 
   const handleSetValue = async (value: TaskPriority) => {
     setValue(value);
@@ -126,24 +126,24 @@ const Priority = ({
 
   return (
     <div className={!label ? 'ml-2 w-4 sm:ml-0' : ''}>
-      <DropdownMenu open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger
-          onClick={() => (isMobile ? setOpenDialog(true) : setOpen(true))}
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger
           className={cn(
             'outline-none',
             label &&
               'flex h-8 w-48 items-center gap-2 p-1 text-xs font-medium text-foreground hover:rounded-md hover:bg-muted/70',
             className,
           )}
+          onClick={() => handleGetPriorities()}
         >
           <span>{getPriorityProps(value ?? '')?.icon}</span>
           {label && (
             <p className="text-stone-600">{getPriorityProps(value)?.label}</p>
           )}
-        </DropdownMenuTrigger>
+        </PopoverTrigger>
 
         {!isMobile && (
-          <DropdownMenuContent className="w-56" align="center" side="bottom">
+          <PopoverContent className="w-56 p-1" align="center" side="bottom">
             <Command className="w-full text-gray-700">
               <PriorityList
                 priorities={priorities}
@@ -152,9 +152,9 @@ const Priority = ({
                 onClose={() => setOpen(false)}
               />
             </Command>
-          </DropdownMenuContent>
+          </PopoverContent>
         )}
-      </DropdownMenu>
+      </Popover>
 
       {isMobile && (
         <CommandDialog
