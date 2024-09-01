@@ -7,7 +7,7 @@ import {
   selectTeamLabelByName,
 } from '@/models/team-labels/team-labels';
 import { createAndEditTeamLabel } from '@/models/team-labels/types';
-import { selectTeam } from '@/models/teams/teams';
+import { findTeam } from '@/models/teams/teams';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
 const selectAllTeamLabels = async (
@@ -17,7 +17,7 @@ const selectAllTeamLabels = async (
   try {
     const { id } = request.params as { id: string };
 
-    const team = await selectTeam(id);
+    const team = await findTeam(id);
 
     if (!team) {
       reply.code(404).send({ message: 'Workspace not found' });
@@ -25,7 +25,7 @@ const selectAllTeamLabels = async (
     }
 
     const labels = await selectAllTeamLabel(id);
-    reply.code(201).send({ data: labels });
+    reply.code(200).send({ data: labels });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to create label', details: error });
   }
@@ -39,7 +39,7 @@ const createTeamLabel = async (
     const { id: team_id } = request.params as { id: string };
     const parsedBody = createAndEditTeamLabel.parse(request.body);
 
-    const team = await selectTeam(team_id);
+    const team = await findTeam(team_id);
 
     if (!team) {
       reply.code(404).send({ message: 'Team not found' });
@@ -68,14 +68,17 @@ const createTeamLabel = async (
   }
 };
 
-const patchTeamLabel = async (request: FastifyRequest, reply: FastifyReply) => {
+const updateTeamLabel = async (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => {
   try {
     const { id: team_id, label_id } = request.params as {
       id: string;
       label_id: string;
     };
 
-    const workspace = await selectTeam(team_id);
+    const workspace = await findTeam(team_id);
 
     if (!workspace) {
       reply.code(404).send({ message: 'Team not found' });
@@ -100,7 +103,8 @@ const patchTeamLabel = async (request: FastifyRequest, reply: FastifyReply) => {
     };
 
     const editedLabel = await editTeamLabel(body, label_id);
-    reply.code(201).send({ data: editedLabel });
+
+    reply.code(200).send({ data: editedLabel });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to edit label', details: error });
   }
@@ -116,7 +120,7 @@ const removeTeamLabel = async (
       label_id: string;
     };
 
-    const workspace = await selectTeam(team_id);
+    const workspace = await findTeam(team_id);
     if (!workspace) {
       reply.code(404).send({ message: 'Team not found' });
       return;
@@ -129,7 +133,7 @@ const removeTeamLabel = async (
     }
 
     const deleteLabel = await deleteTeamLabel(label_id);
-    reply.code(201).send({ data: deleteLabel });
+    reply.code(200).send({ data: deleteLabel });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to delete label', details: error });
   }
@@ -137,7 +141,7 @@ const removeTeamLabel = async (
 
 export {
   createTeamLabel,
-  patchTeamLabel,
+  updateTeamLabel,
   removeTeamLabel,
   selectAllTeamLabels,
 };

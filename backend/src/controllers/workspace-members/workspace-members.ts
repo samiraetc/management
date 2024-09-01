@@ -34,7 +34,7 @@ const selectWorkspaceMembers = async (
         return await { ...selectedMember, permission: member.permission };
       }),
     );
-    reply.code(201).send({ data: members });
+    reply.code(200).send({ data: members });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to show members', details: error });
   }
@@ -100,7 +100,7 @@ const editWorkspaceMember = async (
     const selectedMember = await selectUser(editedMember.user_id);
 
     reply
-      .code(201)
+      .code(200)
       .send({ data: { ...selectedMember, permission: member.permission } });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to create member', details: error });
@@ -130,7 +130,7 @@ const removeWorkspaceMember = async (
     }
 
     const deletedMember = await deleteWorkspaceMember(body);
-    reply.code(201).send({ data: deletedMember });
+    reply.code(200).send({ data: deletedMember });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to remove member', details: error });
   }

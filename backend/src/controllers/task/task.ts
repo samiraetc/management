@@ -3,13 +3,14 @@ import {
   createTask,
   deleteAllTasksByTeam,
   editTeamTask,
+  getAllTaskAssignedToUser,
   getAllTaskByCreatedUser,
   getAllTasksByTeam,
   getTaskByIdentifier,
   getUniqueTask,
 } from '@/models/task/task';
 import { createTaskSchema, editTaskSchema } from '@/models/task/types';
-import { selectTeam } from '@/models/teams/teams';
+import { findTeam } from '@/models/teams/teams';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { selectAllTaskLabels } from '@/models/task-labels/task-labels';
 
@@ -26,7 +27,7 @@ const createTaskController = async (
       return;
     }
 
-    const team = await selectTeam(id);
+    const team = await findTeam(id);
 
     if (!team) {
       reply.code(404).send({ message: 'Team not found' });
@@ -70,7 +71,7 @@ const createTaskController = async (
 const selectAllTasks = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const { id } = request.params as { id: string };
-    const team = await selectTeam(id);
+    const team = await findTeam(id);
 
     if (!team) {
       reply.code(404).send({ message: 'Team not found' });
@@ -81,7 +82,7 @@ const selectAllTasks = async (request: FastifyRequest, reply: FastifyReply) => {
     const allTasks = await Promise.all(
       tasks.map(async (task) => {
         const labels = await selectAllTaskLabels(task.id);
-        const team = await selectTeam(task.team_id);
+        const team = await findTeam(task.team_id);
 
         return {
           ...task,
@@ -91,7 +92,7 @@ const selectAllTasks = async (request: FastifyRequest, reply: FastifyReply) => {
       }),
     );
 
-    reply.code(201).send({ data: allTasks });
+    reply.code(200).send({ data: allTasks });
   } catch (error) {
     reply
       .code(400)
@@ -117,9 +118,9 @@ const selectTaskById = async (request: FastifyRequest, reply: FastifyReply) => {
     }
 
     const labels = await selectAllTaskLabels(task.id);
-    const team = await selectTeam(task.team_id);
+    const team = await findTeam(task.team_id);
 
-    reply.code(201).send({ data: { ...task, labels, team } });
+    reply.code(200).send({ data: { ...task, labels, team } });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to select task', details: error });
   }
@@ -128,7 +129,7 @@ const selectTaskById = async (request: FastifyRequest, reply: FastifyReply) => {
 const deleteAllTasks = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const { id } = request.params as { id: string };
-    const team = await selectTeam(id);
+    const team = await findTeam(id);
 
     if (!team) {
       reply.code(404).send({ message: 'Team not found' });
@@ -137,7 +138,7 @@ const deleteAllTasks = async (request: FastifyRequest, reply: FastifyReply) => {
 
     await deleteAllTasksByTeam(id);
 
-    reply.code(201).send({ data: 'Deleted success' });
+    reply.code(200).send({ data: 'Deleted success' });
   } catch (error) {
     reply
       .code(400)
@@ -165,14 +166,14 @@ const updateTeamTask = async (request: FastifyRequest, reply: FastifyReply) => {
       status: parsedBody.status,
       labels: parsedBody.labels,
       due_date: parsedBody.due_date,
-      assigned: parsedBody.assigned,
+      assigned: parsedBody.assigned ?? task.assigned_to,
       updated_at: new Date(),
     };
 
     const editedLabel = await editTeamTask(body, task.id);
-    const team = await selectTeam(task.team_id);
+    const team = await findTeam(task.team_id);
 
-    reply.code(201).send({
+    reply.code(200).send({
       data: {
         ...editedLabel,
         labels: await selectAllTaskLabels(task.id),
@@ -208,7 +209,7 @@ const selectAllTasksCreatedBy = async (
       const allTasks = await Promise.all(
         tasks.map(async (task) => {
           const labels = await selectAllTaskLabels(task.id);
-          const team = await selectTeam(task.team_id);
+          const team = await findTeam(task.team_id);
 
           return {
             ...task,
@@ -218,7 +219,25 @@ const selectAllTasksCreatedBy = async (
         }),
       );
 
-      reply.code(201).send({ data: allTasks });
+      reply.code(200).send({ data: allTasks });
+    }
+
+    if (filter === 'assigned') {
+      const tasks = await getAllTaskAssignedToUser(user.id, workspace_id);
+      const allTasks = await Promise.all(
+        tasks.map(async (task) => {
+          const labels = await selectAllTaskLabels(task.id);
+          const team = await findTeam(task.team_id);
+
+          return {
+            ...task,
+            labels,
+            team,
+          };
+        }),
+      );
+
+      reply.code(200).send({ data: allTasks });
     }
   } catch (error) {
     reply

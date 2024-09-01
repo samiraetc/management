@@ -61,13 +61,14 @@ const updateUser = async (request: FastifyRequest, reply: FastifyReply) => {
       first_name: parsedBody.first_name,
       last_name: parsedBody.last_name,
       username: parsedBody.username,
+      full_name: `${parsedBody.first_name ?? user.first_name} ${parsedBody.last_name ?? user.last_name}`,
       position: parsedBody.position ?? '',
       image: parsedBody.image ?? null,
     };
 
     const editedUser = await editUser(body, id);
 
-    reply.code(201).send({
+    reply.code(200).send({
       data: editedUser,
     });
   } catch (error) {

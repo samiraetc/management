@@ -45,7 +45,7 @@ const updateTeam = async (data: EditTeam, id: string): Promise<Team> => {
   return team;
 };
 
-const selectTeam = async (id: string): Promise<Team | null> => {
+const findTeam = async (id: string): Promise<Team | null> => {
   const team = await prisma.team.findUnique({
     where: { id: id },
   });
@@ -53,7 +53,7 @@ const selectTeam = async (id: string): Promise<Team | null> => {
   return team;
 };
 
-const selectAllTeams = async (id: string): Promise<Team[] | []> => {
+const findTeamsByWorkspaceId = async (id: string): Promise<Team[] | []> => {
   const team = await prisma.team.findMany({
     where: { workspace_id: id },
   });
@@ -61,4 +61,4 @@ const selectAllTeams = async (id: string): Promise<Team[] | []> => {
   return team;
 };
 
-export { createTeam, selectTeam, selectAllTeams, updateTeam };
+export { createTeam, findTeam, findTeamsByWorkspaceId, updateTeam };

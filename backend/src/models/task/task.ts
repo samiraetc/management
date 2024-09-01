@@ -114,6 +114,31 @@ const getAllTaskByCreatedUser = async (
   });
 };
 
+const getAllTaskAssignedToUser = async (
+  id: string,
+  workspaceId: string,
+): Promise<Tasks[] | []> => {
+  return await prisma.tasks.findMany({
+    where: {
+      assigned_to: id,
+      workspace_id: workspaceId,
+    },
+    include: {
+      assigned: {
+        select: {
+          id: true,
+          first_name: true,
+          last_name: true,
+          full_name: true,
+          username: true,
+          image: true,
+          email: true,
+        },
+      },
+    },
+  });
+};
+
 const getUniqueTask = async (id: string): Promise<Tasks | null> => {
   return await prisma.tasks.findUnique({
     where: {
@@ -256,4 +281,5 @@ export {
   editTeamTask,
   getAllTaskByCreatedUser,
   getTaskByIdentifier,
+  getAllTaskAssignedToUser,
 };

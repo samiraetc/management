@@ -1,8 +1,8 @@
 import { findUserByToken } from '@/middleware/auth';
 import {
   createTeam,
-  selectAllTeams,
-  selectTeam,
+  findTeamsByWorkspaceId,
+  findTeam,
   updateTeam,
 } from '@/models/teams/teams';
 import { editTeamSchema, teamSchema } from '@/models/teams/types';
@@ -70,7 +70,7 @@ const editTeamController = async (
 
     const team = await updateTeam(body, id);
 
-    reply.code(201).send({
+    reply.code(200).send({
       data: team,
     });
   } catch (error) {
@@ -81,7 +81,7 @@ const editTeamController = async (
 const getTeamById = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const { id } = request.params as { id: string };
-    const team = await selectTeam(id);
+    const team = await findTeam(id);
 
     if (!team) {
       reply.code(400).send({ message: 'Team not found' });
@@ -114,7 +114,7 @@ const getAllTeamsByWorkspace = async (
       return;
     }
 
-    const teams = await selectAllTeams(id);
+    const teams = await findTeamsByWorkspaceId(id);
 
     const team = await Promise.all(
       teams.map(async (workspace) => {
