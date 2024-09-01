@@ -69,7 +69,6 @@ export default function RootLayout({
           payload: foundWorkspace,
         });
 
-
         fetchTeams(foundWorkspace.id);
         setWorkspace(foundWorkspace);
       } else if (defaultWorkspace) {
@@ -78,7 +77,6 @@ export default function RootLayout({
           type: 'workspace/setWorkspace',
           payload: defaultWorkspace,
         });
-
 
         fetchTeams(defaultWorkspace.id);
         setWorkspace(defaultWorkspace);
@@ -175,7 +173,7 @@ export default function RootLayout({
           <MenuSidebar shrink={shrink} setShrink={setShrink} />
         </ResizablePanel>
         <ResizableHandle className="border-none" />
-        <ResizablePanel className="flex h-lvh min-w-0 !overflow-visible">
+        <ResizablePanel className="flex h-lvh min-w-0 !overflow-visible bg-gray-50">
           <main className="relative flex-1 overflow-visible rounded-md border-border bg-background sm:my-2 sm:mr-2 sm:border">
             {children}
           </main>
