@@ -56,7 +56,7 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
   }, [workspace?.url_key]);
 
   return (
-    <div className="flex grow flex-col justify-between">
+    <div className="flex grow flex-col justify-between bg-gray-50">
       <div className="flex items-center justify-between px-4">
         {!shrink ? (
           <>
@@ -81,7 +81,7 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
               <AccordionItem value="home" className="border-none">
                 <div className="text-md mb-5 flex w-full items-center justify-between gap-7 pl-2 font-semibold">
                   <p className="truncate">{workspace?.name}</p>
-                  <div className="rounded-lg border p-1.5">
+                  <div className="rounded-lg border bg-white p-1.5">
                     <SquarePen
                       width={20}
                       height={20}
@@ -96,7 +96,7 @@ const MenuSidebar: React.FC<IMenuSidebar> = ({ shrink, setShrink }) => {
 
               <AccordionItem value="home" className="border-none">
                 <MenuSidebarButton
-                  url={`/${workspace?.url_key}/my-issues`}
+                  url={`/${workspace?.url_key}/my-issues/created`}
                   icon={<ListTodo className="text-gray-500" width={18} />}
                   name={'My Issues'}
                 />

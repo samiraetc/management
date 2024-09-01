@@ -5,7 +5,6 @@ import { DataTable } from '@/components/DataTable/DataTable';
 import { getStatusesProps } from '@/lib/utils';
 import { Check, ChevronDown, CircleAlert, Link, Plus } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
-import { tasks } from '@/mock/tasks';
 import { statuses } from '@/mock/statuses';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -32,8 +31,8 @@ const LabelIndex = () => {
   const route = useRouter();
   const params = useParams();
   const labelKey = (params.label_key as string) ?? '';
-  const router = useRouter();
   const workspaceId = (params.workspace_id as string) ?? '';
+  const tasks: Task[] = [];
 
   const { data: session } = useSession();
   const [workspaceLabels, setWorkspaceLabels] = useState<Label[]>([]);
@@ -181,7 +180,7 @@ const LabelIndex = () => {
                     <div className="sm:p-0">
                       <DataTable
                         data={tasksByStatusAndLabel}
-                        columns={issueColumns(workspaceId, router)}
+                        columns={issueColumns(workspaceId)}
                       />
                     </div>
                   </section>
