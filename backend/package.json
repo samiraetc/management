@@ -6,7 +6,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "tsx watch --env-file .env  ./src/server.ts",
-    "database:init": "tsx --env-file .env src/database/seed.ts",
+    "database:init": "tsx --env-file .env ./src/database/seeds.ts",
     "test": "jest --detectOpenHandles",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "prepare": "husky",

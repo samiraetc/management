@@ -105,6 +105,7 @@ model Team {
   task              TeamTasks[]  @relation("team-tasks")
 
   @@unique([workspace_id, name])
+  @@unique([identifier, workspace_id])
 }
 
 model TeamMembers {
