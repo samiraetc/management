@@ -78,3 +78,25 @@ export const createUser = async () => {
     });
   }
 };
+
+async function main() {
+  await createLabel();
+
+  await createPriorities();
+
+  await createEstimatives();
+
+  await createUser();
+}
+
+main()
+  .then(() => {
+    console.log('Seed data inserted');
+  })
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

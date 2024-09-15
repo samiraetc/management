@@ -26,9 +26,36 @@ const teamMembersRoutes = async (server: FastifyInstance) => {
             description: 'Members added successfully',
             type: 'object',
             properties: {
-              user_ids: {
+              data: {
                 type: 'array',
-                items: { type: 'string' },
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'string', format: 'uuid' },
+                    first_name: { type: 'string' },
+                    last_name: { type: 'string' },
+                    full_name: { type: 'string' },
+                    email: { type: 'string', format: 'email' },
+                    username: { type: 'string' },
+                    position: { type: 'string' },
+                    created_at: { type: 'string' },
+                    language: { type: ['string', 'null'] },
+                    image: { type: 'string' },
+                  },
+                },
+                examples: [
+                  {
+                    id: '39c293b9-374e-41c7-b0f0-bc6502123b0c',
+                    first_name: 'Admin',
+                    last_name: 'Dev',
+                    email: 'admindevvv@gmail.com',
+                    created_at: '2024-06-22T23:19:23.464Z',
+                    username: 'admindevvvv',
+                    position: 'Frontend Developer',
+                    language: null,
+                    image: '',
+                  },
+                ],
               },
             },
           },

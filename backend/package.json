@@ -7,7 +7,7 @@
     "start": "node dist/server.js",
     "dev": "nodemon -r tsconfig-paths/register src/server.ts",
     "test": "jest --detectOpenHandles",
-    "database:init": "ts-node seed.ts",
+    "database:init": "ts-node src/database/seed.ts",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "prepare": "husky",
     "commitlint": "commitlint --edit"

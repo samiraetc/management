@@ -9,8 +9,8 @@ export interface CreateTask extends Task {
   updated_at: Date;
   created_at: Date;
   due_date?: string | null;
-  workspace_id: string
-  assigned?: string | null
+  workspace_id: string;
+  assigned?: string | null;
 }
 
 export interface EditTask extends Task {

@@ -33,9 +33,11 @@ const selectAllTeamMembers = async (
     const members = await Promise.all(
       member.map(async (member: TeamMembers) => {
         const selectedMember = await selectUser(member.user_id);
-        return await { ...selectedMember, permission: member.permission };
+
+        return { ...selectedMember, permission: member.permission };
       }),
     );
+
     reply.code(200).send({ data: members });
   } catch (error) {
     reply

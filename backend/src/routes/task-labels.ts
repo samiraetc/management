@@ -1,4 +1,8 @@
-import { addTaskLabel, removeTaskLabel, selectAllTaskLabel } from '@/controllers/task-labels/task-labels';
+import {
+  addTaskLabel,
+  removeTaskLabel,
+  selectAllTaskLabel,
+} from '@/controllers/task-labels/task-labels';
 import { FastifyInstance } from 'fastify';
 
 const taskLabelsRoutes = async (server: FastifyInstance) => {
