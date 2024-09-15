@@ -3,7 +3,7 @@ import { CreatePriority } from './types';
 
 const prisma = new PrismaClient();
 
-const selectAllPriorities = async (): Promise<Priority[]> => {
+const selectPriorities = async (): Promise<Priority[]> => {
   const priorities = await prisma.priority.findMany();
   return priorities;
 };
@@ -26,4 +26,4 @@ const createPriority = async (data: CreatePriority): Promise<Priority> => {
   return priority;
 };
 
-export { Priority, selectAllPriorities, createPriority, selectPriority };
+export { Priority, selectPriorities, createPriority, selectPriority };

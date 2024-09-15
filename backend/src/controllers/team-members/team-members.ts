@@ -6,7 +6,7 @@ import {
   selectAllTeamsMember,
   selectTeamsMember,
 } from '@/models/teams-members/team-members';
-import { selectAllUsers, selectUser } from '@/models/user/user';
+import { selectUsers, selectUser } from '@/models/user/user';
 import { MemberPermission } from '@/utils/member-permission';
 import { TeamMembers } from '@prisma/client';
 import { FastifyReply, FastifyRequest } from 'fastify';
@@ -51,7 +51,7 @@ const addTeamMember = async (request: FastifyRequest, reply: FastifyReply) => {
     const { id } = request.params as { id: string };
     const parsedBody = createTeamMembers.parse(request.body);
 
-    const users = await selectAllUsers();
+    const users = await selectUsers();
 
     const user = users.find((item) => item.email === parsedBody.email);
 

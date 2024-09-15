@@ -2,12 +2,12 @@ import { PrismaClient, Estimatives } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const selectAllEstimatives = async (): Promise<Estimatives[]> => {
+const selectEstimates = async (): Promise<Estimatives[]> => {
   const estimatives = await prisma.estimatives.findMany();
   return estimatives;
 };
 
-const selectEstimativeByName = async (
+const selectEstimateByName = async (
   name: string,
 ): Promise<Estimatives | null> => {
   const estimativeByName = await prisma.estimatives.findUnique({
@@ -17,22 +17,4 @@ const selectEstimativeByName = async (
   return estimativeByName;
 };
 
-const createEstimative = async ({
-  name,
-  points,
-}: Estimatives): Promise<Estimatives> => {
-  const createdEstimative = await prisma.estimatives.create({
-    data: {
-      name,
-      points,
-    },
-  });
-  return createdEstimative;
-};
-
-export {
-  Estimatives,
-  selectEstimativeByName,
-  createEstimative,
-  selectAllEstimatives,
-};
+export { Estimatives, selectEstimateByName, selectEstimates };

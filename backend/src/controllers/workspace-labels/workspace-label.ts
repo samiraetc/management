@@ -13,7 +13,7 @@ import {
 import { selectWorkspaces } from '@/models/workspace/workspace';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-const selectAllWorkspaceLabels = async (
+const getWorkspaceLabels = async (
   request: FastifyRequest,
   reply: FastifyReply,
 ) => {
@@ -147,5 +147,5 @@ export {
   createWorkspaceLabel,
   patchWorkspaceLabel,
   removeWorkspaceLabel,
-  selectAllWorkspaceLabels,
+  getWorkspaceLabels,
 };

@@ -1,12 +1,9 @@
 import fastifyJwt from '@fastify/jwt';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
-import dotenv from 'dotenv';
 import Fastify, { FastifyReply, FastifyRequest } from 'fastify';
 import { fastifyCors } from '@fastify/cors';
 import routes from './routes';
-
-dotenv.config();
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -25,7 +22,6 @@ server.register(fastifyCors, {
   origin: '*',
 });
 
-// Configuração do fastify-swagger
 server.register(fastifySwagger, {
   openapi: {
     info: {
@@ -72,7 +68,7 @@ server.decorate(
     try {
       await request.jwtVerify();
     } catch (err) {
-      reply.send(err);
+      reply.code(401).send({ error: 'Unauthorized' });
     }
   },
 );

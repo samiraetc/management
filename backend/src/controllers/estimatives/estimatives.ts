@@ -1,36 +1,40 @@
 import {
-  selectAllEstimatives,
-  selectEstimativeByName,
+  selectEstimates,
+  selectEstimateByName,
 } from '@/models/estimatives/estimatives';
+import { sendResult, sendResultError } from '@/utils/send-results';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-const AllEstimativesController = async (
-  _: FastifyRequest,
-  reply: FastifyReply,
-) => {
+const getEstimates = async (_: FastifyRequest, reply: FastifyReply) => {
   try {
-    reply.code(200).send({ data: await selectAllEstimatives() });
+    const estimates = await selectEstimates();
+    sendResult(reply, estimates);
   } catch (error) {
-    reply.code(400).send({ error: 'Failed to fetch labels' });
+    sendResultError(reply, 'Failed to fetch estimates');
   }
 };
 
-const getEstimativeByName = async (
-  request: FastifyRequest,
+const getEstimateByName = async (
+  request: FastifyRequest<{
+    Params: {
+      name: string;
+    };
+  }>,
   reply: FastifyReply,
 ) => {
   try {
-    const { name } = request.params as { name: string };
-    const estimativeName = await selectEstimativeByName(name);
+    const { name } = request.params;
+    const estimate = await selectEstimateByName(name);
 
-    if (!estimativeName) {
-      reply.code(404).send({ message: 'Estimative do not exist' });
+    if (!estimate) {
+      sendResultError(reply, 'Estimate does not exist', 404);
       return;
     }
-    reply.code(200).send({ data: estimativeName });
+
+    sendResult(reply, estimate);
   } catch (error) {
-    reply.code(400).send({ error: 'Failed to fetch estimative' });
+    sendResultError(reply, 'Failed to fetch estimate');
   }
 };
 
-export { getEstimativeByName, AllEstimativesController };
+export { getEstimateByName, getEstimates };

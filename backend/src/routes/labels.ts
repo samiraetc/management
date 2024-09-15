@@ -1,7 +1,4 @@
-import {
-  AllLabelController,
-  createLabelController,
-} from '@/controllers/labels/label';
+import { getAllLabels, postLabel } from '@/controllers/labels/label';
 import { FastifyInstance } from '../types';
 
 const labelRoutes = async (app: FastifyInstance) => {
@@ -12,9 +9,11 @@ const labelRoutes = async (app: FastifyInstance) => {
       schema: {
         tags: ['Labels'],
         security: [{ bearerAuth: [] }],
+        summary: 'Retrieve all labels',
+        description: 'Fetches all available labels with their details.',
         response: {
           200: {
-            description: 'Resposta de sucesso',
+            description: 'Successfully retrieved all labels',
             type: 'object',
             properties: {
               data: {
@@ -22,16 +21,23 @@ const labelRoutes = async (app: FastifyInstance) => {
                 items: {
                   type: 'object',
                   properties: {
-                    id: { type: 'string' },
-                    name: { type: 'string' },
-                    color: { type: 'string' },
+                    id: {
+                      type: 'string',
+                      format: 'uuid',
+                      description: 'Unique identifier for the label',
+                    },
+                    name: {
+                      type: 'string',
+                      description: 'Name of the label',
+                    },
+                    color: {
+                      type: 'string',
+                      description: 'Color associated with the label',
+                    },
                   },
+                  required: ['id', 'name', 'color'],
                 },
-              },
-            },
-            examples: [
-              {
-                data: [
+                examples: [
                   {
                     id: 'bd23de17-f99c-4170-9189-521831851b55',
                     name: 'bug',
@@ -54,12 +60,19 @@ const labelRoutes = async (app: FastifyInstance) => {
                   },
                 ],
               },
-            ],
+            },
+          },
+          401: {
+            description: 'Unauthorized',
+            type: 'object',
+            properties: {
+              message: { type: 'string' },
+            },
           },
         },
       },
     },
-    AllLabelController,
+    getAllLabels,
   );
 
   app.post(
@@ -68,11 +81,19 @@ const labelRoutes = async (app: FastifyInstance) => {
       preValidation: [app.authenticate],
       schema: {
         tags: ['Labels'],
+        summary: 'Create a new label',
+        description: 'Creates a new label with the provided name and color.',
         body: {
           type: 'object',
           properties: {
-            name: { type: 'string' },
-            color: { type: 'string' },
+            name: {
+              type: 'string',
+              description: 'Name of the new label',
+            },
+            color: {
+              type: 'string',
+              description: 'Color associated with the new label',
+            },
           },
           required: ['name', 'color'],
           examples: [
@@ -84,8 +105,8 @@ const labelRoutes = async (app: FastifyInstance) => {
         },
         security: [{ bearerAuth: [] }],
         response: {
-          200: {
-            description: 'Created successfully',
+          201: {
+            description: 'Label created successfully',
             type: 'object',
             properties: {
               data: {
@@ -94,26 +115,41 @@ const labelRoutes = async (app: FastifyInstance) => {
                   id: {
                     type: 'string',
                     format: 'uuid',
+                    description:
+                      'Unique identifier for the newly created label',
                   },
-                  name: { type: 'string' },
-                  color: { type: 'string' },
+                  name: {
+                    type: 'string',
+                    description: 'Name of the newly created label',
+                  },
+                  color: {
+                    type: 'string',
+                    description:
+                      'Color associated with the newly created label',
+                  },
                 },
+                required: ['id', 'name', 'color'],
+                examples: [
+                  {
+                    id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+                    name: 'bug',
+                    color: '#fff000',
+                  },
+                ],
               },
             },
-            examples: [
-              {
-                data: {
-                  id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-                  name: 'bug',
-                  color: '#fff000',
-                },
-              },
-            ],
+          },
+          400: {
+            description: 'Bad Request',
+            type: 'object',
+            properties: {
+              message: { type: 'string' },
+            },
           },
         },
       },
     },
-    createLabelController,
+    postLabel,
   );
 };
 

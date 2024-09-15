@@ -2,17 +2,14 @@ import { createUserSchema, editUserSchema } from '@/models/user/type';
 import {
   createUser,
   editUser,
-  selectAllUsers,
+  selectUsers,
   selectUser,
 } from '@/models/user/user';
 import bcrypt from 'bcrypt';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { ZodError } from 'zod';
 
-const createUserController = async (
-  request: FastifyRequest,
-  reply: FastifyReply,
-) => {
+const postUser = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const parsedBody = createUserSchema.parse(request.body);
 
@@ -76,10 +73,7 @@ const updateUser = async (request: FastifyRequest, reply: FastifyReply) => {
   }
 };
 
-const selectUserController = async (
-  request: FastifyRequest,
-  reply: FastifyReply,
-) => {
+const getUser = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const { id } = request.params as { id: string };
 
@@ -96,9 +90,9 @@ const selectUserController = async (
   }
 };
 
-const getAllUsers = async (_: FastifyRequest, reply: FastifyReply) => {
+const getUsers = async (_: FastifyRequest, reply: FastifyReply) => {
   try {
-    const users = await selectAllUsers();
+    const users = await selectUsers();
 
     reply.code(200).send({ data: users });
   } catch (error) {
@@ -106,4 +100,4 @@ const getAllUsers = async (_: FastifyRequest, reply: FastifyReply) => {
   }
 };
 
-export { createUserController, selectUserController, getAllUsers, updateUser };
+export { postUser, getUser, getUsers, updateUser };

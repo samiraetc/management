@@ -1,20 +1,17 @@
 import { findUserByToken } from '@/middleware/auth';
-import { selectAllLabels } from '@/models/labels/labels';
+import { selectLabels } from '@/models/labels/labels';
 import { selectUser } from '@/models/user/user';
 import { workspaceSchema } from '@/models/workspace/types';
 import {
   createWorkspace,
-  selectAllWorkspaces,
   selectWorkspaces,
+  selectWorkspace,
   deleteWorkspaces,
 } from '@/models/workspace/workspace';
 import { MemberPermission } from '@/utils/member-permission';
 import { FastifyRequest, FastifyReply } from 'fastify';
 
-const createWorkspaceController = async (
-  request: FastifyRequest,
-  reply: FastifyReply,
-) => {
+const postWorkspace = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const user = await findUserByToken(request, reply);
 
@@ -30,7 +27,7 @@ const createWorkspaceController = async (
       creator: user.id,
       updated_at: new Date(),
       created_at: new Date(),
-      labels: await selectAllLabels(),
+      labels: await selectLabels(),
       permission: MemberPermission.ADMIN,
     };
 
@@ -48,10 +45,7 @@ const createWorkspaceController = async (
   }
 };
 
-const getAllWorkspaces = async (
-  request: FastifyRequest,
-  reply: FastifyReply,
-) => {
+const getWorkspaces = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const user = await findUserByToken(request, reply);
 
@@ -60,7 +54,7 @@ const getAllWorkspaces = async (
       return;
     }
 
-    const workspaces = await selectAllWorkspaces(user.id);
+    const workspaces = await selectWorkspaces(user.id);
 
     const workspace = await Promise.all(
       workspaces.map(async (workspace) => {
@@ -83,7 +77,7 @@ const getWorkspace = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const { id } = request.params as { id: string };
 
-    const workspace = await selectWorkspaces(id);
+    const workspace = await selectWorkspace(id);
 
     if (!workspace) {
       reply.code(404).send({ message: 'Workspace not found' });
@@ -110,7 +104,7 @@ const deleteWorkspace = async (
   try {
     const { id } = request.params as { id: string };
 
-    const workspace = await selectWorkspaces(id);
+    const workspace = await selectWorkspace(id);
 
     if (!workspace) {
       reply.code(404).send({ message: 'Workspace not found' });
@@ -129,9 +123,4 @@ const deleteWorkspace = async (
   }
 };
 
-export {
-  createWorkspaceController,
-  getAllWorkspaces,
-  getWorkspace,
-  deleteWorkspace,
-};
+export { postWorkspace, getWorkspaces, getWorkspace, deleteWorkspace };

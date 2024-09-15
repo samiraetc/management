@@ -46,7 +46,7 @@ const createWorkspace = async (data: Workspace): Promise<PrismaWorkspace> => {
   return workspace;
 };
 
-const selectWorkspaces = async (id: string) => {
+const selectWorkspace = async (id: string) => {
   const workspaces = await prisma.workspace.findUnique({
     where: { id: id },
   });
@@ -54,7 +54,7 @@ const selectWorkspaces = async (id: string) => {
   return workspaces;
 };
 
-const selectAllWorkspaces = async (user_id: string) => {
+const selectWorkspaces = async (user_id: string) => {
   const workspaces = await prisma.workspace.findMany({
     where: {
       creator_id: user_id,
@@ -114,8 +114,8 @@ const deleteWorkspaces = async (id: string) => {
 
 export {
   Workspace,
-  selectAllWorkspaces,
-  createWorkspace,
+  selectWorkspace,
   selectWorkspaces,
+  createWorkspace,
   deleteWorkspaces,
 };

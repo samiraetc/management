@@ -3,7 +3,7 @@ import { CreateLabel } from './types';
 
 const prisma = new PrismaClient();
 
-const selectAllLabels = async (): Promise<Label[]> => {
+const selectLabels = async (): Promise<Label[]> => {
   const labels = await prisma.label.findMany();
   return labels;
 };
@@ -34,4 +34,4 @@ const createLabel = async ({ name, color }: CreateLabel): Promise<Label> => {
   return label;
 };
 
-export { Label, selectAllLabels, createLabel, selectLabel, selectLabelByName };
+export { Label, selectLabels, createLabel, selectLabel, selectLabelByName };

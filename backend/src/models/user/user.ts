@@ -70,7 +70,7 @@ const selectUser = async (id: string): Promise<UserWithoutPassword | null> => {
   return user;
 };
 
-const selectAllUsers = async (): Promise<UserWithoutPassword[]> => {
+const selectUsers = async (): Promise<UserWithoutPassword[]> => {
   const users = await prisma.user.findMany({
     select: {
       id: true,
@@ -114,7 +114,7 @@ export {
   UserWithoutPassword,
   createUser,
   selectUser,
-  selectAllUsers,
+  selectUsers,
   selectUsersByEmail,
   selectUsersByUsername,
   editUser,

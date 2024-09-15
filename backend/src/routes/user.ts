@@ -1,7 +1,7 @@
 import {
-  createUserController,
-  getAllUsers,
-  selectUserController,
+  postUser,
+  getUsers,
+  getUser,
   updateUser,
 } from '@/controllers/user/user';
 import { FastifyInstance } from 'fastify';
@@ -53,7 +53,7 @@ const userRoutes = async (server: FastifyInstance) => {
         },
       },
     },
-    getAllUsers,
+    getUsers,
   );
 
   server.get(
@@ -61,7 +61,7 @@ const userRoutes = async (server: FastifyInstance) => {
     {
       preValidation: [server.authenticate],
     },
-    selectUserController,
+    getUser,
   );
 
   server.post(
@@ -132,7 +132,7 @@ const userRoutes = async (server: FastifyInstance) => {
         },
       },
     },
-    createUserController,
+    postUser,
   );
 
   server.patch(

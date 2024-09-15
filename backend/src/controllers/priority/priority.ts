@@ -1,26 +1,20 @@
 import {
   createPriority,
-  selectAllPriorities,
+  selectPriorities,
   selectPriority,
 } from '@/models/priority/priority';
 import { createPrioritySchema } from '@/models/priority/types';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-const AllPriorityController = async (
-  _: FastifyRequest,
-  reply: FastifyReply,
-) => {
+const getPriorities = async (_: FastifyRequest, reply: FastifyReply) => {
   try {
-    reply.code(200).send({ data: await selectAllPriorities() });
+    reply.code(200).send({ data: await selectPriorities() });
   } catch (error) {
     reply.code(400).send({ error: 'Failed to fetch priorities' });
   }
 };
 
-const getPriorityController = async (
-  request: FastifyRequest,
-  reply: FastifyReply,
-) => {
+const getPriority = async (request: FastifyRequest, reply: FastifyReply) => {
   const { id } = request.params as { id: string };
 
   try {
@@ -30,10 +24,7 @@ const getPriorityController = async (
   }
 };
 
-const createPriorityController = async (
-  request: FastifyRequest,
-  reply: FastifyReply,
-) => {
+const postPriority = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const parsedBody = createPrioritySchema.parse(request.body);
 
@@ -49,8 +40,4 @@ const createPriorityController = async (
   }
 };
 
-export {
-  AllPriorityController,
-  createPriorityController,
-  getPriorityController,
-};
+export { getPriorities, postPriority, getPriority };

@@ -2,7 +2,7 @@ import {
   createWorkspaceLabel,
   patchWorkspaceLabel,
   removeWorkspaceLabel,
-  selectAllWorkspaceLabels,
+  getWorkspaceLabels,
 } from '@/controllers/workspace-labels/workspace-label';
 import { FastifyInstance } from 'fastify';
 
@@ -40,7 +40,7 @@ const workspaceLabelsRouters = async (server: FastifyInstance) => {
         },
       },
     },
-    selectAllWorkspaceLabels,
+    getWorkspaceLabels,
   );
   server.post(
     '/workspaces/:id/labels',

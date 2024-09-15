@@ -38,7 +38,7 @@ export const createPriorities = async () => {
   }
 };
 
-export const createEstimatives = async () => {
+export const creatEstimate = async () => {
   const estimatives = [
     { name: 'exponential', points: ['1', '2', '4', '8', '16'] },
     { name: 'fibonacci', points: ['1', '2', '3', '5', '8'] },
@@ -84,7 +84,7 @@ async function main() {
 
   await createPriorities();
 
-  await createEstimatives();
+  await creatEstimate();
 
   await createUser();
 }

@@ -1,20 +1,22 @@
 import {
-  AllEstimativesController,
-  getEstimativeByName,
+  getEstimates,
+  getEstimateByName,
 } from '@/controllers/estimatives/estimatives';
 import { FastifyInstance } from '../types';
 
 const estimativesRoutes = async (app: FastifyInstance) => {
   app.get(
-    '/estimatives',
+    '/estimate',
     {
       preValidation: [app.authenticate],
       schema: {
-        tags: ['Estimatives'],
+        tags: ['Estimate'],
         security: [{ bearerAuth: [] }],
+        summary: 'Retrieve a list of estimates',
+        description: 'Fetches all available estimates with their details',
         response: {
           200: {
-            description: 'Resposta de sucesso',
+            description: 'List of estimates',
             type: 'object',
             properties: {
               data: {
@@ -25,63 +27,59 @@ const estimativesRoutes = async (app: FastifyInstance) => {
                     id: {
                       type: 'string',
                       format: 'uuid',
+                      description: 'Unique identifier for the estimate',
                     },
-                    name: { type: 'string' },
-                    points: { type: 'array', items: { type: 'string' } },
+                    name: {
+                      type: 'string',
+                      description: 'Name of the estimate',
+                    },
+                    points: {
+                      type: 'array',
+                      items: {
+                        type: 'string',
+                      },
+                      description: 'Points associated with the estimate',
+                    },
                   },
                 },
-              },
-            },
-            examples: [
-              {
-                data: [
+                examples: [
                   {
                     id: '37ab75d1-dc62-49a1-ba6c-ab71f2b2e995',
-                    name: 'exponential',
+                    name: 'estimate',
                     points: ['1', '2', '4', '8', '16'],
-                  },
-                  {
-                    id: '1cdda8ea-eaa5-4cae-9113-bb7178b830c1',
-                    name: 'fibonacci',
-                    points: ['1', '2', '3', '5', '8'],
-                  },
-                  {
-                    id: 'a104dfe8-1277-4b44-8b4e-c12769c98861',
-                    name: 'linear',
-                    points: ['1', '2', '3', '4', '5'],
-                  },
-                  {
-                    id: '895156ff-ea99-4de2-bc40-eb99d013b09b',
-                    name: 't-shirt',
-                    points: ['XS', 'S', 'M', 'L', 'XL'],
                   },
                 ],
               },
-            ],
+            },
           },
         },
       },
     },
-    AllEstimativesController,
+    getEstimates,
   );
 
   app.get(
-    '/estimatives/:name',
+    '/estimate/:name',
     {
       preValidation: [app.authenticate],
       schema: {
-        tags: ['Estimatives'],
+        tags: ['Estimate'],
+        summary: 'Retrieve an estimate by its name',
+        description: 'Fetches a single estimate based on its name',
         params: {
           type: 'object',
           properties: {
-            name: { type: 'string' },
+            name: {
+              type: 'string',
+              description: 'Name of the estimate to fetch',
+            },
           },
           required: ['name'],
         },
         security: [{ bearerAuth: [] }],
         response: {
           200: {
-            description: 'Created successfully',
+            description: 'Details of the estimate',
             type: 'object',
             properties: {
               data: {
@@ -90,31 +88,41 @@ const estimativesRoutes = async (app: FastifyInstance) => {
                   id: {
                     type: 'string',
                     format: 'uuid',
+                    description: 'Unique identifier for the estimate',
                   },
-                  name: { type: 'string' },
+                  name: {
+                    type: 'string',
+                    description: 'Name of the estimate',
+                  },
                   points: {
                     type: 'array',
                     items: {
                       type: 'string',
                     },
+                    description: 'Points associated with the estimate',
                   },
                 },
+                examples: [
+                  {
+                    id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+                    name: 'exponential',
+                    points: ['1', '2', '4', '8', '16'],
+                  },
+                ],
               },
             },
-            examples: [
-              {
-                data: {
-                  id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-                  name: 'exponential',
-                  points: ['1', '2', '4', '8', '16'],
-                },
-              },
-            ],
+          },
+          404: {
+            description: 'Estimate not found',
+            type: 'object',
+            properties: {
+              message: { type: 'string' },
+            },
           },
         },
       },
     },
-    getEstimativeByName,
+    getEstimateByName,
   );
 };
 
