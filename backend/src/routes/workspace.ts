@@ -77,7 +77,7 @@ const workspaceRouters = async (server: FastifyInstance) => {
   );
 
   server.get(
-    '/workspaces/:id',
+    '/workspace/:id',
     {
       preValidation: [server.authenticate],
       schema: {
@@ -159,7 +159,7 @@ const workspaceRouters = async (server: FastifyInstance) => {
   );
 
   server.post(
-    '/workspaces',
+    '/workspace',
     {
       preValidation: [server.authenticate],
       schema: {
@@ -231,7 +231,7 @@ const workspaceRouters = async (server: FastifyInstance) => {
   );
 
   server.delete(
-    '/workspaces/:id',
+    '/workspace/:id',
     {
       preValidation: [server.authenticate],
       schema: {

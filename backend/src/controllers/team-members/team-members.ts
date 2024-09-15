@@ -49,6 +49,13 @@ const selectAllTeamMembers = async (
 const addTeamMember = async (request: FastifyRequest, reply: FastifyReply) => {
   try {
     const { id } = request.params as { id: string };
+    const team = await findTeam(id);
+
+    if (!team) {
+      reply.code(409).send({ message: 'Team not found' });
+      return;
+    }
+
     const parsedBody = createTeamMembers.parse(request.body);
 
     const users = await selectUsers();
@@ -56,7 +63,7 @@ const addTeamMember = async (request: FastifyRequest, reply: FastifyReply) => {
     const user = users.find((item) => item.email === parsedBody.email);
 
     if (!user) {
-      reply.code(400).send({ message: 'Member not found' });
+      reply.code(409).send({ message: 'Member not found' });
       return;
     }
 
@@ -82,6 +89,13 @@ const editTeamMembers = async (
       id: string;
       member_id: string;
     };
+    const team = await findTeam(id);
+
+    if (!team) {
+      reply.code(409).send({ message: 'Team not found' });
+      return;
+    }
+
     const parsedBody = editTeamMembersSchema.parse(request.body);
 
     const member = await selectTeamsMember({
@@ -120,6 +134,13 @@ const removeTeamMember = async (
       id: string;
       member_id: string;
     };
+
+    const team = await findTeam(id);
+
+    if (!team) {
+      reply.code(409).send({ message: 'Team not found' });
+      return;
+    }
 
     const body = {
       team_id: id,

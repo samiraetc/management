@@ -17,8 +17,6 @@ const addWorkspaceLabel = async (
     },
   });
 
-  console.log('workspace', data.workspace_id);
-
   await addWorkspaceLabelInAllTeams(
     {
       id: newLabel.id,
@@ -96,6 +94,29 @@ const selectWorkspaceLabelByName = async (
   });
 };
 
+const deleteWorkspaceLabels = async (workspaceId: string) => {
+  try {
+    await prisma.workspaceLabels.deleteMany({
+      where: { workspace_id: workspaceId },
+    });
+    console.log('Workspace labels deleted successfully');
+  } catch (error) {
+    console.error('Error deleting workspace labels:', error);
+    throw error;
+  }
+};
+
+const selectTeamByIdentifier = async (identifier: string, id: string) => {
+  return await prisma.team.findUnique({
+    where: {
+      identifier_workspace_id: {
+        identifier: identifier,
+        workspace_id: id,
+      },
+    },
+  });
+};
+
 export {
   WorkspaceLabels,
   addWorkspaceLabel,
@@ -104,4 +125,6 @@ export {
   deleteWorkspaceLabel,
   selectAllWorkspaceLabel,
   selectWorkspaceLabelByName,
+  deleteWorkspaceLabels,
+  selectTeamByIdentifier,
 };

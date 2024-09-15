@@ -180,7 +180,7 @@ const teamRoutes = async (server: FastifyInstance) => {
   );
 
   server.post(
-    '/workspaces/:id/teams',
+    '/workspace/:id/teams',
     {
       preValidation: [server.authenticate],
       schema: {
@@ -220,15 +220,53 @@ const teamRoutes = async (server: FastifyInstance) => {
             description: 'Team created successfully',
             type: 'object',
             properties: {
-              id: { type: 'string', format: 'uuid' },
-              name: { type: 'string' },
-              identifier: { type: 'string' },
+              data: {
+                id: { type: 'string', format: 'uuid' },
+                name: { type: 'string' },
+                identifier: { type: 'string' },
+                created_at: { type: 'string' },
+                creator_id: { type: 'string' },
+                estimates_type: { type: 'string' },
+                workspace_id: { type: 'string' },
+                creator: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'string', format: 'uuid' },
+                    first_name: { type: 'string' },
+                    last_name: { type: 'string' },
+                    full_name: { type: 'string' },
+                    email: { type: 'string', format: 'email' },
+                    username: { type: 'string' },
+                    position: { type: 'string' },
+                    created_at: { type: 'string' },
+                    language: { type: ['string', 'null'] },
+                  },
+                },
+              },
             },
             examples: [
               {
-                id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-                name: 'Marketing Team',
-                identifier: 'MKT',
+                data: {
+                  id: '7bd26ca7-4de6-49b9-95aa-41bce45eeb37',
+                  name: 'Frontend',
+                  created_at: '2024-09-15T22:44:58.047Z',
+                  creator_id: '7e22a52c-514c-4182-aa87-2d77f3b82c2e',
+                  identifier: 'FRE',
+                  estimates_type: null,
+                  workspace_id: 'cf5410f6-ac4e-4ddc-bca5-166296991158',
+                  creator: {
+                    id: '7e22a52c-514c-4182-aa87-2d77f3b82c2e',
+                    first_name: 'Admin',
+                    last_name: 'Dev',
+                    full_name: 'Admin Dev',
+                    email: 'admin@example.com',
+                    created_at: '2024-09-15T16:26:50.603Z',
+                    username: 'admindev',
+                    position: 'Developer',
+                    language: null,
+                    image: null,
+                  },
+                },
               },
             ],
           },

@@ -61,4 +61,28 @@ const findTeamsByWorkspaceId = async (id: string): Promise<Team[] | []> => {
   return team;
 };
 
-export { createTeam, findTeam, findTeamsByWorkspaceId, updateTeam };
+const deleteTeams = async (workspaceId: string) => {
+  try {
+    await prisma.teamLabels.deleteMany({
+      where: { team: { workspace_id: workspaceId } },
+    });
+    await prisma.teamMembers.deleteMany({
+      where: { team: { workspace_id: workspaceId } },
+    });
+    await prisma.team.deleteMany({
+      where: { workspace_id: workspaceId },
+    });
+    console.log('Teams and related data deleted successfully');
+  } catch (error) {
+    console.error('Error deleting teams and related data:', error);
+    throw error;
+  }
+};
+
+export {
+  createTeam,
+  findTeam,
+  findTeamsByWorkspaceId,
+  updateTeam,
+  deleteTeams,
+};

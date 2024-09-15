@@ -10,7 +10,7 @@ import {
   selectWorkspaceLabel,
   selectWorkspaceLabelByName,
 } from '@/models/workspace-labels/workspace-label';
-import { selectWorkspaces } from '@/models/workspace/workspace';
+import { selectWorkspace } from '@/models/workspace/workspace';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
 const getWorkspaceLabels = async (
@@ -20,7 +20,7 @@ const getWorkspaceLabels = async (
   try {
     const { id: workspace_id } = request.params as { id: string };
 
-    const workspace = await selectWorkspaces(workspace_id);
+    const workspace = await selectWorkspace(workspace_id);
 
     if (!workspace) {
       reply.code(404).send({ message: 'Workspace not found' });
@@ -41,7 +41,7 @@ const createWorkspaceLabel = async (
     const { id: workspace_id } = request.params as { id: string };
     const parsedBody = createWorkspaceLabelsSchema.parse(request.body);
 
-    const workspace = await selectWorkspaces(workspace_id);
+    const workspace = await selectWorkspace(workspace_id);
 
     if (!workspace) {
       reply.code(404).send({ message: 'Workspace not found' });
@@ -83,7 +83,7 @@ const patchWorkspaceLabel = async (
       label_id: string;
     };
 
-    const workspace = await selectWorkspaces(workspace_id);
+    const workspace = await selectWorkspace(workspace_id);
 
     if (!workspace) {
       reply.code(404).send({ message: 'Workspace not found' });
@@ -124,7 +124,7 @@ const removeWorkspaceLabel = async (
       label_id: string;
     };
 
-    const workspace = await selectWorkspaces(workspace_id);
+    const workspace = await selectWorkspace(workspace_id);
     if (!workspace) {
       reply.code(404).send({ message: 'Workspace not found' });
       return;

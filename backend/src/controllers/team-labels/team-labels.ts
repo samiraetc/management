@@ -78,9 +78,9 @@ const updateTeamLabel = async (
       label_id: string;
     };
 
-    const workspace = await findTeam(team_id);
+    const team = await findTeam(team_id);
 
-    if (!workspace) {
+    if (!team) {
       reply.code(404).send({ message: 'Team not found' });
       return;
     }
@@ -120,8 +120,9 @@ const removeTeamLabel = async (
       label_id: string;
     };
 
-    const workspace = await findTeam(team_id);
-    if (!workspace) {
+    const team = await findTeam(team_id);
+
+    if (!team) {
       reply.code(404).send({ message: 'Team not found' });
       return;
     }

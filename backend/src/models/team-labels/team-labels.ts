@@ -75,10 +75,15 @@ const editTeamLabel = async (
 };
 
 const deleteTeamLabel = async (id: string): Promise<TeamLabels | null> => {
-  const label = prisma.teamLabels.delete({
-    where: { id },
+  return await prisma.$transaction(async (prisma) => {
+    await prisma.taskLabels.deleteMany({
+      where: { team_label_id: id },
+    });
+
+    return await prisma.teamLabels.delete({
+      where: { id },
+    });
   });
-  return label;
 };
 
 const selectTeamLabel = async (

@@ -7,8 +7,14 @@ import {
 } from '@/models/teams/teams';
 import { editTeamSchema, teamSchema } from '@/models/teams/types';
 import { selectUser } from '@/models/user/user';
-import { selectAllWorkspaceLabel } from '@/models/workspace-labels/workspace-label';
-import { selectWorkspaces } from '@/models/workspace/workspace';
+import {
+  selectAllWorkspaceLabel,
+  selectTeamByIdentifier,
+} from '@/models/workspace-labels/workspace-label';
+import {
+  selectWorkspace,
+  selectWorkspaces,
+} from '@/models/workspace/workspace';
 import { MemberPermission } from '@/utils/member-permission';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
@@ -18,6 +24,14 @@ const createTeamController = async (
 ) => {
   try {
     const { id } = request.params as { id: string };
+
+    const workspace = await selectWorkspace(id);
+
+    if (!workspace) {
+      reply.code(409).send({ message: 'Workspace not found' });
+      return;
+    }
+
     const user = await findUserByToken(request, reply);
 
     if (!user) {
@@ -25,6 +39,17 @@ const createTeamController = async (
       return;
     }
     const parsedBody = teamSchema.parse(request.body);
+
+    const existingTeam = await selectTeamByIdentifier(
+      parsedBody.identifier,
+      id,
+    );
+    if (existingTeam) {
+      reply
+        .code(400)
+        .send({ message: 'Team identifier already exists in this workspace' });
+      return;
+    }
 
     const body = {
       name: parsedBody.name,
@@ -55,12 +80,21 @@ const editTeamController = async (
 ) => {
   try {
     const { id } = request.params as { id: string };
+
+    const existingTeam = await findTeam(id);
+
+    if (!existingTeam) {
+      reply.code(409).send({ message: 'Team not found' });
+      return;
+    }
+
     const user = await findUserByToken(request, reply);
 
     if (!user) {
-      reply.code(400).send({ message: 'User not found' });
+      reply.code(409).send({ message: 'User not found' });
       return;
     }
+
     const parsedBody = editTeamSchema.parse(request.body);
 
     const body = {

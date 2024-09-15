@@ -71,10 +71,23 @@ const deleteWorkspaceMember = async (
   });
 };
 
+const deleteWorkspaceMembers = async (workspaceId: string) => {
+  try {
+    await prisma.workspaceMembers.deleteMany({
+      where: { workspace_id: workspaceId },
+    });
+    console.log('Workspace members deleted successfully');
+  } catch (error) {
+    console.error('Error deleting workspace members:', error);
+    throw error;
+  }
+};
+
 export {
   addWorkspaceMembers,
   deleteWorkspaceMember,
   selectWorkspaceMember,
   selectAllWorkspaceMembers,
   editAllWorkspaceMembers,
+  deleteWorkspaceMembers,
 };

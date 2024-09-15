@@ -51,16 +51,38 @@ const editTeamsMembers = async (data: TeamMembers): Promise<TeamMembers> => {
 const deleteTeamMember = async (
   data: TeamMembersWithoutPermission,
 ): Promise<TeamMembersWithoutPermission | null> => {
-  return await prisma.teamMembers.delete({
-    where: {
-      user_id_team_id: {
-        user_id: data.user_id,
-        team_id: data.team_id,
+  return await prisma.$transaction(async (prisma) => {
+    const tasks = await prisma.tasks.findMany({
+      where: {
+        assigned_to: data.user_id,
       },
-    },
+    });
+
+    await Promise.all(
+      tasks.map((task) =>
+        prisma.tasks.update({
+          where: { id: task.id },
+          data: {
+            assigned: {
+              disconnect: { id: data.user_id },
+            },
+          },
+        }),
+      ),
+    );
+
+    const deletedMember = await prisma.teamMembers.delete({
+      where: {
+        user_id_team_id: {
+          user_id: data.user_id,
+          team_id: data.team_id,
+        },
+      },
+    });
+
+    return deletedMember;
   });
 };
-
 export {
   addTeamsMembers,
   deleteTeamMember,

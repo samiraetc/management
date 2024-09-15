@@ -273,6 +273,12 @@ const deleteAllTasksByTeam = async (id: string) => {
   });
 };
 
+const deleteTasks = async (workspaceId: string) => {
+  await prisma.tasks.deleteMany({
+    where: { workspace_id: workspaceId },
+  });
+};
+
 export {
   createTask,
   getAllTasksByTeam,
@@ -282,4 +288,5 @@ export {
   getAllTaskByCreatedUser,
   getTaskByIdentifier,
   getAllTaskAssignedToUser,
+  deleteTasks,
 };

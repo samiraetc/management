@@ -80,7 +80,7 @@ const getWorkspace = async (request: FastifyRequest, reply: FastifyReply) => {
     const workspace = await selectWorkspace(id);
 
     if (!workspace) {
-      reply.code(404).send({ message: 'Workspace not found' });
+      reply.code(409).send({ message: 'Workspace not found' });
       return;
     }
 

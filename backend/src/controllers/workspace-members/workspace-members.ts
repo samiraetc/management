@@ -10,6 +10,7 @@ import {
   selectAllWorkspaceMembers,
   selectWorkspaceMember,
 } from '@/models/workspace-members/workspace-members';
+import { selectWorkspace } from '@/models/workspace/workspace';
 
 import { MemberPermission } from '@/utils/member-permission';
 import { FastifyReply, FastifyRequest } from 'fastify';
@@ -20,6 +21,12 @@ const selectWorkspaceMembers = async (
 ) => {
   try {
     const { id } = request.params as { id: string };
+
+    const workspace = await selectWorkspace(id);
+    if (!workspace) {
+      reply.code(409).send({ message: 'Workspace not found' });
+      return;
+    }
 
     const member = await selectAllWorkspaceMembers(id);
 
@@ -46,6 +53,13 @@ const addWorkspaceMember = async (
 ) => {
   try {
     const { id } = request.params as { id: string };
+
+    const workspace = await selectWorkspace(id);
+    if (!workspace) {
+      reply.code(409).send({ message: 'Workspace not found' });
+      return;
+    }
+
     const parsedBody = createWorkspaceMembersSchema.parse(request.body);
 
     const body = parsedBody.user_ids.map((member: string) => ({
@@ -78,6 +92,13 @@ const editWorkspaceMember = async (
       id: string;
       member_id: string;
     };
+
+    const workspace = await selectWorkspace(id);
+    if (!workspace) {
+      reply.code(409).send({ message: 'Workspace not found' });
+      return;
+    }
+
     const parsedBody = editWorkspaceMembersSchema.parse(request.body);
 
     const member = await selectWorkspaceMember({
@@ -116,6 +137,12 @@ const removeWorkspaceMember = async (
       id: string;
       member_id: string;
     };
+
+    const workspace = await selectWorkspace(id);
+    if (!workspace) {
+      reply.code(409).send({ message: 'Workspace not found' });
+      return;
+    }
 
     const body = {
       workspace_id: id,

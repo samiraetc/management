@@ -53,4 +53,20 @@ const deleteTaskLabel = async (
   });
 };
 
-export { addTaskLabels, deleteTaskLabel, selectTaskLabel, selectAllTaskLabels };
+const deleteTaskLabels = async (workspaceId: string) => {
+  await prisma.taskLabels.deleteMany({
+    where: {
+      task: {
+        workspace_id: workspaceId,
+      },
+    },
+  });
+};
+
+export {
+  addTaskLabels,
+  deleteTaskLabel,
+  selectTaskLabel,
+  selectAllTaskLabels,
+  deleteTaskLabels,
+};

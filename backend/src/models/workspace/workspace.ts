@@ -2,6 +2,11 @@ import { PrismaClient, Workspace as PrismaWorkspace } from '@prisma/client';
 
 import { Label } from '../labels/labels';
 import { User } from '../user/user';
+import { deleteTeams } from '../teams/teams';
+import { deleteWorkspaceLabels } from '../workspace-labels/workspace-label';
+import { deleteWorkspaceMembers } from '../workspace-members/workspace-members';
+import { deleteTaskLabels } from '../task-labels/task-labels';
+import { deleteTasks } from '../task/task';
 
 const prisma = new PrismaClient();
 
@@ -64,51 +69,34 @@ const selectWorkspaces = async (user_id: string) => {
   return workspaces;
 };
 
-const deleteWorkspaces = async (id: string) => {
+const deleteWorkspace = async (workspaceId: string) => {
   try {
-    await prisma.$transaction(async (prisma) => {
-      // Deletar os registros de team_labels relacionados aos times que pertencem ao workspace_id
-      await prisma.teamLabels.deleteMany({
-        where: {
-          team: {
-            workspace_id: id,
-          },
-        },
-      });
+    await prisma.workspace.delete({
+      where: { id: workspaceId },
+    });
+    console.log('Workspace deleted successfully');
+  } catch (error) {
+    console.error('Error deleting workspace:', error);
+    throw error;
+  }
+};
 
-      // Deletar os registros de team_members relacionados aos times que pertencem ao workspace_id
-      await prisma.teamMembers.deleteMany({
-        where: {
-          team: {
-            workspace_id: id,
-          },
-        },
-      });
-
-      // Deletar os times que pertencem ao workspace_id
-      await prisma.team.deleteMany({
-        where: { workspace_id: id },
-      });
-
-      // Deletar os registros de workspace_labels relacionados ao workspace_id
-      await prisma.workspaceLabels.deleteMany({
-        where: { workspace_id: id },
-      });
-
-      // Deletar os registros de workspace_members relacionados ao workspace_id
-      await prisma.workspaceMembers.deleteMany({
-        where: { workspace_id: id },
-      });
-
-      // Finalmente, deletar o workspace
-      await prisma.workspace.delete({
-        where: { id },
-      });
+const deleteWorkspaces = async (id: string): Promise<void> => {
+  try {
+    await prisma.$transaction(async () => {
+      await deleteTasks(id);
+      await deleteTaskLabels(id);
+      await deleteTeams(id);
+      await deleteWorkspaceLabels(id);
+      await deleteWorkspaceMembers(id);
+      await deleteWorkspace(id);
     });
 
     console.log('Workspace and related data deleted successfully');
   } catch (error) {
     console.error('Error deleting workspace and related data:', error);
+
+    throw error;
   }
 };
 

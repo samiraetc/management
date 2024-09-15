@@ -17,6 +17,12 @@ const getPriorities = async (_: FastifyRequest, reply: FastifyReply) => {
 const getPriority = async (request: FastifyRequest, reply: FastifyReply) => {
   const { id } = request.params as { id: string };
 
+  const priority = await selectPriority(id);
+  if (!priority) {
+    reply.code(409).send({ message: 'Priority not found' });
+    return;
+  }
+
   try {
     reply.code(200).send({ data: await selectPriority(id) });
   } catch (error) {
