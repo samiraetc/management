@@ -148,9 +148,9 @@ const LabelDropdown = ({
               )}
               onClick={() => setOpen(true)}
             >
-              <Tags width={15} className="text-stone-600" />
+              <Tags width={15} className="text-stone-600 dark:text-white" />
               {showList && (
-                <p className="font-medium text-stone-600">Add Label</p>
+                <p className="font-medium text-stone-600 dark:text-white">Add Label</p>
               )}
             </div>
           )}

@@ -138,7 +138,7 @@ const Priority = ({
         >
           <span>{getPriorityProps(value ?? '')?.icon}</span>
           {label && (
-            <p className="text-stone-600">{getPriorityProps(value)?.label}</p>
+            <p className="text-stone-600 dark:text-white">{getPriorityProps(value)?.label}</p>
           )}
         </PopoverTrigger>
 

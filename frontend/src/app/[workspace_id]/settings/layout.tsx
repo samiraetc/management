@@ -281,7 +281,7 @@ export default function RootLayout({
               <ArrowLeft
                 width={20}
                 height={20}
-                onClick={() => router.push(`/${workspace?.url_key}`)}
+                onClick={() => router.back()}
                 className="cursor-pointer"
               />
               Settings

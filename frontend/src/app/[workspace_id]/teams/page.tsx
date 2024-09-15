@@ -13,26 +13,25 @@ const TeamsIndex = () => {
   const { data: session } = useSession();
   const [teamMembers, setTeamMembers] = useState<TeamWithMembers[]>([]);
 
-  const handleGetMembers = async (teamId: string) => {
-    return await getTeamMembers(teamId);
-  };
-
-  const fetchTeamMembers = async () => {
-    const members = await Promise.all(
-      teams.map(async (team) => {
-        const teamMembers = await handleGetMembers(team.id);
-        return {
-          ...team,
-          members: teamMembers,
-          joined_team: teamMembers.some((item) => item.id === session?.user.id),
-        };
-      }),
-    );
-
-    setTeamMembers(members);
-  };
-
   useEffect(() => {
+    const fetchTeamMembers = async () => {
+      const members = await Promise.all(
+        teams.map(async (team) => {
+          const teamMembers = await getTeamMembers(team.id);
+
+          console.log(teamMembers);
+          return {
+            ...team,
+            members: teamMembers,
+            joined_team: teamMembers.some(
+              (item) => item.id === session?.user.id,
+            ),
+          };
+        }),
+      );
+
+      setTeamMembers(members);
+    };
     fetchTeamMembers();
   }, [teams]);
 

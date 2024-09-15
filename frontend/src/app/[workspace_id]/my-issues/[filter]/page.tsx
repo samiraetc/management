@@ -35,7 +35,7 @@ const MyIssues = () => {
 
           return (
             <section key={status.id} className="">
-              <div className="flex items-center justify-between border-b bg-gray-50 py-2 pl-3.5 pr-5 sm:pl-7 sm:pr-2">
+              <div className="flex items-center justify-between border-b bg-gray-50 dark:bg-accent py-2 pl-3.5 pr-5 sm:pl-7 sm:pr-2">
                 <div className="flex items-center gap-2">
                   {getStatusesProps(status.key)?.icon}
                   <span className="text-sm font-medium">{status.name}</span>

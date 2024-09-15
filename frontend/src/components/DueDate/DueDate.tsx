@@ -176,7 +176,7 @@ const DueDate = ({
           onClick={() => setOpen && setOpen(true)}
         >
           {getDueDateIcon(value).icon}
-          <p className="text-xs text-stone-600">
+          <p className="text-xs text-stone-600 dark:text-white">
             {getDueDateIcon(value).label}
           </p>
         </div>
@@ -213,11 +213,11 @@ const DueDate = ({
                     <CalendarDays size={18} className="text-gray-500" />
                   )}
                   {value ? (
-                    <p className="text-xs font-medium text-stone-600">
+                    <p className="text-xs font-medium text-stone-600 dark:text-white">
                       {format(value, 'dd/MM/yyyy')}
                     </p>
                   ) : (
-                    <p className="text-xs font-medium text-stone-600">
+                    <p className="text-xs font-medium text-stone-600 dark:text-white">
                       Add due date
                     </p>
                   )}
@@ -231,7 +231,7 @@ const DueDate = ({
                   setValue(null);
                   handleSetValue(null);
                 }}
-                className="cursor-pointer text-stone-600"
+                className="cursor-pointer text-stone-600 dark:text-white"
               />
             )}
           </div>

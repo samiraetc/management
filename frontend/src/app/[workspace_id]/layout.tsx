@@ -173,7 +173,7 @@ export default function RootLayout({
           <MenuSidebar shrink={shrink} setShrink={setShrink} />
         </ResizablePanel>
         <ResizableHandle className="border-none" />
-        <ResizablePanel className="flex h-lvh min-w-0 !overflow-visible bg-gray-50">
+        <ResizablePanel className="flex h-lvh min-w-0 !overflow-visible bg-gray-50 dark:bg-background">
           <main className="relative flex-1 overflow-visible rounded-md border-border bg-background sm:my-2 sm:mr-2 sm:border">
             {children}
           </main>

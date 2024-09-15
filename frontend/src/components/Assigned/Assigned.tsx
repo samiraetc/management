@@ -166,14 +166,14 @@ const Assigned = ({
                     />
                   </Avatar>
                 ) : (
-                  <CircleUserRound width={16} className="text-stone-600" />
+                  <CircleUserRound width={16} className="text-stone-600 dark:text-white" />
                 )}
-                <p className="text-stone-600">{currentAssigned.full_name}</p>
+                <p className="text-stone-600 dark:text-white">{currentAssigned.full_name}</p>
               </>
             ) : (
               <>
-                <CircleUserRound width={16} className="text-stone-600" />
-                <p className="text-stone-600">Assigned</p>
+                <CircleUserRound width={16} className="text-stone-600 dark:text-white" />
+                <p className="text-stone-600 dark:text-white">Assigned</p>
               </>
             )}
           </div>

@@ -95,7 +95,7 @@ export const issueColumns = (workspaceId: string) => {
                             <p className="text-sm font-bold">
                               Due on {format(date, 'MMM d')}
                             </p>
-                            <p className="text-stone-600">{title}</p>
+                            <p className="text-stone-600 dark:text-white">{title}</p>
                           </div>
                         </div>
                       </TooltipContent>
@@ -125,7 +125,7 @@ export const issueColumns = (workspaceId: string) => {
             <div className="hidden sm:flex">
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger className="text-xs text-stone-600">
+                  <TooltipTrigger className="text-xs text-stone-600 dark:text-white">
                     {format(new Date(row.original.created_at), 'MMM d')}
                   </TooltipTrigger>
                   <TooltipContent sideOffset={6} className="text-stone-700">
@@ -138,7 +138,7 @@ export const issueColumns = (workspaceId: string) => {
             <div className="hidden text-end sm:flex">
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger className="text-xs text-stone-600">
+                  <TooltipTrigger className="text-xs text-stone-600 dark:text-white">
                     {format(new Date(row.original.updated_at), 'MMM d')}
                   </TooltipTrigger>
                   <TooltipContent sideOffset={6} className="text-stone-700">
@@ -150,7 +150,7 @@ export const issueColumns = (workspaceId: string) => {
 
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger className="mr-1 text-stone-600">
+                <TooltipTrigger className="mr-1 text-stone-600 dark:text-white">
                   <Avatar className="size-6">
                     <>
                       {row.original.assigned?.image ? (

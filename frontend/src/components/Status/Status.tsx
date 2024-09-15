@@ -41,7 +41,7 @@ const StatusList = ({
       placeholder="Change status..."
       className="text-md sm:text-sm"
     />
-    <CommandList className="p-2 text-stone-600 sm:p-1">
+    <CommandList className="p-2 text-stone-600 dark:text-white sm:p-1">
       <CommandEmpty>No results found.</CommandEmpty>
       {statuses.map((stat, index) => {
         const { icon, label } = getStatusesProps(stat.key);
@@ -96,7 +96,7 @@ const Status = ({ status, label, className, task, setProperties }: IStatus) => {
         >
           {getStatusesProps(value ?? '').icon}
           {label && (
-            <p className="pl-0.5 text-stone-600">
+            <p className="pl-0.5 text-stone-600 dark:text-white">
               {getStatusesProps(value ?? '').label}
             </p>
           )}

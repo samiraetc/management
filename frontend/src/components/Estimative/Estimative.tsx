@@ -121,18 +121,18 @@ const Estimative = ({
             className,
           )}
         >
-          <Image src="/prism.svg" width={14} height={14} alt="prism" />
+          <Image src="/prism.svg" width={14} height={14} alt="prism"  className='dark:text-white'/>
 
           {label ? (
             currentEstimative ? (
-              <p className="text-stone-600">
+              <p className="text-stone-600 dark:text-white">
                 {getEstimativeProps(currentEstimative ?? null)}
               </p>
             ) : (
-              <p className="text-stone-600">Set Estimative</p>
+              <p className="text-stone-600 dark:text-white">Set Estimative</p>
             )
           ) : (
-            <p className="text-stone-600">{currentEstimative}</p>
+            <p className="text-stone-600 dark:text-white">{currentEstimative}</p>
           )}
         </PopoverTrigger>
 
