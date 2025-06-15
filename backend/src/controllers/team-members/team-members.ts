@@ -119,9 +119,9 @@ const editTeamMembers = async (
 
     reply
       .code(200)
-      .send({ data: { ...selectedMember, permission: member.permission } });
+      .send({ data: { ...selectedMember, permission: editedMember.permission } });
   } catch (error) {
-    reply.code(400).send({ error: 'Failed to create member', details: error });
+    reply.code(400).send({ error: 'Failed to edit member', details: error });
   }
 };
 
